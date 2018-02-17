@@ -1,0 +1,15 @@
+{% load render_bundle from webpack_loader %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <title>Quiz</title>
+    {% load static %}
+  </head>
+  <body>
+
+    <div id="react-app"></div>
+    {% render_bundle 'main' %}
+  </body>
+</html>
