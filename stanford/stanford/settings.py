@@ -38,8 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'quiz',
+    'frontend',
+    'webpack_loader',
     'rest_framework',
 ]
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'frontend/assets'),
+)
 
 WEBPACK_LOADER = {
     'DEFAULT': {
