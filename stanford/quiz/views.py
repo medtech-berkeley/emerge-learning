@@ -1,15 +1,39 @@
 from django.shortcuts import render
+from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Question, QuestionUserData, Category, Student
+from .serializers import QuestionSerializer
 
 
+@login_required
 def get_question(request):
     """
     Return random question from category that user hasn't done yet, create QuestionUserData model info
     :param request: GET request with category ID
     :return: JSONResponse of question
     """
-    pass
+    if request.method == 'GET':
+        student = request.user.student
+        if student:
+            try:
+                category = Category.objects.get(name=request.GET['category'])
+            except (Category.DoesNotExist, KeyError):
+                return JsonResponse({'accepted': False, 'reason': 'Missing or invalid category in request'})
+
+            # check for questions user has already started, exclude
+            user_data = QuestionUserData.objects.filter(student=student).all()
+            started_questions = set(data.question for data in user_data)
+            question_set = [question for question in Question.objects.filter(category=category)
+                            if question not in started_questions]
+            if len(question_set) == 0:
+                return JsonResponse({'accepted': False, 'reason': 'No new questions available'}, status=204)
+            question = question_set[0]
+            return JsonResponse(QuestionSerializer(instance=question).data, status=200)
+    else:
+        return HttpResponse(status=405)
 
 
+@login_required
 def submit_answer(request):
     """
     Update QuestionUserData with time_completed, answer, etc. Check that question was completed in time allotted in
