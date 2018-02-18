@@ -1,19 +1,41 @@
 from rest_framework import serializers
-from .models import Question, QuestionUserData, Category, Answer
+from .models import Question, QuestionUserData, Category, Answer, Student, Instructor
 
 
 # TODO: fill out, make AnswerSerializer a nested field for question
-class QuestionSerializer(serializers.ModelSerializer):
-    pass
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ('user', 'location')
+
+class InstructorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Instructor
+        fields = ('user', 'organization')
 
 
-class UserDataSerializer(serializers.ModelSerializer):
-    pass
+
+class QuestionUserDataSerializer(serializers.ModelSerializer):
+    class Meta:
+    	model = QuestionUserData
+    	fields = ('student', 'question', 'answer', 'time_started', 'is_done')
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    pass
+    class Meta:
+    	model = Category
+    	fields = ('name', 'start', 'end', 'sponsor', 'is_challenge')
+
+class QuestionSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+    class Meta:
+        model = Question
+        fields = ('text', 'category', 'created', 'max_time')        
 
 
 class AnswerSerializer(serializers.ModelSerializer):
-    pass
+    question = QuestionSerializer()
+    class Meta:
+    	model = Answer
+    	fields = ('text', 'is_correct', 'question')
+
