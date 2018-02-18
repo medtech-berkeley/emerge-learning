@@ -16,8 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from frontend.views import index
+from rest_framework import routers
+from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet
+
+router = routers.SimpleRouter()
+router.register(r'questions', QuestionViewSet, 'Question')
+router.register(r'answers', AnswerViewSet, 'Answer')
+router.register(r'categories', CategoryViewSet, 'Category')
+router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index)
+    path('', index),
 ]
+
+urlpatterns += router.urls
