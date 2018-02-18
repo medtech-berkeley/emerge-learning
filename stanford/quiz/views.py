@@ -1,5 +1,26 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User
+from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer
+from .models import Student, Instructor, Category, Question, Answer, QuestionUserData
+from rest_framework import generics
+from rest_framework.permissions import IsAdminUser
+from rest_framework.viewsets import ModelViewSet
 
+class QuestionViewSet(ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+class AnswerViewSet(ModelViewSet):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
+
+class CategoryViewSet(ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class QuestionUserDataViewSet(ModelViewSet):
+    queryset = QuestionUserData.objects.all()
+    serializer_class = QuestionUserDataSerializer
 
 def get_question(request):
     """

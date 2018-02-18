@@ -1,6 +1,7 @@
 from __future__ import print_function
 import httplib2
 import os
+import datetime
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
@@ -71,7 +72,7 @@ class Sheet:
         for row in self.rows:
             question_text = row[4]
             correct_answer = row[1]
-            curr_q = Question.objects.create(text=question_text, category=all_questions, created=timezone.now())
+            curr_q = Question.objects.create(text=question_text, category=all_questions, created=timezone.now(), max_time=datetime.time(minute=1))
             curr_a = Answer.objects.create(text=correct_answer, is_correct=True, question=curr_q)
             for choice in answer_choices:
                 if choice != correct_answer:
@@ -80,3 +81,4 @@ class Sheet:
     def __str__(self):
         return "COLUMN HEADERS: " + str(self.col_headers) + " NUM_ROWS: " + str(len(self.rows))
 
+test_sheet = Sheet('1_RkDeLX5G-AphCnvX5bFPmGDn6dScItfB7r_PnKdOpY')
