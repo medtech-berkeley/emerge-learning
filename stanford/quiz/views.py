@@ -1,11 +1,13 @@
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from .models import Question, QuestionUserData, Category, Student
 from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer
 from .models import Student, Category, Question, Answer, QuestionUserData
 from rest_framework.viewsets import ModelViewSet
 
 
+# TODO: set up permissions for viewsets
 class QuestionViewSet(ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
@@ -79,7 +81,44 @@ def submit_answer(request):
     :param request: Post request with QuestionID and AnswerID
     :return: JSONResponse with above format
     """
-    pass
+    if request.method == 'POST':
+        student = request.user.student
+        if student:
+            try:
+                question_id = request.POST['question']
+                answer_id = request.POST['answer']
+            except (Category.DoesNotExist, KeyError):
+                return JsonResponse({'accepted': False, 'reason': 'Missing or invalid question or answer in request'}, status=400)
 
-# TODO: add Serializers for Questions, Categories, set up permissions
-#  (instructors can view, edit questions from their organization, students can only view categories, num_completed, etc)
+            question = Question.objects.filter(id=question_id)
+            answer = Answer.objects.filter(id=answer_id)
+            if not question.exists():
+                return JsonResponse({'accepted': False, 'reason': 'Question not found'}, status=404)
+            elif not answer.exists():
+                return JsonResponse({'accepted': False, 'reason': 'Answer not found'}, status=404)
+
+            question = question.first()
+            answer = answer.first()
+
+            if answer.question != question:
+                return JsonResponse({'accepted': False, 'reason': 'Answer not for specified question'}, status=400)
+
+            user_data = student.question_data.filter(question=question)
+
+            if not user_data.exists():
+                return JsonResponse({'accepted': False, 'reason': 'Question not started yet'}, status=404)
+
+            user_data = user_data.first()
+
+            if user_data.answer is None and timezone.now() < user_data.time_started + question.max_time:
+                user_data.answer = answer
+                user_data.time_completed = timezone.now()
+                user_data.save()
+
+                return JsonResponse({'accepted': True, 'correct': answer.is_correct})
+            elif timezone.now() >= user_data.time_started + question.max_time:
+                return JsonResponse({'accepted': False, 'reason': 'Ran out of time'})
+            else:
+                return JsonResponse({'accepted': False, 'reason': 'Already answered'})
+    else:
+        return HttpResponse(status=405)

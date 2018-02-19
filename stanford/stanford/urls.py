@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 from frontend.views import index
 from rest_framework import routers
-from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, get_question
+from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet
+from quiz.views import get_question, submit_answer
 
 router = routers.SimpleRouter()
 router.register(r'questions', QuestionViewSet, 'Question')
@@ -29,6 +30,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
     path('quiz/question', get_question),
-    path('api/', include(router.urls))
+    path('quiz/answer', submit_answer),
+    path('api/', include(router.urls)),
 ]
 
