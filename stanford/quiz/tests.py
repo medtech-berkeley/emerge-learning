@@ -1,29 +1,33 @@
 from .models import Question, Category, QuestionUserData, Answer, Student
+from unittest import skip
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.utils import timezone
 import datetime
 from .sheetreader import *
 
+
+@skip('Client secret missing')
 class SheetsTestCase(TestCase):
-	""" Tests that sheetreader.py creates correct Question and Answer models """ 
-	def setUp(self):
-		self.test_sheet = Sheet('1_RkDeLX5G-AphCnvX5bFPmGDn6dScItfB7r_PnKdOpY')
-		self.test_sheet.sheet_to_models()
+    """ Tests that sheetreader.py creates correct Question and Answer models """
 
-	def test_print(self):
-		print(self.test_sheet)
+    def setUp(self):
+        self.test_sheet = Sheet('1_RkDeLX5G-AphCnvX5bFPmGDn6dScItfB7r_PnKdOpY')
+        self.test_sheet.sheet_to_models()
 
-	def test_questions(self):
-		for question, row in zip(Question.objects.all(), self.test_sheet.rows):
-			csv_question_text = row[4]
-			self.assertEqual(question.text, csv_question_text)
-			self.assertEqual(question.answers.count(), 6)
+    def test_print(self):
+        print(self.test_sheet)
 
-	def test_answers(self):
-		for answer, row in zip(Answer.objects.all(), self.test_sheet.rows):
-			csv_answer_text = row[1]
-			self.assertIn(answer.text, 'ABCDEF')
+    def test_questions(self):
+        for question, row in zip(Question.objects.all(), self.test_sheet.rows):
+            csv_question_text = row[4]
+            self.assertEqual(question.text, csv_question_text)
+            self.assertEqual(question.answers.count(), 6)
+
+    def test_answers(self):
+        for answer, row in zip(Answer.objects.all(), self.test_sheet.rows):
+            csv_answer_text = row[1]
+            self.assertIn(answer.text, 'ABCDEF')
 
 
 class QuizTestCase(TestCase):
@@ -101,6 +105,3 @@ class QuizTestCase(TestCase):
 
     def test_get_question_all_complete(self):
         pass
-
-
-

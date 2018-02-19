@@ -10,13 +10,8 @@ class Student(models.Model):
     location = models.CharField(max_length=100)
 
 
-class Instructor(models.Model):
-    user = models.OneToOneField(User, related_name="instructor", on_delete=models.CASCADE)
-    organization = models.CharField(max_length=100)
-
-
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, primary_key=True)
     start = models.DateTimeField()
     end = models.DateTimeField()
     sponsor = models.CharField(max_length=50)

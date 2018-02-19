@@ -14,10 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from frontend.views import index
 from rest_framework import routers
-from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet
+from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, get_question
 
 router = routers.SimpleRouter()
 router.register(r'questions', QuestionViewSet, 'Question')
@@ -28,6 +28,7 @@ router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
+    path('quiz/question', get_question),
+    path('api/', include(router.urls))
 ]
 
-urlpatterns += router.urls
