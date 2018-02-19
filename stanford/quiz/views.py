@@ -39,17 +39,25 @@ def get_question(request):
             try:
                 category = Category.objects.get(name=request.GET['category'])
             except (Category.DoesNotExist, KeyError):
-                return JsonResponse({'accepted': False, 'reason': 'Missing or invalid category in request'})
+                return JsonResponse({'accepted': False, 'reason': 'Missing or invalid category in request'}, status=400)
 
-            # check for questions user has already started, exclude
-            user_data = QuestionUserData.objects.filter(student=student).all()
+            # check for questions user has already started, exclude from final set
+            user_data = QuestionUserData.objects.filter(student=student, question__category=category)
             started_questions = set(data.question for data in user_data)
             question_set = [question for question in Question.objects.filter(category=category)
                             if question not in started_questions]
             if len(question_set) == 0:
-                return JsonResponse({'accepted': False, 'reason': 'No new questions available'}, status=204)
+                return JsonResponse(data={'accepted': False, 'reason': 'No new questions available'})
             question = question_set[0]
-            return JsonResponse(QuestionSerializer(instance=question).data, status=200)
+            # create QuestionUserData as user has started to answer question
+            question_data = QuestionUserData.objects.create(student=student, question=question)
+
+            # strip out correctness indicators from answers
+            question_json = QuestionSerializer(instance=question).data
+            for answer in question_json['answers']:
+                del answer['is_correct']
+
+            return JsonResponse(data=question_json, status=200)
     else:
         return HttpResponse(status=405)
 

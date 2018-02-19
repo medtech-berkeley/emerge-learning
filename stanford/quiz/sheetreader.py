@@ -80,5 +80,3 @@ class Sheet:
 
     def __str__(self):
         return "COLUMN HEADERS: " + str(self.col_headers) + " NUM_ROWS: " + str(len(self.rows))
-
-test_sheet = Sheet('1_RkDeLX5G-AphCnvX5bFPmGDn6dScItfB7r_PnKdOpY')

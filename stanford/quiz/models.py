@@ -25,7 +25,7 @@ class Question(models.Model):
     text = models.CharField(max_length=300)
     category = models.ForeignKey(Category, related_name="questions", on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
-    max_time = models.TimeField()
+    max_time = models.DurationField()
 
     def __str__(self):
         return self.category.name + " - Question " + str(self.id)
