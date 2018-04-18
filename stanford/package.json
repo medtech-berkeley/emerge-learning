@@ -25,6 +25,7 @@
     "webpack-dev-server": "^2.9.7"
   },
   "dependencies": {
+    "history": "^4.7.2",
     "js-cookie": "^2.2.0",
     "package.json": "^2.0.1",
     "prop-types": "^15.6.1",
