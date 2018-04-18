@@ -11,7 +11,7 @@ export class NavBar extends React.Component {
                         <span className="navbar-toggler-icon"/>
                     </NavbarToggler>
                 </Container>
-                <Nav navbar="right">
+                <Nav navbar>
                     <Button href="/logout" color="primary" className="navbar-btn">
                         Logout
                     </Button>
