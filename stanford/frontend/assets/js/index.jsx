@@ -53,4 +53,4 @@ window.deleteHeader = {
 
 window.store = createStore(stanfordApp, applyMiddleware(ReduxThunk));
 
-// render(<Provider store={store}><App /></Provider>, document.getElementById('react-app'));
+render(<Provider store={store}><App /></Provider>, document.getElementById('react-app'));

@@ -1,0 +1,13 @@
+.CategoriesBox {
+   margin-top:20px;
+}
+
+.CategoriesCard .btn {
+	margin-left: 10px;
+	margin-right: 10px;
+	transform: translateX(-11px);
+}
+
+#react-app {
+	transform: translateY(200%);
+}
