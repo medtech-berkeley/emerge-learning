@@ -32396,7 +32396,7 @@ var CategoryCard = exports.CategoryCard = function (_React$Component) {
 		value: function render() {
 			return _react2.default.createElement(
 				"div",
-				{ "class": "col" },
+				{ "class": "col-sm-4" },
 				_react2.default.createElement(
 					_reactstrap.Card,
 					null,
@@ -32406,12 +32406,12 @@ var CategoryCard = exports.CategoryCard = function (_React$Component) {
 						_react2.default.createElement(
 							"h4",
 							{ "class": "card-title" },
-							"Card title"
+							this.props.name
 						),
 						_react2.default.createElement(
 							"p",
 							{ "class": "card-text" },
-							"Some example text. Some example text."
+							"Speak up"
 						),
 						_react2.default.createElement(
 							"a",
