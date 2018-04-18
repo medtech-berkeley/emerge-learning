@@ -1,6 +1,6 @@
 
 # Created by https://www.gitignore.io/api/node,django,python
-
+package-lock.json
 ### Django ###
 *.log
 *.pot
