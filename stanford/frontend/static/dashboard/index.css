@@ -20,4 +20,6 @@
 
 #react-app {
 	transform: translateY(40%);
+.navbar-brand, .navbar-brand:hover {
+	color: white;
 }
