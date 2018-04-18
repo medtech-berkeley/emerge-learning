@@ -8,6 +8,6 @@
 	transform: translateX(-11px);
 }
 
-#react-app {
-	transform: translateY(200%);
+.navbar-brand, .navbar-brand:hover {
+	color: white;
 }

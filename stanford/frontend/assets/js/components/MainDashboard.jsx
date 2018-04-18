@@ -1,15 +1,19 @@
 import React from "react"
-import {Card, CardBody, CardHeader, CardFooter, Container} from "reactstrap";
 import {CategoriesBox} from "./CategoriesBox"
 import PropTypes from "prop-types"
+import {Container} from "reactstrap";
+import {NavBar} from "./NavBar";
 
 export class MainDashboard extends React.Component {
 	render() {
 		return (
-			<div class="container">
-				<p>CHALLENGES</p>
-				<hr />
-				<CategoriesBox categories={this.props.categories}/>
+		    <div>
+                <NavBar/>
+                <Container>
+                    <p>CHALLENGES</p>
+                    <hr />
+                    <CategoriesBox categories={this.props.categories}/>
+                </Container>
 			</div>
 		);
 	}
