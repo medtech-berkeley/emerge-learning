@@ -9,11 +9,13 @@ export class MainDashboard extends React.Component {
 		return (
 		    <div>
                 <NavBar/>
-                <Container>
-                    <p>CHALLENGES</p>
-                    <hr />
-                    <CategoriesBox categories={this.props.categories}/>
-                </Container>
+                <div className="dashboard">
+	                <Container>
+	                    <p>CHALLENGES</p>
+	                    <hr />
+	                    <CategoriesBox categories={this.props.categories}/>
+	                </Container>
+	            </div>
 			</div>
 		);
 	}
