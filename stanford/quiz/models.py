@@ -57,4 +57,3 @@ class QuestionUserData(models.Model):
     class Meta:
         unique_together = ('question', 'student')
 
-

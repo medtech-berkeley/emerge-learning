@@ -5,6 +5,7 @@ from django.test import TestCase, Client
 from django.utils import timezone
 import datetime
 from .sheetreader import Sheet
+from .utils import get_stats_student, get_stats_question_total
 
 
 @skip
@@ -270,3 +271,91 @@ class QuizTestCase(TestCase):
         answer_json = answer_response.json()
         self.assertEqual(answer_json['accepted'], True)
         self.assertEqual(answer_json['correct'], True)
+
+    def test_stats_student(self):
+        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        question_id = response.json()['id']
+        question = Question.objects.get(id=question_id)
+        answer = question.answers.filter(is_correct=True).first()
+
+        answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+        answer_json = answer_response.json()
+
+        response = self.client.get("/quiz/question", {'category': 'cat2'})
+        question_id = response.json()['id']
+        question = Question.objects.get(id=question_id)
+        answer = question.answers.filter(is_correct=False).first()
+
+        answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+        answer_json = answer_response.json()
+
+        # test multiple open at same time
+        response = self.client.get("/quiz/question", {'category': 'cat2'})
+        question_id = response.json()['id']
+        question = Question.objects.get(id=question_id)
+        answer = question.answers.filter(is_correct=True).first()
+
+        response2 = self.client.get("/quiz/question", {'category': 'cat3'})
+        question_id2 = response2.json()['id']
+        question2 = Question.objects.get(id=question_id2)
+        answer2 = question2.answers.filter(is_correct=True).first()
+
+        answer_response2 = self.client.post("/quiz/answer", {'question': question_id2, 'answer': answer2.id})
+        answer_json2 = answer_response2.json()
+
+        answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+        answer_json = answer_response.json()
+
+        print(get_stats_student(self.student))
+        self.assertEqual(3, get_stats_student(self.student)['num_correct'])
+
+    def test_stats_question_total(self):
+        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        question_id = response.json()['id']
+        question = Question.objects.get(id=question_id)
+        answer = question.answers.filter(is_correct=True).first()
+
+        answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+        answer_json = answer_response.json()
+
+        self.assertEqual(1, get_stats_question_total(question)['num_correct'])
+
+
+        response = self.client.get("/quiz/question", {'category': 'cat2'})
+        question_id = response.json()['id']
+        print(response.json())
+        question = Question.objects.get(id=question_id)
+        answer = question.answers.filter(is_correct=False).first()
+
+        answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+        answer_json = answer_response.json()
+
+        # test multiple open at same time
+        response = self.client.get("/quiz/question", {'category': 'cat2'})
+        question_id = response.json()['id']
+        question = Question.objects.get(id=question_id)
+        answer = question.answers.filter(is_correct=True).first()
+
+        print(get_stats_question_total(question))
+        self.assertEqual(3, get_stats_question_total(question)['num_correct'])
+
+
+        response2 = self.client.get("/quiz/question", {'category': 'cat3'})
+        question_id2 = response2.json()['id']
+        question2 = Question.objects.get(id=question_id2)
+        answer2 = question2.answers.filter(is_correct=True).first()
+
+        answer_response2 = self.client.post("/quiz/answer", {'question': question_id2, 'answer': answer2.id})
+        answer_json2 = answer_response2.json()
+
+        answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+        answer_json = answer_response.json()
+
+    def test_stats_category(self):
+        pass 
+
+    def test_stats_location_total(self):
+        pass 
+
+    def test_stats_location_category(self):
+        pass
