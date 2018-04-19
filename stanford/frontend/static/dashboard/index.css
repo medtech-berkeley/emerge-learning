@@ -1,12 +1,19 @@
 .UserInfo {
-    transform: translateY(150px);
-    max-width: 20%;
+    transform: translate(20px, 150px);
     border-style: solid;
     border-width: 5px;
+    max-width: 20%;
 }
 
 .Badges {
-    transform: translate(300px, 12px);
+    transform: translate(320px, 12px);
+    border-style: solid;
+    border-width: 5px;
+    max-width: 70%;
+}
+
+.Graphs {
+    transform: translate(320px, 50px);
     border-style: solid;
     border-width: 5px;
     max-width: 70%;

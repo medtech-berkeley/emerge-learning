@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import {NavBar} from "./NavBar";
 import {UserInfo} from "./UserInfo";
 import {Badges} from "./Badges";
+import {Graphs} from "./Graphs";
 // import {Container} from "reactstrap";
 // import {NavBar} from "./NavBar";
 // import {Router, Route} from "react-router";
@@ -16,6 +17,7 @@ export class MainDashboard extends React.Component {
                 <NavBar/>
                 <UserInfo/>
                 <Badges/>
+                <Graphs/>
 			</div>
 		);
 	}
