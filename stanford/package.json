@@ -2,7 +2,7 @@
   "name": "stanford-quiz",
   "version": "1.0.0",
   "description": "Quiz software for Stanford Department of International Emergency Medicine",
-  "main": "./user_profile/assets/js/index.jsx",
+  "main": "./frontend/assets/js/index.jsx",
   "scripts": {
     "build": "webpack --config webpack.config.js --progress --colors",
     "build-production": "webpack --config webpack.prod.config.js --progress --colors",

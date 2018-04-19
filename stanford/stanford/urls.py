@@ -15,8 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from user_profile.views import profile
-from frontend.views import index
+from frontend.views import index, profile
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet
 from quiz.views import get_question, submit_answer

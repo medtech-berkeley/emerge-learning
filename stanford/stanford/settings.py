@@ -42,11 +42,10 @@ INSTALLED_APPS = [
     'frontend',
     'webpack_loader',
     'rest_framework',
-    'user_profile'
 ]
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'user_profile/assets'),
+    os.path.join(BASE_DIR, 'frontend/assets'),
 )
 
 WEBPACK_LOADER = {

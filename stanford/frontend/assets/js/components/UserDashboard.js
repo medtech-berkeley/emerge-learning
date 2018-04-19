@@ -1,0 +1,29 @@
+import React from "react";
+// import {CategoriesBox} from "./CategoriesBox"
+import PropTypes from "prop-types";
+import {NavBar} from "./NavBar";
+import {UserInfo} from "./UserInfo";
+import {Badges} from "./Badges";
+import {Graphs} from "./Graphs";
+// import {Container} from "reactstrap";
+// import {NavBar} from "./NavBar";
+// import {Router, Route} from "react-router";
+// import history from "../history";
+
+
+
+export class UserDashboard extends React.Component {
+	render() {
+		return (
+		    <div>
+                <UserInfo user={this.props.user}/>
+                <Badges/>
+                <Graphs/>
+			</div>
+		);
+	}
+}
+//
+// UserDashboard.propTypes = {
+//     user: PropTypes.array
+// };

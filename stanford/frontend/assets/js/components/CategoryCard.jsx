@@ -5,13 +5,13 @@ import PropTypes from "prop-types"
 export class CategoryCard extends React.Component {
 	render() {
 		return (
-			<div class="col-sm-4">
+			<div className="col-sm-4">
 				<Card>
-				    <div class="card-body">
-				      <h4 class="card-title">{this.props.name}</h4>
-				      <p class="card-text">Speak up</p>
-				      <a href="#" class="card-link">Card link</a>
-				      <a href="#" class="card-link">Another link</a>
+				    <div className="card-body">
+				      <h4 className="card-title">{this.props.name}</h4>
+				      <p className="card-text">Speak up</p>
+				      <a href="#" className="card-link">Card link</a>
+				      <a href="#" className="card-link">Another link</a>
 				    </div>
 				</Card>
 			</div>

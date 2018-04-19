@@ -3,8 +3,9 @@ import {CategoriesBox} from "./CategoriesBox"
 import PropTypes from "prop-types"
 import {Container} from "reactstrap";
 import {NavBar} from "./NavBar";
-import {Router, Route} from "react-router";
+import {Router, Route, Switch} from "react-router";
 import history from "../history";
+import {UserDashboard} from "./UserDashboard";
 
 export class MainDashboard extends React.Component {
 	render() {
@@ -13,6 +14,8 @@ export class MainDashboard extends React.Component {
                 <NavBar/>
                 <Container>
                     <Router history={history}>
+					<div>
+					<Switch>
                         <Route exact={true} path="/">
                             <div>
                                 <p>CHALLENGES</p>
@@ -20,6 +23,11 @@ export class MainDashboard extends React.Component {
                                 <CategoriesBox categories={this.props.categories}/>
                             </div>
                         </Route>
+						<Route path="/profile" >
+							<UserDashboard user={this.props.user}/>
+						</Route>
+					</Switch>
+					</div>
                     </Router>
                 </Container>
 			</div>

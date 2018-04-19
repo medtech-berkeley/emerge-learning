@@ -27,7 +27,13 @@ const initialState = {
 		    "end": "2018-02-18T23:11:53.137319Z",
 		    "sponsor": "Stanford EMI",
 		    "is_challenge": false
-		}]
+		}],
+		user: {
+			"name": "Arjun Vasudevan",
+			"username": "onebeat",
+			"location": "Berkeley, CA",
+			"description": "Sophomore at UC Berkeley"
+		}
 	}
 }
 
