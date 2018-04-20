@@ -1,22 +1,13 @@
-.UserInfo {
-    transform: translate(20px, 150px);
-    border-style: solid;
-    border-width: 5px;
-    max-width: 20%;
+.UserInfo img {
+    width: 100%;
 }
 
 .Badges {
-    transform: translate(320px, 12px);
-    border-style: solid;
-    border-width: 5px;
-    max-width: 70%;
+    width: 100%;
 }
 
 .Graphs {
-    transform: translate(320px, 50px);
-    border-style: solid;
-    border-width: 5px;
-    max-width: 70%;
+    width: 100%;
 }
 
 .CategoriesBox {
@@ -30,7 +21,7 @@
 }
 
 .card {
-    box-shadow: 0 3px 6px 0 rgba(0,0,0,0.2);
+    /* box-shadow: 0 3px 6px 0 rgba(0,0,0,0.2); */
     transition: 0.3s;
 }
 

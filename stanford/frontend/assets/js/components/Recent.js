@@ -1,15 +1,15 @@
 import React from "react";
 import {Card, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Button, Container} from "reactstrap";
 
-export class Badges extends React.Component {
+export class Recent extends React.Component {
     render() {
         return (
-            <div className="Badges">
-                <h2>Badges</h2>
+            <div className="Graphs">
+                <h2>Recent</h2>
                 <hr/>
                 <Card>
-                        <div className="card-body">
-                <p>List badges here.</p>
+                    <div className="card-body">
+                <p>Recent activity</p>
                 </div>
                 </Card>
             </div>);

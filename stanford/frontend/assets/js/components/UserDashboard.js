@@ -5,7 +5,9 @@ import {NavBar} from "./NavBar";
 import {UserInfo} from "./UserInfo";
 import {Badges} from "./Badges";
 import {Graphs} from "./Graphs";
-// import {Container} from "reactstrap";
+import {Recent} from "./Recent"
+
+import {Col, Row} from "reactstrap";
 // import {NavBar} from "./NavBar";
 // import {Router, Route} from "react-router";
 // import history from "../history";
@@ -16,9 +18,16 @@ export class UserDashboard extends React.Component {
 	render() {
 		return (
 		    <div>
-                <UserInfo user={this.props.user}/>
-                <Badges/>
-                <Graphs/>
+				<Row>
+				<Col xs="3">
+                	<UserInfo user={this.props.user}/>
+				</Col>
+				<Col>
+					<Row><Badges/></Row>
+					<Row><Graphs data={this.props.data}/></Row>
+					<Row><Recent/></Row>
+				</Col>
+				</Row>
 			</div>
 		);
 	}

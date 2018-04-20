@@ -12,7 +12,8 @@ export class MainDashboard extends React.Component {
 		return (
 		    <div>
                 <NavBar/>
-                <Container>
+				<Container>
+				<div >
                     <Router history={history}>
 					<div>
 					<Switch>
@@ -24,12 +25,18 @@ export class MainDashboard extends React.Component {
                             </div>
                         </Route>
 						<Route path="/profile" >
-							<UserDashboard user={this.props.user}/>
+						<div>
+							<p>PLACEHOLDER</p>
+							<hr />
+							<hr />
+							<UserDashboard user={this.props.user} data={this.props.data}/>
+							</div>
 						</Route>
 					</Switch>
 					</div>
                     </Router>
-                </Container>
+					</div>
+					</Container>
 			</div>
 		);
 	}
