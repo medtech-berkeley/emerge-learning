@@ -7,18 +7,20 @@ export class NavBar extends React.Component {
             <Navbar color="dark" expand="lg" fixed="top">
                 <Container>
                     <Nav>
+                    <NavbarBrand href="/">EMT Learning Platform v0.10</NavbarBrand>
                       <NavItem>
-                        <NavLink href="/profile">Dashboard</NavLink>
+                        <NavLink href="/">Dashboard</NavLink>
                       </NavItem>
                       <NavItem>
-                        <NavLink href="/">Practice</NavLink>
+                        <NavLink href="/profile">Profile</NavLink>
                       </NavItem>
                       <NavItem>
                         <NavLink href="#">Challenge</NavLink>
                       </NavItem>
+                      <NavItem>
+                        <NavLink href="#">Settings</NavLink>
+                      </NavItem>
                     </Nav>
-                </Container>
-                <Container>
                 </Container>
                 <Nav navbar>
                     <Button href="/logout" color="primary" className="navbar-btn">

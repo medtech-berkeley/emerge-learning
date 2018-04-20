@@ -1,6 +1,6 @@
 import React from "react";
 import {Card, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Button, Container} from "reactstrap";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Legend, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export class Graphs extends React.Component {
     render() {
@@ -10,12 +10,12 @@ export class Graphs extends React.Component {
                 <hr/>
                 <Card>
                     <div className="card-body">
-                        <ResponsiveContainer width='100%' height={300}>
+                        <ResponsiveContainer width='100%' height={350}>
                         <LineChart cx="50%" cy="50%" outerRadius="80%" data={this.props.data}>
-                           <XAxis dataKey="day" />
-                           <YAxis/>
+                           <XAxis label={{ value: 'Day', angle: 0, position: 'insideBottom', offset:0 }} dataKey="day" />
+                           <YAxis label={{ value: 'Points', angle: -90, position: 'insideLeft' }} dataKey="points"/>
                            <CartesianGrid strokeDasharray="3 3" />
-                           <Tooltip />
+                          <Tooltip />
                            <Line connectNulls={true} type="monotone" dataKey="points" stroke="black" />
                        </LineChart>
                    </ResponsiveContainer>

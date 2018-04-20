@@ -37,31 +37,31 @@ const initialState = {
 		},
 		data: [{
 			"day": "1",
-			"points": "100"
+			"points": 100
 		},
 		{
 			"day": "2",
-			"points": "180"
+			"points": 180
 		},
 		{
 			"day": "3",
-			"points": "210"
+			"points": 210
 		},
 		{
 			"day": "4",
-			"points": "200"
+			"points": 200
 		},
 		{
 			"day": "5",
-			"points": "100"
+			"points": 100
 		},
 		{
 			"day": "6",
-			"points": "80"
+			"points": 80
 		},
 		{
 			"day": "7",
-			"points": "120"
+			"points": 120
 		}]
 	}
 }

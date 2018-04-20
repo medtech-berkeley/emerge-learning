@@ -13,6 +13,8 @@ export class UserInfo extends React.Component {
         return (
             <div className="UserInfo">
                 <img src={this.props.user.image}></img>
+                <br/>
+                <br/>
                 <Card>
                 <div className="card-body">
                     <h3 className="card-title">{this.props.user.name}</h3>

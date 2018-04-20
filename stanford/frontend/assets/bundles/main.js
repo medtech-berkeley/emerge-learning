@@ -8524,11 +8524,16 @@ var NavBar = exports.NavBar = function (_React$Component) {
                         _reactstrap.Nav,
                         null,
                         _react2.default.createElement(
+                            _reactstrap.NavbarBrand,
+                            { href: "/" },
+                            "EMT Learning Platform v0.10"
+                        ),
+                        _react2.default.createElement(
                             _reactstrap.NavItem,
                             null,
                             _react2.default.createElement(
                                 _reactstrap.NavLink,
-                                { href: "/profile" },
+                                { href: "/" },
                                 "Dashboard"
                             )
                         ),
@@ -8537,8 +8542,8 @@ var NavBar = exports.NavBar = function (_React$Component) {
                             null,
                             _react2.default.createElement(
                                 _reactstrap.NavLink,
-                                { href: "/" },
-                                "Practice"
+                                { href: "/profile" },
+                                "Profile"
                             )
                         ),
                         _react2.default.createElement(
@@ -8549,10 +8554,18 @@ var NavBar = exports.NavBar = function (_React$Component) {
                                 { href: "#" },
                                 "Challenge"
                             )
+                        ),
+                        _react2.default.createElement(
+                            _reactstrap.NavItem,
+                            null,
+                            _react2.default.createElement(
+                                _reactstrap.NavLink,
+                                { href: "#" },
+                                "Settings"
+                            )
                         )
                     )
                 ),
-                _react2.default.createElement(_reactstrap.Container, null),
                 _react2.default.createElement(
                     _reactstrap.Nav,
                     { navbar: true },
@@ -35340,7 +35353,11 @@ var UserDashboard = exports.UserDashboard = function (_React$Component) {
 					_react2.default.createElement(
 						_reactstrap.Col,
 						{ xs: "3" },
-						_react2.default.createElement(_UserInfo.UserInfo, { user: this.props.user })
+						_react2.default.createElement(
+							_reactstrap.Row,
+							null,
+							_react2.default.createElement(_UserInfo.UserInfo, { user: this.props.user })
+						)
 					),
 					_react2.default.createElement(
 						_reactstrap.Col,
@@ -35350,11 +35367,13 @@ var UserDashboard = exports.UserDashboard = function (_React$Component) {
 							null,
 							_react2.default.createElement(_Badges.Badges, null)
 						),
+						_react2.default.createElement("br", null),
 						_react2.default.createElement(
 							_reactstrap.Row,
 							null,
 							_react2.default.createElement(_Graphs.Graphs, { data: this.props.data })
 						),
+						_react2.default.createElement("br", null),
 						_react2.default.createElement(
 							_reactstrap.Row,
 							null,
@@ -35428,6 +35447,8 @@ var UserInfo = exports.UserInfo = function (_React$Component) {
                 "div",
                 { className: "UserInfo" },
                 _react2.default.createElement("img", { src: this.props.user.image }),
+                _react2.default.createElement("br", null),
+                _react2.default.createElement("br", null),
                 _react2.default.createElement(
                     _reactstrap.Card,
                     null,
@@ -35595,12 +35616,12 @@ var Graphs = exports.Graphs = function (_React$Component) {
                         { className: "card-body" },
                         _react2.default.createElement(
                             _recharts.ResponsiveContainer,
-                            { width: "100%", height: 300 },
+                            { width: "100%", height: 350 },
                             _react2.default.createElement(
                                 _recharts.LineChart,
                                 { cx: "50%", cy: "50%", outerRadius: "80%", data: this.props.data },
-                                _react2.default.createElement(_recharts.XAxis, { dataKey: "day" }),
-                                _react2.default.createElement(_recharts.YAxis, null),
+                                _react2.default.createElement(_recharts.XAxis, { label: { value: 'Day', angle: 0, position: 'insideBottom', offset: 0 }, dataKey: "day" }),
+                                _react2.default.createElement(_recharts.YAxis, { label: { value: 'Points', angle: -90, position: 'insideLeft' }, dataKey: "points" }),
                                 _react2.default.createElement(_recharts.CartesianGrid, { strokeDasharray: "3 3" }),
                                 _react2.default.createElement(_recharts.Tooltip, null),
                                 _react2.default.createElement(_recharts.Line, { connectNulls: true, type: "monotone", dataKey: "points", stroke: "black" })
@@ -36134,25 +36155,25 @@ var initialState = {
 		},
 		data: [{
 			"day": "1",
-			"points": "100"
+			"points": 100
 		}, {
 			"day": "2",
-			"points": "180"
+			"points": 180
 		}, {
 			"day": "3",
-			"points": "210"
+			"points": 210
 		}, {
 			"day": "4",
-			"points": "200"
+			"points": 200
 		}, {
 			"day": "5",
-			"points": "100"
+			"points": 100
 		}, {
 			"day": "6",
-			"points": "80"
+			"points": 80
 		}, {
 			"day": "7",
-			"points": "120"
+			"points": 120
 		}]
 	}
 };

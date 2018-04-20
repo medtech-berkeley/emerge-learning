@@ -7,7 +7,7 @@ import {Badges} from "./Badges";
 import {Graphs} from "./Graphs";
 import {Recent} from "./Recent"
 
-import {Col, Row} from "reactstrap";
+import {Button, Col, Row} from "reactstrap";
 // import {NavBar} from "./NavBar";
 // import {Router, Route} from "react-router";
 // import history from "../history";
@@ -20,11 +20,15 @@ export class UserDashboard extends React.Component {
 		    <div>
 				<Row>
 				<Col xs="3">
+					<Row>
                 	<UserInfo user={this.props.user}/>
+					</Row>
 				</Col>
 				<Col>
 					<Row><Badges/></Row>
+					<br/>
 					<Row><Graphs data={this.props.data}/></Row>
+					<br/>
 					<Row><Recent/></Row>
 				</Col>
 				</Row>

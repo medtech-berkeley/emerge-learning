@@ -1,3 +1,7 @@
+.UserInfo {
+    transform: translateX(-15px);
+}
+
 .UserInfo img {
     width: 100%;
 }
