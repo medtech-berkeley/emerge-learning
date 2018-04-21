@@ -2,13 +2,15 @@ import { connect } from 'react-redux'
 import { QuizBase } from '../components/QuizBase'
 
 const mapStateToProps = state => {
-    return {question: state.api.categories};
+    let question = Object.assign({}, state.api.question);
+    question.category = state.category;
+    return question;
 };
 
 const mapDispatchToProps = dispatch => {
     return {};
 };
 
-let MainDashboardApi = connect(mapStateToProps, mapDispatchToProps)(QuizBase);
+let Quiz = connect(mapStateToProps, mapDispatchToProps)(QuizBase);
 
-export default MainDashboardApi;
+export default Quiz;

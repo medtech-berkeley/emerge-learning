@@ -2,6 +2,7 @@ const initialState = {
 	api: {
 		categories: [
 			{
+				"id":0,
 			    "name": "Brain Trauma Practice",
 			    "start": "2018-02-18T23:09:57.383629Z",
 			    "end": "2018-02-18T23:09:57.383654Z",
@@ -12,6 +13,7 @@ const initialState = {
 			    "num_questions": 15
 			},
 			{
+				"id":1,
 			    "name": "Vehicle Collision",
 			    "start": "2018-02-18T23:10:38.287416Z",
 			    "end": "2018-02-18T23:10:38.287431Z",
@@ -22,6 +24,7 @@ const initialState = {
 			   	"num_questions": 13
 			},
 			{
+				"id":2,
 			    "name": "Resuscitation Protocols",
 			    "start": "2018-02-18T23:11:09.668039Z",
 			    "end": "2018-02-18T23:11:09.668060Z",
@@ -32,6 +35,7 @@ const initialState = {
 			    "num_questions": 12
 			},
 			{
+				"id":3,
 			    "name": "All Questions Practice",
 			    "start": "2018-02-18T23:11:53.137297Z",
 			    "end": "2018-02-18T23:11:53.137319Z",
@@ -41,76 +45,6 @@ const initialState = {
 			    "time_limit": 15,
 			    "num_questions": 10
 			}
-		],
-		questions: [
-			{
-
-
-
-			}
-		],
-
-		answers: [
-			{
-		        "id": 1,
-		        "text": "B",
-		        "is_correct": true
-		    },
-		    {
-		        "id": 2,
-		        "text": "A",
-		        "is_correct": false
-		    },
-		    {
-		        "id": 3,
-		        "text": "C",
-		        "is_correct": false
-		    },
-		    {
-		        "id": 4,
-		        "text": "D",
-		        "is_correct": false
-		    },
-		    {
-		        "id": 5,
-		        "text": "E",
-		        "is_correct": false
-		    },
-		    {
-		        "id": 6,
-		        "text": "F",
-		        "is_correct": false
-		    },
-		    {
-		        "id": 7,
-		        "text": "D",
-		        "is_correct": true
-		    },
-		    {
-		        "id": 8,
-		        "text": "A",
-		        "is_correct": false
-		    },
-		    {
-		        "id": 9,
-		        "text": "B",
-		        "is_correct": false
-		    },
-		    {
-		        "id": 10,
-		        "text": "C",
-		        "is_correct": false
-		    },
-		    {
-		        "id": 11,
-		        "text": "E",
-		        "is_correct": false
-		    },
-		    {
-		        "id": 12,
-		        "text": "F",
-		        "is_correct": false
-		    }
 		],
 		user: {
 			"name": "Arjun Vasudevan",
@@ -146,8 +80,14 @@ const initialState = {
 		{
 			"day": "7",
 			"points": 120
-		}]
-	}
+		}],
+		question: {
+			answers: ['Kill her', 'Run away', 'Apply aloe-vera to her gunshot wound', 'Check her vitals'],
+			text: 'You find a woman with blue lips after a loud noise was heard. What do you do?',
+			id: -1,
+		}
+	},
+	category: -1
 }
 
 export function stanfordApp(state = initialState, action) {
