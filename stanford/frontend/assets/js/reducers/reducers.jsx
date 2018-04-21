@@ -39,6 +39,42 @@ const initialState = {
 		    "img_src": "https://i.imgur.com/cx5KGx0.png",
 		    "time_limit": 15,
 		    "num_questions": 10
+		    "is_challenge": false
+		}],
+		user: {
+			"name": "Arjun Vasudevan",
+			"username": "onebeat",
+			"location": "Berkeley, CA",
+			"description": "Sophomore at UC Berkeley",
+			"image": "https://scontent-lax3-2.xx.fbcdn.net/v/t35.18174-12/22092563_1710459192298519_1703759275_o.jpg?_nc_cat=0&oh=8b0dc0707bbddc672f51df34979439c8&oe=5ADB9B11"
+		},
+		data: [{
+			"day": "1",
+			"points": 100
+		},
+		{
+			"day": "2",
+			"points": 180
+		},
+		{
+			"day": "3",
+			"points": 210
+		},
+		{
+			"day": "4",
+			"points": 200
+		},
+		{
+			"day": "5",
+			"points": 100
+		},
+		{
+			"day": "6",
+			"points": 80
+		},
+		{
+			"day": "7",
+			"points": 120
 		}]
 	}
 }

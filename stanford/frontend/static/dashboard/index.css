@@ -1,3 +1,22 @@
+.UserInfo {
+    transform: translateX(-15px);
+}
+
+.UserInfo img {
+    width: 100%;
+}
+
+.Badges {
+    width: 100%;
+}
+
+.Graphs {
+    width: 100%;
+}
+
+.CategoriesBox {
+   margin-top:20px;
+}
 .dashboard {
 	transform: translateY(50%);	
 }
