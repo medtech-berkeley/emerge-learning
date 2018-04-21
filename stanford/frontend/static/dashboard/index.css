@@ -1,3 +1,11 @@
+#dashboard {
+	transform: translateY(5%);
+}
+
+.categoriesBox {
+	margin-top: 35px;
+	margin-bottom: 35px;
+
 .UserInfo {
     transform: translateX(-15px);
 }
