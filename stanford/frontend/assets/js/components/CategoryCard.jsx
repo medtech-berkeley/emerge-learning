@@ -6,24 +6,24 @@ export class CategoryCard extends React.Component {
 	render() {
 		return (
 			<div className="col-sm-4">
-				<div class="card">
-			        <div class="card-body row">
-			            <div class="col-auto">
-			               <img src={this.props.img_src} class="img-fluid" alt=""></img>	
+				<div className="card">
+			        <div className="card-body row">
+			            <div className="col-auto">
+			               <img src={this.props.img_src} className="img-fluid" alt=""/>
 			            </div>
-			                <div class="card-block px-2">
-			                    <h6 class="card-title">
+			                <div className="card-block px-2">
+			                    <h6 className="card-title">
 			                    	{this.props.name}
 			                    	{this.props.is_challenge && 
-			                    	<img src="https://i.imgur.com/NWR88o8.png" class="icon img-fluid" alt=""></img>}
+			                    	<img src="https://i.imgur.com/NWR88o8.png" className="icon img-fluid" alt=""/>}
 			                    </h6>
-			                    <p class="card-text">{
+			                    <p className="card-text">{
 			                    	this.props.num_questions + ' questions. ' +
 			                    	this.props.time_limit + ' minutes.'}
 			                    </p>
-			                    <div class="row">
-			                    	<a href="#" class="btn btn-outline-success">Start Challenge</a>
-			                   		<a href="#" class="btn btn-outline-primary">Info</a>
+			                    <div className="row">
+			                    	<a href="#" className="btn btn-outline-success">Start Challenge</a>
+			                   		<a href="#" className="btn btn-outline-primary">Info</a>
 			                   	</div>
 			                </div>
 			        </div>

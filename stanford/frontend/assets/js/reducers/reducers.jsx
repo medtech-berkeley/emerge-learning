@@ -38,7 +38,7 @@ const initialState = {
 		    "is_challenge": false,
 		    "img_src": "https://i.imgur.com/cx5KGx0.png",
 		    "time_limit": 15,
-		    "num_questions": 10
+		    "num_questions": 10,
 		    "is_challenge": false
 		}],
 		user: {
