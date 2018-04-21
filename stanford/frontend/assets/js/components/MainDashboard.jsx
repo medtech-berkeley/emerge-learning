@@ -10,17 +10,12 @@ export class MainDashboard extends React.Component {
 	render() {
 		return (
 		    <div>
-                <NavBar/>
                 <Container>
-                    <Router history={history}>
-                        <Route exact={true} path="/">
-                            <div>
-                                <p>CHALLENGES</p>
-                                <hr />
-                                <CategoriesBox categories={this.props.categories}/>
-                            </div>
-                        </Route>
-                    </Router>
+                    <div>
+                        <p>CHALLENGES</p>
+                        <hr />
+                        <CategoriesBox categories={this.props.categories}/>
+                    </div>
                 </Container>
 			</div>
 		);
