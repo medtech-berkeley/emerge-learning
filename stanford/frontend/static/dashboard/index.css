@@ -44,6 +44,10 @@
 }
 
 
-.navbar-brand, .navbar-brand:hover {
+.navbar-brand a, .navbar-brand a:hover, .nav-link {
 	color: white;
+}
+
+.nav-link:hover {
+    color: lightgray;
 }

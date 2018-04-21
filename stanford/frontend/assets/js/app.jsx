@@ -14,6 +14,7 @@ export class App extends React.Component {
                             <NavBar/>
                             <Route exact={true} path="/" component={MainDashboardApi}/>
                             <Route path="/profile" component={UserDashboardApi}/>
+                            <Route path="/quiz/:quizId" component={Quiz}/>
                         </div>
                     </Router>
                 </div>);

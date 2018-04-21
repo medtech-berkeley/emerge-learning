@@ -2,7 +2,7 @@ import React from "react"
 import {Card, CardBody, CardHeader, CardFooter, Container, Row, Col} from "reactstrap";
 import PropTypes from "prop-types"
 
-export class QuizCard extends React.Component {
+export class QuizBase extends React.Component {
 	render() {
 		return (
 			<Container>

@@ -1,6 +1,7 @@
 import React from "react"
 import {Card, CardBody, CardHeader, CardFooter, Container, Button} from "reactstrap";
 import PropTypes from "prop-types"
+import {Link} from "react-router-dom";
 
 export class CategoryCard extends React.Component {
 	render() {
@@ -22,7 +23,7 @@ export class CategoryCard extends React.Component {
 			                    	this.props.time_limit + ' minutes.'}
 			                    </p>
 			                    <div className="row">
-			                    	<a href="#" className="btn btn-outline-success">Start Challenge</a>
+			                    	<Link to={"/quiz/" + this.props.id} className="btn btn-outline-success">Start Challenge</Link>
 			                   		<a href="#" className="btn btn-outline-primary">Info</a>
 			                   	</div>
 			                </div>
