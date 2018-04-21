@@ -1,4 +1,4 @@
-import React from "react"
+	import React from "react"
 import {Card, CardBody, CardHeader, CardFooter, Container, Row} from "reactstrap";
 import {CategoryCard} from "./CategoryCard"
 import PropTypes from "prop-types"

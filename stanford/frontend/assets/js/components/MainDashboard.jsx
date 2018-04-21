@@ -17,7 +17,7 @@ export class MainDashboard extends React.Component {
                         <CategoriesBox categories={this.props.categories}/>
                     </div>
                 </Container>
-			</div>
+</div>
 		);
 	}
 }
