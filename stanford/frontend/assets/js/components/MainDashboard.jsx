@@ -12,17 +12,22 @@ export class MainDashboard extends React.Component {
 		    <div>
                 <NavBar/>
                 <Container>
+                    <div id="dashboard">
                     <Router history={history}>
                         <Route exact={true} path="/">
                             <div>
                                 <p>CHALLENGES</p>
                                 <hr />
-                                <CategoriesBox categories={this.props.categories}/>
+                                <CategoriesBox is_challenge_section={true} categories={this.props.categories}/>
+                                <p>PRACTICE</p>
+                                <hr />
+                                <CategoriesBox is_challenge_section={false} categories={this.props.categories}/>
                             </div>
                         </Route>
                     </Router>
+                    </div>
                 </Container>
-</div>
+            </div>
 		);
 	}
 }
