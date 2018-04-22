@@ -1,18 +1,19 @@
 import React from "react";
 import {Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Button, Container} from "reactstrap";
-
+import {Link} from "react-router-dom";
+// TODO: add Link
 export class NavBar extends React.Component {
     render() {
         return (
             <Navbar color="dark" expand="lg" fixed="top">
                 <Container>
                     <Nav>
-                    <NavbarBrand href="/">EMT Learning Platform v0.10</NavbarBrand>
+                        <div className="navbar-brand"><Link to="/">EMT Learning Platform v0.10</Link></div>
                       <NavItem>
-                        <NavLink href="/">Dashboard</NavLink>
+                          <Link to="/" className="nav-link">Dashboard</Link>
                       </NavItem>
                       <NavItem>
-                        <NavLink href="/profile">Profile</NavLink>
+                          <Link to="/profile" className="nav-link">Profile</Link>
                       </NavItem>
                       <NavItem>
                         <NavLink href="#">Challenge</NavLink>

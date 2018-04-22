@@ -8,8 +8,8 @@ export class Badges extends React.Component {
                 <h2>Badges</h2>
                 <hr/>
                 <Card>
-                        <div className="card-body">
-                <p>List badges here.</p>
+                <div className="card-body">
+                    <p>List badges here.</p>
                 </div>
                 </Card>
             </div>);

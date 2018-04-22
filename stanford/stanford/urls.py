@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from frontend.views import index, profile
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet
@@ -29,8 +29,12 @@ router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
-    path('profile/', profile),
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('api/', include(router.urls)),
+]
+
+
+urlpatterns += [
+    re_path(r'^.*/', index)
 ]

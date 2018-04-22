@@ -2,30 +2,30 @@ import React from "react"
 import {Card, CardBody, CardHeader, CardFooter, Container, Row, Col} from "reactstrap";
 import PropTypes from "prop-types"
 
-export class QuizCard extends React.Component {
+export class QuizBase extends React.Component {
+
+	getColor(i) {
+		let colors = ['red', 'green', 'blue', '#CCCC00'];
+		return colors[i % colors.length];
+	}
+
 	render() {
 		return (
 			<Container>
 				<Card className="question">
 				  <CardBody>
 					<h4 className="card-title">EMT Training: Question 1</h4>
-					<p className="card-text">You find an old woman passed out. Her lips are blue and she is holding some sort of inhaler. What do you do?</p>
-					<Row>
-					  <Col className="answer1 box">
-						Kill her
-					  </Col>
-					  <Col class="answer2 box">
-						Run away
-					  </Col>
-					</Row>
-					<Row>
-					  <Col class="answer3 box">
-						Give CPR
-					  </Col>
-					  <Col class="answer4 box">
-						Apply aloe-vera for a bullet wound to the head
-					  </Col>
-					</Row>
+					<p className="card-text">{this.props.text}</p>
+				  	<Row>
+					  {
+						  this.props.answers.map((answer, i) =>(
+							  <Col md={6} sm={12} key={i}>
+								  <div className={"answer-box"} style={{"background-color": this.getColor(i)}}>
+									  {answer}
+								  </div>
+							  </Col>))
+					  }
+				    </Row>
 				  </CardBody>
 			  </Card>
 			</Container>
@@ -33,8 +33,9 @@ export class QuizCard extends React.Component {
 	}
 }
 
-QuizCard.propTypes = {
+QuizBase.propTypes = {
     id: PropTypes.number,
 	text: PropTypes.string,
-	answers: PropTypes.array
+	answers: PropTypes.array,
+    category: PropTypes.number
 };

@@ -1,6 +1,5 @@
 from .models import Student, Question, Category, Answer, QuestionUserData
 
-
 def get_stats_student(student):
 	stats = {}
 	qud = QuestionUserData.objects.filter(student=student)
