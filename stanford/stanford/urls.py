@@ -32,9 +32,5 @@ urlpatterns = [
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('api/', include(router.urls)),
-]
-
-
-urlpatterns += [
-    re_path(r'^.*/', index)
+    re_path(r'.*', index),
 ]
