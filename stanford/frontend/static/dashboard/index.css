@@ -9,10 +9,12 @@
 
 .UserInfo {
     transform: translateX(-15px);
+    margin-right: 40px;
 }
 
 .UserInfo img {
     width: 100%;
+    height: 50%;
 }
 
 .Badges {
@@ -26,8 +28,8 @@
 .CategoriesBox {
    margin-top:20px;
 }
-.dashboard {
-	transform: translateY(50%);	
+#dashboard {
+	transform: translateY(-2.5%);	
 }
 
 .icon {
@@ -40,16 +42,39 @@
 	transform: translateX(10px);
 }
 
-.card {
+.card-shadow {
     box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.card:hover {
+.card-shadow:hover {
     box-shadow: 0 5px 12px 0 rgba(0,0,0,0.2);
     border-color: green;
+}
+
+.card-answer {
+    transition: 0.3s;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.card-answer:hover {
+    border-color: green;
+}
+
+#mapMarker {
+    margin-right: 10px;
+}
+
+#academy {
+    transform: translateX(-4px);
+    margin-right: 1px;
+}
+
+.UserDashboard {
+    transform: translateY(-25px);
 }
 
 .answer-box {

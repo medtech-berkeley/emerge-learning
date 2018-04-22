@@ -5,18 +5,15 @@ import {Link} from "react-router-dom";
 export class NavBar extends React.Component {
     render() {
         return (
-            <Navbar color="dark" expand="lg" fixed="top">
+            <Navbar color="dark" expand="lg">
                 <Container>
                     <Nav>
-                        <div className="navbar-brand"><Link to="/">EMT Learning Platform v0.10</Link></div>
+                        <div className="navbar-brand"><Link to="/">MTAB</Link></div>
                       <NavItem>
                           <Link to="/" className="nav-link">Dashboard</Link>
                       </NavItem>
                       <NavItem>
                           <Link to="/profile" className="nav-link">Profile</Link>
-                      </NavItem>
-                      <NavItem>
-                        <NavLink href="#">Challenge</NavLink>
                       </NavItem>
                       <NavItem>
                         <NavLink href="#">Settings</NavLink>

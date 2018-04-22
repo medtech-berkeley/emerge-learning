@@ -5,7 +5,7 @@ export class Recent extends React.Component {
     render() {
         return (
             <div className="Graphs">
-                <h2>Recent</h2>
+                <p><b>Recent</b></p>
                 <hr/>
                 <Card>
                     <div className="card-body">

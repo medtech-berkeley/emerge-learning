@@ -19,11 +19,13 @@ export class QuizBase extends React.Component {
 				  	<Row>
 					  {
 						  this.props.answers.map((answer, i) =>(
-							  <Col md={6} sm={12} key={i}>
-								  <div className={"answer-box"} style={{"background-color": this.getColor(i)}}>
-									  {answer}
+						  <Col md={6} sm={12} key={i}>
+							  <div class="card card-answer">
+								  <div class="card-body">
+								    <p class="card-text">{answer}</p>
 								  </div>
-							  </Col>))
+								</div>
+						  </Col>))
 					  }
 				    </Row>
 				  </CardBody>
@@ -39,3 +41,7 @@ QuizBase.propTypes = {
 	answers: PropTypes.array,
     category: PropTypes.number
 };
+
+{/*<div className={"answer-box"} style={{"background-color": this.getColor(i)}}>
+									  {answer}
+								  </div>*/}

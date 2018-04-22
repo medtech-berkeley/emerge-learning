@@ -12,11 +12,10 @@ import {Button, Col, Container, Row} from "reactstrap";
 // import {Router, Route} from "react-router";
 // import history from "../history";
 
-
-
 export class UserDashboard extends React.Component {
 	render() {
 		return (
+			<div class="UserDashboard">
 		    <Container>
 				<Row>
 					<Col xs="3">
@@ -39,6 +38,7 @@ export class UserDashboard extends React.Component {
 					</Col>
 				</Row>
 			</Container>
+			</div>
 		);
 	}
 }

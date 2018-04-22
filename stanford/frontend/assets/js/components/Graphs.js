@@ -6,7 +6,7 @@ export class Graphs extends React.Component {
     render() {
         return (
             <div className="Graphs">
-                <h2>Graphs</h2>
+                <p><b>Statistics</b></p>
                 <hr/>
                 <Card>
                     <div className="card-body">
@@ -16,7 +16,7 @@ export class Graphs extends React.Component {
                            <YAxis label={{ value: 'Points', angle: -90, position: 'insideLeft' }} dataKey="points"/>
                            <CartesianGrid strokeDasharray="3 3" />
                           <Tooltip />
-                           <Line connectNulls={true} type="monotone" dataKey="points" stroke="black" />
+                           <Line connectNulls={true} type="monotone" dataKey="points" stroke="#82ca9d" />
                        </LineChart>
                    </ResponsiveContainer>
                 </div>

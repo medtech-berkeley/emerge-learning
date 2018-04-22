@@ -9,7 +9,7 @@ export class CategoriesBox extends React.Component {
 			<div className="categoriesBox">
 			<Container>
 				<Row>
-					{this.props.categories.map((category) => <CategoryCard key={category.name} {...category} />)}
+					{this.props.categories.map((category) => (this.props.is_challenge_section === category.is_challenge) && <CategoryCard key={category.name} {...category} />)}
 				</Row>
 			</Container>
 			</div>
