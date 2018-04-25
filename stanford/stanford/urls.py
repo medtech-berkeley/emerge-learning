@@ -19,6 +19,7 @@ from frontend.views import index, profile
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet
 from quiz.views import get_question, submit_answer
+import accounts.views
 
 router = routers.SimpleRouter()
 router.register(r'questions', QuestionViewSet, 'Question')
@@ -32,6 +33,8 @@ urlpatterns = [
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('api/', include(router.urls)),
+    path('signup/', accounts.views.signup, name = 'signup'),
+    path('login/', accounts.views.logins, name = 'login'),
 ]
 
 

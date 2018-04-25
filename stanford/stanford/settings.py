@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'quiz',
     'frontend',
+    'accounts',
     'webpack_loader',
     'rest_framework',
 ]
