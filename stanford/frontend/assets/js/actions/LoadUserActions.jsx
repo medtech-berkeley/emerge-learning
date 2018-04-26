@@ -10,7 +10,7 @@ export function updateUser(user) {
 }
 
 export function refreshUser() {
-	return dispatch => fetch("/api/student", window.getHeader)
+	return dispatch => fetch("/api/students", window.getHeader)
 		.then(r => r.json().then(user => {
 			dispatch(updateUser(user))
 		}));

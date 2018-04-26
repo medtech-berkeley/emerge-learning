@@ -7,6 +7,7 @@ from django.utils import timezone
 
 class Student(models.Model):
     user = models.OneToOneField(User, related_name="student", on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, default="Arjun")
     location = models.CharField(max_length=100)
 
 

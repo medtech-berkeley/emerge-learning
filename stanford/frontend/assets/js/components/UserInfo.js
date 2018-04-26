@@ -10,17 +10,19 @@ import {Card, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Button,
 
 export class UserInfo extends React.Component {
     render() {
+        console.log(this.props.user)
+        console.log(this.props.user[0].name)
         return (
             <div className="UserInfo">
-                <img src={this.props.user.image}/>
+                {/* <img src={this.props.user.image}/> */}
                 <br/>
                 <br/>
                 <Card>
                 <div className="card-body">
-                    <h3 className="card-title">{this.props.user.name}</h3>
-                    <h4>{this.props.user.username}</h4>
-                    <p>{this.props.user.location}</p>
-                    <p>{this.props.user.description}</p>
+                    <h3 className="card-title">{this.props.user[0].name}</h3>
+                    <h4>{this.props.user[0].name}</h4>
+                    <p>{this.props.user[0].location}</p>
+                    <p>{this.props.user[0].description}</p>
                 </div>
                 </Card>
             </div>);

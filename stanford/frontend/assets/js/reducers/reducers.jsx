@@ -48,13 +48,13 @@ const initialState = {
 			    "num_questions": 10
 			}
 		],
-		user: {
+		user: [{
 			"name": "Arjun Vasudevan",
 			"username": "One Beat",
 			"location": "Berkeley, CA",
 			"description": "Sophomore at UC Berkeley",
 			"image": "https://scontent-lax3-2.xx.fbcdn.net/v/t35.18174-12/22092563_1710459192298519_1703759275_o.jpg?_nc_cat=0&oh=8b0dc0707bbddc672f51df34979439c8&oe=5ADB9B11"
-		},
+		}],
 		data: [{
 			"day": "1",
 			"points": 100

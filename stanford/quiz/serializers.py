@@ -5,7 +5,7 @@ from .models import Question, QuestionUserData, Category, Answer, Student
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ('user', 'location')
+        fields = ('user', 'name', 'location')
 
 
 class QuestionUserDataSerializer(serializers.ModelSerializer):
