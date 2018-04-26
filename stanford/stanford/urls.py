@@ -15,9 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from frontend.views import index, profile
+from frontend.views import index
 from rest_framework import routers
-from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet
+from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet
 from quiz.views import get_question, submit_answer
 import accounts.views
 
@@ -26,10 +26,12 @@ router.register(r'questions', QuestionViewSet, 'Question')
 router.register(r'answers', AnswerViewSet, 'Answer')
 router.register(r'categories', CategoryViewSet, 'Category')
 router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData')
+router.register(r'students', QuestionUserDataViewSet, 'Student')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
+    path('profile', index),
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('api/', include(router.urls)),
@@ -39,5 +41,5 @@ urlpatterns = [
 
 
 urlpatterns += [
-    re_path(r'^.*/', index)
+    # re_path(r'^.*/', index)
 ]

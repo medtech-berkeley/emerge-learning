@@ -1,3 +1,5 @@
+import { UPDATE_USER } from "../actions/LoadUserActions"
+
 const initialState = {
 	api: {
 		categories: [
@@ -92,7 +94,13 @@ const initialState = {
 
 export function stanfordApp(state = initialState, action) {
     switch (action.type) {
-        default:
-        	return state;
+        case (UPDATE_USER):
+			let newStateUpdateUser = Object.assign({}, state);
+	    	newStateUpdateUser.api.user = action.user;
+	    	console.log("update jobs");
+	    	console.log(action);
+	    	return newStateUpdateUser;
+		default:
+			return state;
     }
 }

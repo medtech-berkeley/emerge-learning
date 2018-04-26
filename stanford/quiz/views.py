@@ -2,12 +2,16 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Question, QuestionUserData, Category, Student
-from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer
+from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, StudentSerializer
 from .models import Student, Category, Question, Answer, QuestionUserData
 from rest_framework.viewsets import ModelViewSet
 
 
 # TODO: set up permissions for viewsets
+class StudentViewSet(ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
 class QuestionViewSet(ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
