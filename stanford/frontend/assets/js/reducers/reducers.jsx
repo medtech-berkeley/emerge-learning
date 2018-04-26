@@ -99,7 +99,7 @@ export function stanfordApp(state = initialState, action) {
 	    	newStateUpdateUser.api.user = action.user;
 	    	console.log("update jobs");
 	    	console.log(action);
-	    	return newStateUpdateUser;
+			return newStateUpdateUser;
 		default:
 			return state;
     }

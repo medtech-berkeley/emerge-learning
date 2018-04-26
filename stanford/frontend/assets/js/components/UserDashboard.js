@@ -18,7 +18,6 @@ export class UserDashboard extends React.Component {
 
 	componentWillMount() {
 		this.props.refreshUser();
-		console.log("test");
 	}
 
 	render() {
