@@ -18,6 +18,15 @@ window.getHeader = {
     cache: "reload",
 };
 
+window.postFormHeader = {
+    method: 'post',
+    credentials: "same-origin",
+    headers: {
+        "X-CSRFToken": Cookies.get("csrftoken"),
+    },
+    cache: "reload",
+};
+
 window.postHeader = {
     method: 'post',
     credentials: "same-origin",

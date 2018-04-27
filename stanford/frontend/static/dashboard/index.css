@@ -28,6 +28,12 @@
 .CategoriesBox {
    margin-top:20px;
 }
+
+.category-img {
+    transform: translate(15%, 20%);
+    margin-right: 12px;
+}
+
 #dashboard {
 	transform: translateY(-2.5%);	
 }

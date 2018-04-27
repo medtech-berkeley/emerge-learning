@@ -1,14 +1,16 @@
 import { connect } from 'react-redux'
 import { QuizBase } from '../components/QuizBase'
+import { getCurrentQuestion, answerQuestion }from '../actions/Actions'
 
 const mapStateToProps = state => {
-    let question = Object.assign({}, state.api.question);
-    question.category = state.category;
-    return question;
+	return {currentQuestion: state.ui.currentQuestion, categoryId: state.ui.categoryId, complete: state.ui.complete};
 };
 
 const mapDispatchToProps = dispatch => {
-    return {};
+    return {
+    	getCurrentQuestion: (categoryId) => dispatch(getCurrentQuestion(categoryId)),
+    	answerQuestion: (questionId, answerId, categoryId) => dispatch(answerQuestion(questionId, answerId, categoryId))
+    };
 };
 
 let Quiz = connect(mapStateToProps, mapDispatchToProps)(QuizBase);

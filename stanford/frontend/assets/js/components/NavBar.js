@@ -14,7 +14,7 @@ export class NavBar extends React.Component {
                       </NavItem>
                       <NavItem>
                           <Link to="/profile" className="nav-link">Profile</Link>
-                      </NavItem>
+                      </NavItem>  
                       <NavItem>
                         <NavLink href="#">Settings</NavLink>
                       </NavItem>

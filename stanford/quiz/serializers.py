@@ -17,10 +17,11 @@ class QuestionUserDataSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('name', 'start', 'end', 'sponsor', 'is_challenge')
+        fields = ('name', 'start', 'end', 'sponsor', 'is_challenge', 'image')
 
 
 class AnswerSerializer(serializers.ModelSerializer):
+    # TODO: Get rid of is_correct in serializer
     class Meta:
         model = Answer
         fields = ('id', 'text', 'is_correct')

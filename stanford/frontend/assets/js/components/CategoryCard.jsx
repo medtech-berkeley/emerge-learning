@@ -8,27 +8,31 @@ export class CategoryCard extends React.Component {
 		return (
 			<div className="col-sm-4">
 				<div className="card card-shadow">
-			        <div className="card-body row">
-			            <div className="col-auto">
-			               <img src={this.props.img_src} className="img-fluid" alt=""/>
+			        <div className="row no-gutters">
+			            <div className="category-img col-auto">
+			                <img src={this.props.image} className="img-fluid" alt=""/>
 			            </div>
-			                <div className="card-block px-2">
-			                    <h6 className="card-title">
+			            <div className="col">
+			                <div className="card-body">
+			                    <h4 className="card-title">
 			                    	{this.props.name}
 			                    	{this.props.is_challenge && 
 			                    	<img src="https://i.imgur.com/NWR88o8.png" className="icon img-fluid" alt=""/>}
-			                    </h6>
-			                    <p className="card-text">{
-			                    	this.props.num_questions + ' questions. ' +
-			                    	this.props.time_limit + ' minutes.'}
-			                    </p>
+			                    </h4>
+			                    <p className="card-text">{this.props.sponsor}</p>
 			                    <div className="row">
-			                    	<Link to={"/quiz/" + this.props.id} className="btn btn-outline-success">Start Challenge</Link>
+			                    	<Link 
+			                    		to={"/quiz/" + this.props.name} 
+			                    		className="btn btn-outline-success" 
+			                    		onClick={() => this.props.selectCategory(this.props.name)}>
+			                    		{this.props.is_challenge && <div>Start Challenge</div>}{!this.props.is_challenge && <div>Start Practice</div>}
+			                    	</Link>
 			                   		<a href="#" className="btn btn-outline-primary">Info</a>
 			                   	</div>
 			                </div>
+			            </div>
 			        </div>
-		  		</div>
+			  	</div>
 			</div>
 		);
 	}

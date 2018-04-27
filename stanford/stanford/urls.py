@@ -19,6 +19,9 @@ from frontend.views import index, profile
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet
 from quiz.views import get_question, submit_answer
+from django.conf import settings
+from django.conf.urls.static import static
+import os
 
 router = routers.SimpleRouter()
 router.register(r'questions', QuestionViewSet, 'Question')
@@ -32,5 +35,7 @@ urlpatterns = [
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('api/', include(router.urls)),
-    re_path(r'.*', index),
+    # re_path(r'.*', index),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

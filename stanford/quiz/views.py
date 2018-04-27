@@ -49,7 +49,7 @@ def get_question(request):
             question_set = [question for question in Question.objects.filter(category=category)
                             if question not in started_questions]
             if len(question_set) == 0:
-                return JsonResponse(data={'accepted': False, 'reason': 'No new questions available'})
+                return JsonResponse(data={'accepted': True, 'completed': True})
             question = question_set[0]
             # create QuestionUserData as user has started to answer question
             question_data = QuestionUserData.objects.create(student=student, question=question)

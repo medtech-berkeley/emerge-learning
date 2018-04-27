@@ -16,6 +16,7 @@ class Category(models.Model):
     end = models.DateTimeField()
     sponsor = models.CharField(max_length=50)
     is_challenge = models.BooleanField()
+    image = models.ImageField(upload_to="category_images", default='default.jpg')
 
     def __str__(self):
         return self.name
