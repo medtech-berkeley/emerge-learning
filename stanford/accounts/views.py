@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from quiz.models import Student
 
 # Create your views here.
 def signup(request):
@@ -11,8 +12,12 @@ def signup(request):
                 return render(request, 'accounts/signup.html', {'error':'Username has already been taken.'})
             except User.DoesNotExist:
                 user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
+                student = Student.objects.get(user=user)
+                student.name = request.POST['name']
+                student.image = request.POST['image']
+                student.save()
                 login(request, user)
-                return render(request, 'accounts/signup.html')
+                return render(request, '../../frontend/templates/index.html')
         else:
             return render(request, 'accounts/signup.html', {'error':'Passwords didn\'t match'})
     else:

@@ -6,6 +6,7 @@ import history from "./history";
 import {Router, Route, Switch} from "react-router-dom";
 import UserDashboardApi from "./containers/UserDashboardApi";
 import Quiz from "./containers/Quiz";
+import Settings from "./containers/SettingsContainer";
 
 export class App extends React.Component {
     render() {
@@ -16,6 +17,7 @@ export class App extends React.Component {
                             <div className="content-area">
                                 <Route exact={true} path="/" component={MainDashboardApi}/>
                                 <Route path="/profile" component={UserDashboardApi}/>
+                                <Route path="/settings" component={Settings}/>
                                 <Route path="/quiz/:quizId" component={Quiz}/>
                             </div>
                         </div>

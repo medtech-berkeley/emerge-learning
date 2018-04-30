@@ -19,7 +19,7 @@ export class NavBar extends React.Component {
                         <NavLink href="#">Challenge</NavLink>
                       </NavItem>
                       <NavItem>
-                        <NavLink href="#">Settings</NavLink>
+                        <NavLink href="/settings">Settings</NavLink>
                       </NavItem>
                     </Nav>
                 </Container>

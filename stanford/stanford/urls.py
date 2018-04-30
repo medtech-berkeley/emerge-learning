@@ -20,6 +20,9 @@ from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet
 from quiz.views import get_question, submit_answer
 import accounts.views
+from django.conf.urls.static import static
+from django.conf import settings
+import os
 
 router = routers.SimpleRouter()
 router.register(r'questions', QuestionViewSet, 'Question')
@@ -31,13 +34,19 @@ router.register(r'students', StudentViewSet, 'Student')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
-    path('profile', index),
+    path('profile/', index),
+    path('settings/', index),
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('api/', include(router.urls)),
     path('signup/', accounts.views.signup, name = 'signup'),
     path('login/', accounts.views.logins, name = 'login'),
 ]
+# + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 urlpatterns += [

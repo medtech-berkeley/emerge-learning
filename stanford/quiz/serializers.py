@@ -1,11 +1,18 @@
 from rest_framework import serializers
 from .models import Question, QuestionUserData, Category, Answer, Student
+from django.contrib.auth.models import User
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'email')
 
 class StudentSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
     class Meta:
         model = Student
-        fields = ('user', 'name', 'location')
+        fields = ('user', 'name', 'location', 'description', 'image')
 
 
 class QuestionUserDataSerializer(serializers.ModelSerializer):
