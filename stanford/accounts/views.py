@@ -14,7 +14,7 @@ def signup(request):
                 user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
                 student = Student.objects.get(user=user)
                 student.name = request.POST['name']
-                student.image = request.POST['image']
+                student.image = request.FILES['image']
                 student.save()
                 login(request, user)
                 return render(request, '../../frontend/templates/index.html')

@@ -14,7 +14,7 @@ export class UserInfo extends React.Component {
         console.log(this.props.user[0].user)
         return (
             <div className="UserInfo">
-                {/* <img src={this.props.user.image}/> */}
+                <img src={this.props.user[0].image}/>
                 <br/>
                 <br/>
                 <Card>

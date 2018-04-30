@@ -11,8 +11,8 @@ def index(request):
             student.location = request.POST['location']
         if request.POST['description']:
             student.description = request.POST['description']
-        if request.POST['image']:
-            student.image = request.POST['image']
+        if request.FILES['image']:
+            student.image = request.FILES['image']
         student.save()
         return render(request, 'index.html')
     else:
