@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+<<<<<<< HEAD
+=======
+from quiz.models import Student
+>>>>>>> react-profile
 
 # Create your views here.
 def signup(request):
@@ -13,6 +17,12 @@ def signup(request):
                 user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
                 login(request, user)
                 return render(request, 'accounts/signup.html')
+                student = Student.objects.get(user=user)
+                student.name = request.POST['name']
+                student.image = request.FILES['image']
+                student.save()
+                login(request, user)
+                return render(request, '../../frontend/templates/index.html')
         else:
             return render(request, 'accounts/signup.html', {'error':'Passwords didn\'t match'})
     else:

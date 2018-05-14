@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'quiz',
     'accounts'
     'frontend',
+    'accounts',
     'webpack_loader',
     'rest_framework',
     'django_extensions'
@@ -137,3 +138,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")

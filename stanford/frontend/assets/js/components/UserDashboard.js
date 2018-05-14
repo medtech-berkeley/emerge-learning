@@ -13,6 +13,11 @@ import {Button, Col, Container, Row} from "reactstrap";
 // import history from "../history";
 
 export class UserDashboard extends React.Component {
+
+	componentWillMount() {
+		this.props.refreshUser();
+	}
+
 	render() {
 		return (
 			<div class="UserDashboard">

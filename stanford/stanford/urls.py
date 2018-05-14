@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from frontend.views import index, profile
+from frontend.views import index
 from rest_framework import routers
-from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet
+from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet
 from quiz.views import get_question, submit_answer
 from django.conf import settings
 from django.conf.urls.static import static
+import accounts.views
+from django.conf import settings
 import os
 
 router = routers.SimpleRouter()
@@ -28,13 +30,18 @@ router.register(r'questions', QuestionViewSet, 'Question')
 router.register(r'answers', AnswerViewSet, 'Answer')
 router.register(r'categories', CategoryViewSet, 'Category')
 router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData')
+router.register(r'students', StudentViewSet, 'Student')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
+    path('profile/', index),
+    path('settings/', index),
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('api/', include(router.urls)),
+        path('signup/', accounts.views.signup, name = 'signup'),
+    path('login/', accounts.views.logins, name = 'login'),
     # re_path(r'.*', index),
 ]
 

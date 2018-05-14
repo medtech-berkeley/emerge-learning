@@ -1,14 +1,26 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 
-
 class Student(models.Model):
-    user = models.OneToOneField(User, related_name="student", on_delete=models.CASCADE)
-    location = models.CharField(max_length=100)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, default="Enter Name")
+    location = models.CharField(max_length=100, default="Enter location")
+    description = models.CharField(max_length=500, default="Enter description")
+    image = models.ImageField(upload_to='profile_images', blank=True)
 
+    def __str__(self):
+        return self.user.username
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            student = Student.objects.create(user=instance)
+            student.save()
 
 class Category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
@@ -57,4 +69,3 @@ class QuestionUserData(models.Model):
 
     class Meta:
         unique_together = ('question', 'student')
-
