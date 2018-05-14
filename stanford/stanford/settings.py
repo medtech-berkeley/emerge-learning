@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR, "media")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -25,7 +27,7 @@ SECRET_KEY = 'b=#*95)h(w6_kk@=s5gw8yvi$1%o)x@=6+re376xnd#088^525'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0','localhost']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', '*']
 
 
 # Application definition
@@ -39,7 +41,22 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'quiz',
     'accounts'
+    'frontend',
+    'webpack_loader',
+    'rest_framework',
+    'django_extensions'
 ]
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'frontend/assets'),
+)
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

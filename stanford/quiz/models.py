@@ -11,11 +11,12 @@ class Student(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, primary_key=True)
     start = models.DateTimeField()
     end = models.DateTimeField()
     sponsor = models.CharField(max_length=50)
     is_challenge = models.BooleanField()
+    image = models.ImageField(upload_to="category_images", default='default.jpg')
 
     def __str__(self):
         return self.name
@@ -25,6 +26,7 @@ class Question(models.Model):
     text = models.CharField(max_length=300)
     category = models.ForeignKey(Category, related_name="questions", on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
+    max_time = models.DurationField()
 
     def __str__(self):
         return self.category.name + " - Question " + str(self.id)
@@ -40,14 +42,19 @@ class Answer(models.Model):
 
 
 class QuestionUserData(models.Model):
+    """
+    Stores student-specific metadata for each question. Time it took to complete, what the student answered, etc
+    """
+
     student = models.ForeignKey(Student, related_name="question_data", on_delete=models.DO_NOTHING)
     question = models.ForeignKey(Question, related_name="question_data", on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, null=True, related_name="question_data", on_delete=models.CASCADE)
     time_started = models.DateTimeField(default=timezone.now)
-    is_done = models.BooleanField(default=False)
+    time_completed = models.DateTimeField(null=True)
 
     def __str__(self):
         return "Question " + str(self.question.id) + " Data - " + self.student.user.username
 
     class Meta:
         unique_together = ('question', 'student')
+
