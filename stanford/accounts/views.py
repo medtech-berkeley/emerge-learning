@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from quiz.models import Student
@@ -13,13 +13,14 @@ def signup(request):
             except User.DoesNotExist:
                 user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
                 login(request, user)
-                return render(request, 'accounts/signup.html')
                 student = Student.objects.get(user=user)
                 student.name = request.POST['name']
-                student.image = request.FILES['image']
+                if request.FILES['image']:
+                    student.image = request.FILES['image']
                 student.save()
                 login(request, user)
-                return render(request, '../../frontend/templates/index.html')
+                return redirect('login')
+                # return render(request, 'accounts/login.html')
         else:
             return render(request, 'accounts/signup.html', {'error':'Passwords didn\'t match'})
     else:
@@ -29,8 +30,7 @@ def logins(request):
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is not None:
             login(request, user)
-            return render(request, 'accounts/signup.html', {'error':'Correct log in'})
-            # Redirect to a success page.
+            return redirect('home')
         else:
             return render(request, 'accounts/login.html', {'error':'Incorrect password or username'})
     else:
@@ -38,4 +38,4 @@ def logins(request):
 
 def logout_view(request):
     logout(request)
-    return render(request, 'accounts/login.html')
+    return redirect('login')
