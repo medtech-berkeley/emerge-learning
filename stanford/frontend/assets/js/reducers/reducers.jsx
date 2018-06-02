@@ -1,11 +1,5 @@
-import { UPDATE_USERS, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED } from "../actions/Actions"
-import { UPDATE_USER } from "../actions/LoadUserActions"
-
-const initialState = {
-	api: {
-		categories: [],
-		users: [],
-		questionUserData: []
+import { UPDATE_USERS, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED } from "../actions/Actions";
+import { UPDATE_USER } from "../actions/LoadUserActions";
 
 const initialState = {
 	api: {
@@ -166,8 +160,6 @@ export function stanfordApp(state = initialState, action) {
     		let newStateUpdateCC = Object.assign({}, state);
 	    	newStateUpdateCC.ui.complete = true;
 	    	return newStateUpdateCC;
-        default:
-        	return state;
         case (UPDATE_USER):
 			let newStateUpdateUser = Object.assign({}, state);
 	    	newStateUpdateUser.api.user = action.user;
