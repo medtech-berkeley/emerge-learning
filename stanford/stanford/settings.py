@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'quiz',
-    'accounts'
     'frontend',
     'accounts',
     'webpack_loader',
