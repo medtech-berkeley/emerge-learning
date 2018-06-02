@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 export class NavBar extends React.Component {
     render() {
         return (
-            <Navbar color="dark" expand="lg">
+            <Navbar color="primary" expand="lg">
                 <Container>
                     <Nav>
                         <div className="navbar-brand"><Link to="/">MTAB</Link></div>
