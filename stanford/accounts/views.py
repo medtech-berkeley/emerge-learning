@@ -15,7 +15,7 @@ def signup(request):
                 User.objects.get(username = request.POST['username'])
                 return render(request, 'accounts/signup.html', {'error':'Username has already been taken.'})
             except User.DoesNotExist:
-                # try:
+                try:
                     user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
                     login(request, user)
                     student = Student.objects.get(user=user)
@@ -31,9 +31,8 @@ def signup(request):
                     student.save()
                     login(request, user)
                     return redirect('login')
-                # except:
-                #     return render(request, 'accounts/signup.html', {'error':'ERROR'})
-                # return render(request, 'accounts/login.html')
+                except:
+                    return render(request, 'accounts/signup.html', {'error':'ERROR'})
         else:
             return render(request, 'accounts/signup.html', {'error':'Passwords didn\'t match'})
     else:
