@@ -4,7 +4,17 @@ import { UPDATE_USER } from "../actions/LoadUserActions";
 const initialState = {
 	api: {
 		categories: [],
-		user: [],
+		user: [{
+			"user": {
+	            "username": "",
+	            "password": "",
+	            "email": ""
+	        },
+	        "name": "",
+	        "location": "",
+	        "description": "",
+	        "image": ""
+    	}],
 		data: [{
 			"day": "1",
 			"points": 100
