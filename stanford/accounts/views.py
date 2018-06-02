@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from quiz.models import Student
 
 # Create your views here.
@@ -35,3 +35,7 @@ def logins(request):
             return render(request, 'accounts/login.html', {'error':'Incorrect password or username'})
     else:
         return render(request, 'accounts/login.html')
+
+def logout_view(request):
+    logout(request)
+    return render(request, 'accounts/login.html')
