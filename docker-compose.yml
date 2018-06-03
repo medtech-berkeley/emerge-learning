@@ -11,7 +11,7 @@ services:
       - interfaceserver
   interfaceserver:
     build: .
-    command: /stanford/entrypoint-interface.sh
+    command: /entry/entrypoint-interface.sh
     user: stanford
     working_dir: /stanford
     expose:
@@ -22,10 +22,10 @@ services:
       - database
 #      - redis
     volumes:
-      - static:/stanford/static
+      - static:/static
 #  workerserver:
 #    build: .
-#    command: /stanford/entrypoint-worker.sh
+#    command: /entry/entrypoint-worker.sh
 #    user: stanford
 #    working_dir: /stanford
 #    env_file:

@@ -14,7 +14,7 @@ services:
       context: .
       args:
         user_id: 1000
-    command: /stanford/entrypoint-interface.sh
+    command: /entry/entrypoint-interface.sh
     user: stanford
     working_dir: /stanford
     expose:
@@ -25,7 +25,8 @@ services:
       - database
 #      - redis
     volumes:
-      - static:/stanford/static
+      - static:/static
+      - ./stanford:/stanford
   database:
     image: postgres:9.5
 #  redis:

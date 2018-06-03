@@ -12,13 +12,12 @@ RUN useradd -u $user_id --system stanford && \
     mkdir /stanford && \
     chown stanford:stanford /stanford
 
-ADD requirements.txt /stanford/requirements.txt
-RUN pip install -r /stanford/requirements.txt
+COPY requirements.txt /stanford/requirements.txt
+RUN pip install --upgrade pip && pip install -r /stanford/requirements.txt
 
 COPY --chown=stanford:stanford ./stanford/ /stanford/
-ADD --chown=stanford:stanford docker/entrypoint-*.sh /stanford/
-RUN mkdir /stanford/static
-RUN chown stanford:stanford /stanford/static
+ADD --chown=stanford:stanford docker/entrypoint-*.sh /entry/
+RUN mkdir /static && chown stanford:stanford /static
 
 
 USER stanford
