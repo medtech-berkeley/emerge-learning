@@ -12,8 +12,8 @@
   "license": "",
   "devDependencies": {
     "babel": "^6.23.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
@@ -26,6 +26,7 @@
     "webpack-dev-server": "^2.9.7"
   },
   "dependencies": {
+    "babel-env": "^2.4.1",
     "history": "^4.7.2",
     "js-cookie": "^2.2.0",
     "package.json": "^2.0.1",
@@ -35,14 +36,15 @@
     "react-progress-bar": "^0.1.0",
     "react-progress-bar.js": "git://github.com/squarecat/react-progressbar.js.git",
     "react-redux": "^5.0.7",
+    "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-settings-pane": "^0.1.5",
     "react-spring": "^4.2.1",
     "react-state-animation": "^0.1.0",
-    "reactstrap": "^5.0.0-beta.3",
+    "reactstrap": "^5.0.0",
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0",
-    "whatwg-fetch": "^2.0.3"
+    "redux-thunk": "^2.3.0",
+    "whatwg-fetch": "^2.0.4"
   }
 }
