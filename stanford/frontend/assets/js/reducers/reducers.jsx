@@ -3,12 +3,6 @@ import { UPDATE_USER } from "../actions/LoadUserActions"
 
 const initialState = {
 	api: {
-		categories: [],
-		users: [],
-		questionUserData: []
-
-const initialState = {
-	api: {
 		categories: [
 			{
 				"id":0,
