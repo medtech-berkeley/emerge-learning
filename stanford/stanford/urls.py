@@ -21,7 +21,7 @@ from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, Question
 from quiz.views import get_question, submit_answer
 from django.conf import settings
 from django.conf.urls.static import static
-import accounts.views
+from accounts.views import signup, logins, logout_view
 from django.conf import settings
 import os
 
@@ -34,14 +34,15 @@ router.register(r'students', StudentViewSet, 'Student')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index),
+    path('', index, name = 'home'),
     path('profile/', index),
     path('settings/', index),
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('api/', include(router.urls)),
-        path('signup/', accounts.views.signup, name = 'signup'),
-    path('login/', accounts.views.logins, name = 'login'),
+    path('signup/', signup, name = 'signup'),
+    path('login/', logins, name = 'login'),
+    path('logout/', logout_view, name='logout')
     # re_path(r'.*', index),
 ]
 

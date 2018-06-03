@@ -10,10 +10,9 @@ import {Card, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Button,
 
 export class UserInfo extends React.Component {
     render() {
-        console.log("here")
-        console.log(this.props.user[0].user)
         return (
             <div className="UserInfo">
+
                 <img src={this.props.user[0].image}/>
                 <br/>
                 <br/>
@@ -38,6 +37,7 @@ export class UserInfo extends React.Component {
             </div>);
     }
 }
+
 //
 // UserInfo.propTypes = {
 //     user: PropTypes.array
