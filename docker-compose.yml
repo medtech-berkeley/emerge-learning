@@ -1,0 +1,41 @@
+version: '2'
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/nginx:/etc/nginx/conf.d
+      - static:/static
+    depends_on:
+      - interfaceserver
+  interfaceserver:
+    build: .
+    command: /entry/entrypoint-interface.sh
+    user: stanford
+    working_dir: /stanford
+    expose:
+      - "8000"
+    env_file:
+      - docker/docker.env
+    depends_on:
+      - database
+#      - redis
+    volumes:
+      - static:/static
+#  workerserver:
+#    build: .
+#    command: /entry/entrypoint-worker.sh
+#    user: stanford
+#    working_dir: /stanford
+#    env_file:
+#      - docker/docker.env
+#    depends_on:
+#      - database
+#      - redis
+  database:
+    image: postgres:9.5
+#  redis:
+#    image: redis:3.0-alpine
+volumes:
+   static:

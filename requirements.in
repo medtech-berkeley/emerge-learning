@@ -1,0 +1,7 @@
+django
+django-webpack-loader
+psycopg2-binary
+djangorestframework
+django-oauth-toolkit
+django-cors-middleware
+Pillow
