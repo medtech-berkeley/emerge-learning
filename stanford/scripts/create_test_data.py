@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 def run():
 		
 	# student = Student.objects.create(user=arjunsv, location="Berkeley")
-
 	circulation_category = Category.objects.create(name="Circulation", start=datetime.now(), end=datetime(2020,9,16), sponsor="Stanford University", is_challenge=True)
 	ems_knowledge_category = Category.objects.create(name="EMS Knowledge", start=datetime.now(), end=datetime(2020,9,16), sponsor="Stanford University", is_challenge=False)
 	

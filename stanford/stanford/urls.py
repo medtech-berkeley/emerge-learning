@@ -34,7 +34,7 @@ router.register(r'students', StudentViewSet, 'Student')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name = 'home'),
+    path('', index, name = 'dashboard'),
     path('profile/', index),
     path('settings/', index),
     path('quiz/question', get_question),
