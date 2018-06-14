@@ -5,3 +5,4 @@ djangorestframework
 django-oauth-toolkit
 django-cors-middleware
 Pillow
+django-jenkins
