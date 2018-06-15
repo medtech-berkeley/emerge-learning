@@ -23,11 +23,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'quiz',
-    'frontend',
-    'accounts',
     'webpack_loader',
     'rest_framework',
+    'django_jenkins',
+    'quiz',
+    'frontend',
+    'accounts'
 ]
 
 
