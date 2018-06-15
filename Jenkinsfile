@@ -3,8 +3,6 @@ pipeline {
   stages {
     stage('Set up') {
       steps {
-        sh 'ls -la /var/run/'
-        sh 'docker ps'
         sh 'python3 try_build.py'
       }
     }

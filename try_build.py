@@ -3,6 +3,9 @@ import os
 import sys
 import subprocess
 
+if os.system('docker-compose build') == 1:
+	sys.exit(1)
+
 up_proc = subprocess.Popen(['docker-compose', 'run', 'interfaceserver'], stdout=subprocess.PIPE)
 
 while True:
