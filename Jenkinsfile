@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Set up') {
       steps {
-        sh 'whoami'
+        sh 'ps aux'
         sh 'python3 try_build.py'
       }
     }
