@@ -3,13 +3,13 @@ pipeline {
   stages {
     stage('Set up') {
       steps {
-        sh 'exec python3 try_build.py'
+        sh 'whoami'
+        sh 'python3 try_build.py'
       }
     }
     stage('Run tests') {
       steps {
-        sh '''docker-compose -f testing.yml up -d
-'''
+        sh 'docker-compose -f testing.yml up -d'
         sh 'docker-compose exec interfaceserver python3 manage.py jenkins --with-coverage'
       }
     }
