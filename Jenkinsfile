@@ -3,8 +3,7 @@ pipeline {
   stages {
     stage('Set up') {
       steps {
-        sh 'ls -la'
-        sh 'exec python3 try_build.sh'
+        sh 'exec python3 try_build.py'
       }
     }
     stage('Run tests') {
