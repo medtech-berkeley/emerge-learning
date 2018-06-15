@@ -16,6 +16,7 @@ COPY requirements.txt /stanford/requirements.txt
 RUN pip install --upgrade pip && pip install -r /stanford/requirements.txt
 
 COPY --chown=stanford:stanford ./stanford/ /stanford/
+COPY --chown=stanford:stanford ./run_tests.sh /stanford/
 ADD --chown=stanford:stanford docker/entrypoint-*.sh /entry/
 RUN mkdir /static && chown stanford:stanford /static
 

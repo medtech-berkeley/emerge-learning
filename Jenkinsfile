@@ -9,7 +9,7 @@ pipeline {
     stage('Run tests') {
       steps {
         sh 'docker-compose -f testing.yml up -d'
-        sh 'docker-compose exec interfaceserver python3 manage.py jenkins --with-coverage'
+        sh 'docker-compose exec interfaceserver run_tests.sh'
       }
     }
     stage('Collect and Publish Reports') {
