@@ -1,12 +1,14 @@
-from .models import Question, Category, QuestionUserData, Answer, Student
+import datetime
+import pytz
 from unittest import skip
+
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.utils import timezone
-import datetime
-from .sheetreader import Sheet
-from .utils import get_stats_student, get_stats_question_total
 
+from .sheetreader import Sheet
+from .models import Question, Category, QuestionUserData, Answer, Student
+from .utils import get_stats_student, get_stats_question_total
 
 @skip
 class SheetsTestCase(TestCase):
@@ -32,8 +34,7 @@ class SheetsTestCase(TestCase):
 
 
 class QuizTestCase(TestCase):
-    @classmethod
-    def setUpClass(self):
+    def setUp(self):
         cat1 = Category.objects.create(name="cat1", start=timezone.now(),
                                        end=timezone.now(), sponsor="none", is_challenge=False)
 
@@ -247,11 +248,12 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], True)
 
     def test_answer_late(self):
+        # ptvsd.break_into_debugger()
         response = self.client.get("/quiz/question", {'category': 'cat1'})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         user_data = QuestionUserData.objects.get(question = question, student=self.student)
-        user_data.time_started = datetime.datetime.min
+        user_data.time_started = timezone.datetime(1, 1, 1, 0, 0, tzinfo=pytz.utc)
         user_data.save()
 
         answer = question.answers.filter(is_correct=True).first()
@@ -309,7 +311,6 @@ class QuizTestCase(TestCase):
         answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
         answer_json = answer_response.json()
 
-        print(get_stats_student(self.student))
         self.assertEqual(3, get_stats_student(self.student)['num_correct'])
 
     def test_stats_question_total(self):
@@ -326,7 +327,6 @@ class QuizTestCase(TestCase):
 
         response = self.client.get("/quiz/question", {'category': 'cat2'})
         question_id = response.json()['id']
-        print(response.json())
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=False).first()
 
@@ -339,7 +339,6 @@ class QuizTestCase(TestCase):
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
 
-        print(get_stats_question_total(question))
         self.assertEqual(3, get_stats_question_total(question)['num_correct'])
 
 
