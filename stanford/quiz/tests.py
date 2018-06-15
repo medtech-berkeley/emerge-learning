@@ -11,8 +11,8 @@ from .utils import get_stats_student, get_stats_question_total
 @skip
 class SheetsTestCase(TestCase):
     """ Tests that sheetreader.py creates correct Question and Answer models """
-
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         self.test_sheet = Sheet('1_RkDeLX5G-AphCnvX5bFPmGDn6dScItfB7r_PnKdOpY')
         self.test_sheet.sheet_to_models()
 
@@ -32,7 +32,8 @@ class SheetsTestCase(TestCase):
 
 
 class QuizTestCase(TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         cat1 = Category.objects.create(name="cat1", start=timezone.now(),
                                        end=timezone.now(), sponsor="none", is_challenge=False)
 
@@ -90,7 +91,9 @@ class QuizTestCase(TestCase):
         self.questions = [c1_q1, c1_q2, c1_q3, c2_q1, c2_q2, c2_q3, c3_q1, c3_q2]
         self.client = Client()
         user = User.objects.create_user(username="sean", password="nah", email="test@testing.com")
-        self.student = Student.objects.create(user=user, location="London Bridge")
+        self.student = Student.objects.get(user=user)
+        self.student.location="London Bridge"
+        self.student.save()
         self.client.login(username="sean", password="nah")
 
     def test_get_question_basic(self):
