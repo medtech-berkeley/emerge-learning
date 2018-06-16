@@ -12,6 +12,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '=)')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', True)
 DOCKER = os.environ.get('DJANGO_DOCKER', False)
+TESTING = sys.argv[1:2] == ['test']
 
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'interfaceserver']
 
@@ -92,8 +93,11 @@ DATABASES = {
             'PORT': '5432',
         }
     }
-# Password validation
-# https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
+
+if TESTING:
+    PASSWORD_HASHERS = [
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    ]
 
 REDIS_HOST = 'redis' if DOCKER else 'localhost'
 RQ_QUEUES = {

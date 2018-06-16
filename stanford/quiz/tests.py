@@ -1,6 +1,7 @@
 import datetime
 import pytz
 from unittest import skip
+from secrets import token_hex
 
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
@@ -90,12 +91,17 @@ class QuizTestCase(TestCase):
 
         self.categories = [cat1, cat2, cat3]
         self.questions = [c1_q1, c1_q2, c1_q3, c2_q1, c2_q2, c2_q3, c3_q1, c3_q2]
-        self.client = Client()
-        user = User.objects.create_user(username="sean", password="nah", email="test@testing.com")
-        self.student = Student.objects.get(user=user)
-        self.student.location="London Bridge"
-        self.student.save()
-        self.client.login(username="sean", password="nah")
+        self.client, self.student = self._create_client_and_student("sean", "nah", "London Bridge")
+
+    @staticmethod
+    def _create_client_and_student(username, password, location):
+        client = Client()
+        user = User.objects.create_user(username=username, password=password)
+        student = Student.objects.get(user=user)
+        student.location = location
+        student.save()
+        client.login(username=username, password=password)
+        return client, student
 
     def test_get_question_basic(self):
         response = self.client.get("/quiz/question", {'category': 'cat1'})
@@ -136,7 +142,7 @@ class QuizTestCase(TestCase):
         response = self.client.get("/quiz/question", {'category': 'cat1'})
         # self.assertEqual(response.status_code, 204)
         question = response.json()
-        self.assertEqual(question['accepted'], False)
+        self.assertEqual(question['completed'], True)
 
     def test_answer_basic(self):
         response = self.client.get("/quiz/question", {'category': 'cat1'})
@@ -313,7 +319,7 @@ class QuizTestCase(TestCase):
 
         self.assertEqual(3, get_stats_student(self.student)['num_correct'])
 
-    def test_stats_question_total(self):
+    def test_stats_question_total_single(self):
         response = self.client.get("/quiz/question", {'category': 'cat1'})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -324,34 +330,33 @@ class QuizTestCase(TestCase):
 
         self.assertEqual(1, get_stats_question_total(question)['num_correct'])
 
+    def test_stats_question_total_multi_user(self):
+        # assumes questions are issued in the same order across multiple students
+        NUM_STUDENTS = 10
+        # create students and clients
+        clients, students = [self.client], [self.student]
 
-        response = self.client.get("/quiz/question", {'category': 'cat2'})
+        for _ in range(NUM_STUDENTS - 1):
+            client, student = self._create_client_and_student(token_hex(4), token_hex(4), token_hex(4))
+            clients.append(client)
+            students.append(student)
+
+        for i, client in enumerate(clients):
+            response = client.get("/quiz/question", {'category': 'cat1'})
+            question_id = response.json()['id']
+            question = Question.objects.get(id=question_id)
+            answer = question.answers.filter(is_correct=True).first()
+
+            answer_response = client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+            answer_json = answer_response.json()
+            self.assertEqual(i + 1, get_stats_question_total(question)['num_correct'])
+
+    def test_stats_question_total_null(self):
+        response = self.client.get("/quiz/question", {'category': 'cat1'})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
-        answer = question.answers.filter(is_correct=False).first()
 
-        answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
-        answer_json = answer_response.json()
-
-        # test multiple open at same time
-        response = self.client.get("/quiz/question", {'category': 'cat2'})
-        question_id = response.json()['id']
-        question = Question.objects.get(id=question_id)
-        answer = question.answers.filter(is_correct=True).first()
-
-        self.assertEqual(3, get_stats_question_total(question)['num_correct'])
-
-
-        response2 = self.client.get("/quiz/question", {'category': 'cat3'})
-        question_id2 = response2.json()['id']
-        question2 = Question.objects.get(id=question_id2)
-        answer2 = question2.answers.filter(is_correct=True).first()
-
-        answer_response2 = self.client.post("/quiz/answer", {'question': question_id2, 'answer': answer2.id})
-        answer_json2 = answer_response2.json()
-
-        answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
-        answer_json = answer_response.json()
+        self.assertEqual(0, get_stats_question_total(question)['num_correct'])
 
     def test_stats_category(self):
         pass 
