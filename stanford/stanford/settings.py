@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'oauth2_provider',
     'django_jenkins',
+    'django_extensions',
     'quiz',
     'frontend',
     'accounts'

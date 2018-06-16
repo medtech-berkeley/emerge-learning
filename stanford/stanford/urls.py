@@ -31,18 +31,19 @@ router.register(r'answers', AnswerViewSet, 'Answer')
 router.register(r'categories', CategoryViewSet, 'Category')
 router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData')
 router.register(r'students', StudentViewSet, 'Student')
+router.register('question')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name = 'dashboard'),
+    path('', index, name='dashboard'),
     path('profile/', index),
     path('settings/', index),
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('api/', include(router.urls)),
-    path('signup/', signup, name = 'signup'),
-    path('login/', logins, name = 'login'),
-    path('logout/', logout_view, name='logout')
+    path('signup/', signup, name='signup'),
+    path('login/', logins, name='login'),
+    path('logout/', logout_view, name='logout'),
     # re_path(r'.*', index),
 ]
 
