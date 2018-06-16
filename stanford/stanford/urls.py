@@ -34,6 +34,7 @@ router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData'
 router.register(r'students', StudentViewSet, 'Student')
 router.register(r'data', StudentsStatsViewSet, 'StudentStats')
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='dashboard'),
