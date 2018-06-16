@@ -42,6 +42,15 @@
 
 
 <div class="login">
+  {% if error %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong> {{error}} </strong>
+
+    </div>
+  {% endif %}
 <div class="card" style="width: 18rem;">
   <div class="card-body" style="text-align: center">
     <h5 class="card-title">Log In</h5>

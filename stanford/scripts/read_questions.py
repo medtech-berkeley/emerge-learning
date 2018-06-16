@@ -17,4 +17,4 @@ def run():
 					Answer.objects.create(text=answer, is_correct=False, question=question)
 		else:
 			rownum += 1
-		
+
