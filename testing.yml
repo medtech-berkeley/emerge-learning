@@ -23,7 +23,7 @@ services:
 #      - redis
     volumes:
       - static:/static
-      - ./reports:/reports
+      - ./reports:/stanford/reports
 #  workerserver:
 #    build: .
 #    command: /entry/entrypoint-worker.sh
