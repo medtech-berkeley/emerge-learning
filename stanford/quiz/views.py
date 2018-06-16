@@ -7,6 +7,7 @@ from .models import Student, Category, Question, Answer, QuestionUserData
 from django.contrib.auth.models import User
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
+from quiz.utils import get_stats_student
 
 
 # TODO: set up permissions for viewsets
@@ -47,19 +48,20 @@ class StudentsStatsViewSet(ViewSet):
         students_stats = []
         students = Student.objects.all()
         for student in students:
-            stats = {}
-            qud = QuestionUserData.objects.filter(student=student)
-            stats['student'] = student.name
-            stats['questions_answered'] = qud.count()
-            stats['num_correct'] = qud.filter(answer__is_correct=True).count()
-            stats['num_incorrect'] = stats['questions_answered'] - stats['num_correct']
+            stats = get_stats_student(student)
             students_stats.append(stats)
         
         serializer = DataSerializer(instance=students_stats, many=True)
         return Response(serializer.data)
 
-    
+    def retrieve(self, request, pk=None):
+        student_stats = []
+        student = Student.objects.get(user=request.user)
+        stats = get_stats_student(student)
+        student_stats.append(stats)
 
+        serializer = DataSerializer(instance=student_stats, many=True)
+        return Response(serializer.data)
 
 @login_required
 def get_question(request):
