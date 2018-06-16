@@ -21,8 +21,7 @@ from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, Question
 from quiz.views import get_question, submit_answer
 from django.conf import settings
 from django.conf.urls.static import static
-from accounts.views import signup, logins
-from django.contrib.auth import logout
+from accounts.views import signup, logins, logout_view
 from django.conf import settings
 import os
 
@@ -43,7 +42,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('signup/', signup, name = 'signup'),
     path('login/', logins, name = 'login'),
-    path('logout/', logout, name='logout')
+    path('logout/', logout_view, name='logout')
     # re_path(r'.*', index),
 ]
 
