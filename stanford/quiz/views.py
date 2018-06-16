@@ -2,10 +2,12 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Question, QuestionUserData, Category, Student
-from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, StudentSerializer, UserSerializer
+from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, StudentSerializer, UserSerializer, DataSerializer
 from .models import Student, Category, Question, Answer, QuestionUserData
 from django.contrib.auth.models import User
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet
+from rest_framework.response import Response
+from quiz.utils import get_stats_student
 
 
 # TODO: set up permissions for viewsets
@@ -18,7 +20,6 @@ class StudentViewSet(ModelViewSet):
         user=self.request.user
         queryset = Student.objects.filter(user=user)
         return queryset
-
 
 class QuestionViewSet(ModelViewSet):
     queryset = Question.objects.all()
@@ -39,6 +40,28 @@ class QuestionUserDataViewSet(ModelViewSet):
     queryset = QuestionUserData.objects.all()
     serializer_class = QuestionUserDataSerializer
 
+
+class StudentsStatsViewSet(ViewSet):
+    serializer_class = DataSerializer
+
+    def list(self, request):
+        students_stats = []
+        students = Student.objects.all()
+        for student in students:
+            stats = get_stats_student(student)
+            students_stats.append(stats)
+        
+        serializer = DataSerializer(instance=students_stats, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        student_stats = []
+        student = Student.objects.get(user=request.user)
+        stats = get_stats_student(student)
+        student_stats.append(stats)
+
+        serializer = DataSerializer(instance=student_stats, many=True)
+        return Response(serializer.data)
 
 @login_required
 def get_question(request):

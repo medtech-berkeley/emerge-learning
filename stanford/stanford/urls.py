@@ -17,12 +17,13 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from frontend.views import index
 from rest_framework import routers
-from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet
+from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet, StudentsStatsViewSet
 from quiz.views import get_question, submit_answer
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import signup, logins, logout_view
 from django.conf import settings
+from quiz.utils import get_stats_student
 import os
 
 router = routers.SimpleRouter()
@@ -31,6 +32,8 @@ router.register(r'answers', AnswerViewSet, 'Answer')
 router.register(r'categories', CategoryViewSet, 'Category')
 router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData')
 router.register(r'students', StudentViewSet, 'Student')
+router.register(r'data', StudentsStatsViewSet, 'StudentStats')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
