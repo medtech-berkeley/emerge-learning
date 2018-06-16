@@ -4,6 +4,7 @@ pipeline {
     stage('Set up') {
       steps {
         sh 'python3 try_build.py'
+        sh 'mkdir reports && chmod -R 777 reports'
       }
     }
     stage('Run tests') {
@@ -23,6 +24,7 @@ pipeline {
     always {
       sh 'docker-compose down'
       cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, cleanupMatrixParent: true, deleteDirs: true)
+
     }
 
   }
