@@ -61,7 +61,7 @@ def get_stats_location_category(category, location, date=None):
     return stats
 
 
-def get_stats_question_location(question, location, date=None):
+def get_stats_location_question(question, location, date=None):
     if date is None:
         date = timezone.now()
 
