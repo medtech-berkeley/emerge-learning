@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { UserDashboard } from '../components/UserDashboard'
 import { refreshUser } from '../actions/LoadUserActions'
+import { refreshData } from '../actions/DataActions'
 
 const mapStateToProps = state => {
     return {user: state.api.user, data: state.api.data};
@@ -9,6 +10,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
     return {
         refreshUser: () => dispatch(refreshUser()),
+        refreshData: () => dispatch(refreshData())
     };
 };
 

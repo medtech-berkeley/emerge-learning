@@ -2,7 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Question, QuestionUserData, Category, Student
-from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, StudentSerializer, UserSerializer, DataSerializer
+from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, StudentSerializer, UserSerializer, StudentStatsSerializer
 from .models import Student, Category, Question, Answer, QuestionUserData
 from django.contrib.auth.models import User
 from rest_framework.viewsets import ModelViewSet, ViewSet
@@ -42,7 +42,7 @@ class QuestionUserDataViewSet(ModelViewSet):
 
 
 class StudentsStatsViewSet(ViewSet):
-    serializer_class = DataSerializer
+    serializer_class = StudentStatsSerializer
 
     def list(self, request):
         students_stats = []
@@ -51,7 +51,7 @@ class StudentsStatsViewSet(ViewSet):
             stats = get_stats_student(student)
             students_stats.append(stats)
         
-        serializer = DataSerializer(instance=students_stats, many=True)
+        serializer = StudentStatsSerializer(instance=students_stats, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
@@ -60,7 +60,7 @@ class StudentsStatsViewSet(ViewSet):
         stats = get_stats_student(student)
         student_stats.append(stats)
 
-        serializer = DataSerializer(instance=student_stats, many=True)
+        serializer = StudentStatsSerializer(instance=student_stats, many=True)
         return Response(serializer.data)
 
 @login_required

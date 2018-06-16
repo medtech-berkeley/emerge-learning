@@ -15,11 +15,11 @@ import {Button, Col, Container, Row} from "reactstrap";
 export class UserDashboard extends React.Component {
 
 	componentWillMount() {
+		this.props.refreshData();
 		this.props.refreshUser();
 	}
 
 	render() {
-		console.log(this.props);
 		return (
 			<div className="UserDashboard">
 		    <Container>

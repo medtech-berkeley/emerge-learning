@@ -1,5 +1,6 @@
 import { UPDATE_USERS, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED } from "../actions/Actions"
 import { UPDATE_USER } from "../actions/LoadUserActions"
+import { UPDATE_DATA } from "../actions/DataActions"
 
 const initialState = {
 	api: {
@@ -161,11 +162,15 @@ export function stanfordApp(state = initialState, action) {
 	    	newStateUpdateCC.ui.complete = true;
 	    	return newStateUpdateCC;
         case (UPDATE_USER):
-		let newStateUpdateUser = Object.assign({}, state);
+			let newStateUpdateUser = Object.assign({}, state);
 	    	newStateUpdateUser.api.user = action.user;
 	    	console.log("update jobs");
 	    	console.log(action);
 			return newStateUpdateUser;
+		case (UPDATE_DATA):
+			let newStateUpdateData = Object.assign({}, state);
+			newStateUpdateData.api.data = action.data;
+			return newStateUpdateData;
 	default:
 			return state;
     }
