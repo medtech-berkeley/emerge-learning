@@ -2,17 +2,8 @@ pipeline {
   agent any
   stages {
     stage('Set up') {
-      parallel {
-        stage('Set up') {
-          steps {
-            sh 'python3 try_build.py'
-          }
-        }
-        stage('') {
-          steps {
-            cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, cleanupMatrixParent: true, deleteDirs: true)
-          }
-        }
+      steps {
+        sh 'python3 try_build.py'
       }
     }
     stage('Run tests') {
@@ -31,7 +22,7 @@ pipeline {
   post {
     always {
       sh 'docker-compose down'
-
+      cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, cleanupMatrixParent: true, deleteDirs: true)
     }
 
   }
