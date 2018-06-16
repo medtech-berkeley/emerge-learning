@@ -29,8 +29,7 @@ INSTALLED_APPS = [
     'django_jenkins',
     'quiz',
     'frontend',
-    'accounts',
-    
+    'accounts'
 ]
 
 

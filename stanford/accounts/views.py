@@ -36,6 +36,7 @@ def signup(request):
             return render(request, 'accounts/signup.html', {'error':'Passwords didn\'t match'})
     else:
         return render(request, 'accounts/signup.html')
+
 def logins(request):
     if request.method == 'POST':
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
@@ -49,4 +50,4 @@ def logins(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('dashboard')
