@@ -4,7 +4,7 @@ pipeline {
     stage('Set up') {
       steps {
         sh 'python3 try_build.py'
-        sh 'mkdir reports && chmod -R 777 reports'
+        sh 'chmod -R 777 reports'
       }
     }
     stage('Run tests') {
