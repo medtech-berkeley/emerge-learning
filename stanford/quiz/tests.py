@@ -122,8 +122,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(question3['category'], 'cat3')
         self.assertNotEqual(question, question3)
         self.assertNotEqual(question2, question3)
-
-    @skip("failing")
+    
     def test_get_question_all_complete(self):
         questions = []
         for i in range(3):
@@ -314,7 +313,6 @@ class QuizTestCase(TestCase):
 
         self.assertEqual(3, get_stats_student(self.student)['num_correct'])
 
-    @skip("failing")
     def test_stats_question_total(self):
         response = self.client.get("/quiz/question", {'category': 'cat1'})
         question_id = response.json()['id']
