@@ -15,8 +15,8 @@ pipeline {
     }
     stage('Collect and Publish Reports') {
       steps {
-        cobertura(autoUpdateHealth: true, failNoReports: true, failUnstable: true, coberturaReportFile: 'reports/coverage.xml')
         junit 'reports/junit.xml'
+        cobertura(autoUpdateHealth: true, failNoReports: true, failUnstable: true, coberturaReportFile: 'reports/coverage.xml')
       }
     }
   }
