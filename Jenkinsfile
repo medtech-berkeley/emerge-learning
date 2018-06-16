@@ -9,7 +9,7 @@ pipeline {
     stage('Run tests') {
       steps {
         sh 'docker-compose -f testing.yml up -d'
-        sh 'docker-compose exec interfaceserver run_tests.sh'
+        sh 'docker-compose exec -T interfaceserver bash run_tests.sh'
       }
     }
     stage('Collect and Publish Reports') {
@@ -22,6 +22,8 @@ pipeline {
   post {
     always {
       sh 'docker-compose down'
+
     }
+
   }
 }
