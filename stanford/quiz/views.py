@@ -55,13 +55,15 @@ class StudentsStatsViewSet(ViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        student_stats = []
-        student = Student.objects.get(user=request.user)
-        stats = get_stats_student(student)
-        student_stats.append(stats)
+        if pk == 'self':
+            pk = request.user.student.pk
 
-        serializer = DataSerializer(instance=student_stats, many=True)
+        student = Student.objects.get(pk=pk)
+        stats = get_stats_student(student)
+
+        serializer = DataSerializer(instance=stats)
         return Response(serializer.data)
+
 
 @login_required
 def get_question(request):
