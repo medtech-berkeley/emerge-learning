@@ -1,18 +1,20 @@
-from .models import Question, Category, QuestionUserData, Answer, Student
+import datetime
+import pytz
 from unittest import skip
+
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.utils import timezone
-import datetime
-from .sheetreader import Sheet
-from .utils import get_stats_student, get_stats_question_total
 
+from .sheetreader import Sheet
+from .models import Question, Category, QuestionUserData, Answer, Student
+from .utils import get_stats_student, get_stats_question_total
 
 @skip
 class SheetsTestCase(TestCase):
     """ Tests that sheetreader.py creates correct Question and Answer models """
-
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         self.test_sheet = Sheet('1_RkDeLX5G-AphCnvX5bFPmGDn6dScItfB7r_PnKdOpY')
         self.test_sheet.sheet_to_models()
 
@@ -90,7 +92,9 @@ class QuizTestCase(TestCase):
         self.questions = [c1_q1, c1_q2, c1_q3, c2_q1, c2_q2, c2_q3, c3_q1, c3_q2]
         self.client = Client()
         user = User.objects.create_user(username="sean", password="nah", email="test@testing.com")
-        self.student = Student.objects.create(user=user, location="London Bridge")
+        self.student = Student.objects.get(user=user)
+        self.student.location="London Bridge"
+        self.student.save()
         self.client.login(username="sean", password="nah")
 
     def test_get_question_basic(self):
@@ -118,7 +122,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(question3['category'], 'cat3')
         self.assertNotEqual(question, question3)
         self.assertNotEqual(question2, question3)
-
+    
     def test_get_question_all_complete(self):
         questions = []
         for i in range(3):
@@ -244,11 +248,12 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], True)
 
     def test_answer_late(self):
+        # ptvsd.break_into_debugger()
         response = self.client.get("/quiz/question", {'category': 'cat1'})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         user_data = QuestionUserData.objects.get(question = question, student=self.student)
-        user_data.time_started = datetime.datetime.min
+        user_data.time_started = timezone.datetime(1, 1, 1, 0, 0, tzinfo=pytz.utc)
         user_data.save()
 
         answer = question.answers.filter(is_correct=True).first()
@@ -306,7 +311,6 @@ class QuizTestCase(TestCase):
         answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
         answer_json = answer_response.json()
 
-        print(get_stats_student(self.student))
         self.assertEqual(3, get_stats_student(self.student)['num_correct'])
 
     def test_stats_question_total(self):
@@ -323,7 +327,6 @@ class QuizTestCase(TestCase):
 
         response = self.client.get("/quiz/question", {'category': 'cat2'})
         question_id = response.json()['id']
-        print(response.json())
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=False).first()
 
@@ -336,7 +339,6 @@ class QuizTestCase(TestCase):
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
 
-        print(get_stats_question_total(question))
         self.assertEqual(3, get_stats_question_total(question)['num_correct'])
 
 

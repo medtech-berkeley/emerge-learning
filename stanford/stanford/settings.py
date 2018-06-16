@@ -23,11 +23,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'quiz',
-    'frontend',
-    'accounts',
     'webpack_loader',
     'rest_framework',
+    'django_jenkins',
+    'quiz',
+    'frontend',
+    'accounts'
 ]
 
 
@@ -153,7 +154,7 @@ LOGGING = {
     }
 }
 
-AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'guardian.backends.ObjectPermissionBackend')
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

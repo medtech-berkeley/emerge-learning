@@ -11,7 +11,7 @@ services:
       - interfaceserver
   interfaceserver:
     build: .
-    command: /entry/entrypoint-interface.sh
+    command: sleep inf
     user: stanford
     working_dir: /stanford
     expose:
@@ -23,7 +23,7 @@ services:
 #      - redis
     volumes:
       - static:/static
-      - ./reports:/reports
+      - ./reports:/stanford/reports
 #  workerserver:
 #    build: .
 #    command: /entry/entrypoint-worker.sh
