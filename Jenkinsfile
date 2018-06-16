@@ -2,8 +2,17 @@ pipeline {
   agent any
   stages {
     stage('Set up') {
-      steps {
-        sh 'python3 try_build.py'
+      parallel {
+        stage('Set up') {
+          steps {
+            sh 'python3 try_build.py'
+          }
+        }
+        stage('') {
+          steps {
+            cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, cleanupMatrixParent: true, deleteDirs: true)
+          }
+        }
       }
     }
     stage('Run tests') {
