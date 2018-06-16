@@ -18,20 +18,16 @@ export class UserInfo extends React.Component {
                 <br/>
                 <Card>
                 <div className="card-body">
-                    <h3 className="card-title">{this.props.user.name}</h3>
-                    <h4>({this.props.user.username})</h4>
+                    <h3 className="card-title">{this.props.user[0].name}</h3>
+                    <h4>({this.props.user[0].user.username})</h4>
                     <p>
                         <i id="mapMarker" className="fa fa-map-marker"></i>
-                        {this.props.user.location}
+                        {this.props.user[0].location}
                     </p>
                     <p>
                         <i id="academy" className="fa fa-university" aria-hidden="true"></i>
-                        {this.props.user.description}
+                        {this.props.user[0].description}
                     </p>
-                    <h3 className="card-title">{this.props.user[0].name}</h3>
-                    <h4>{this.props.user[0].user.username}</h4>
-                    <p>Location: {this.props.user[0].location}</p>
-                    <p>Description: {this.props.user[0].description}</p>
                 </div>
                 </Card>
             </div>);
