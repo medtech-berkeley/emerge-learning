@@ -126,6 +126,8 @@ const initialState = {
         "max_time": "1 10:00:00"
     },
 		complete: false,
+		num_correct: 0,
+		num_attempted: 0
 	}
 }
 
@@ -156,9 +158,11 @@ export function stanfordApp(state = initialState, action) {
 	    	newStateUpdateSubmitError.api.questionUserData = action.questionUserData;
 	    	return newStateUpdateSubmitError;
     	case (UPDATE_CATEGORY_COMPLETED):
-            console.log("update category completed")
+            console.log("update category completed");
     		let newStateUpdateCC = Object.assign({}, state);
 	    	newStateUpdateCC.ui.complete = true;
+	    	newStateUpdateCC.ui.num_attempted = action.num_attempted;
+	    	newStateUpdateCC.ui.num_correct = action.num_correct;
 	    	return newStateUpdateCC;
         case (UPDATE_USER):
 		let newStateUpdateUser = Object.assign({}, state);

@@ -1,6 +1,8 @@
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+
+from quiz.utils import get_student_category_stats
 from .models import Question, QuestionUserData, Category, Student
 from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, StudentSerializer, UserSerializer, DataSerializer
 from .models import Student, Category, Question, Answer, QuestionUserData
@@ -20,6 +22,7 @@ class StudentViewSet(ModelViewSet):
         user=self.request.user
         queryset = Student.objects.filter(user=user)
         return queryset
+
 
 class QuestionViewSet(ModelViewSet):
     queryset = Question.objects.all()
@@ -85,8 +88,16 @@ def get_question(request):
             started_questions = set(data.question for data in user_data)
             question_set = [question for question in Question.objects.filter(category=category)
                             if question not in started_questions]
+
+            stats = get_student_category_stats(category, student)
             if len(question_set) == 0:
-                return JsonResponse(data={'accepted': True, 'completed': True})
+                response = {'accepted': True,
+                            'completed': True,
+                            'num_attempted': stats['num_attempted'],
+                            'num_correct': stats['num_correct']}
+                print(response)
+                return JsonResponse(data=response)
+
             question = question_set[0]
             # create QuestionUserData as user has started to answer question
             question_data = QuestionUserData.objects.create(student=student, question=question)
