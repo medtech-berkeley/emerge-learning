@@ -5,8 +5,9 @@ from django.utils import timezone
 def get_stats_student(student, date=None):
     if date is None:
         date = timezone.now()
+
     stats = {}
-    qud = QuestionUserData.objects.filter(student=student)
+    qud = QuestionUserData.objects.filter(student=student, time_completed__lte=date)
     stats['student'] = student.name
     stats['questions_answered'] = qud.count()
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
