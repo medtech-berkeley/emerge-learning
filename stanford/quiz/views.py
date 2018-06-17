@@ -60,7 +60,7 @@ class StudentsStatsViewSet(ViewSet):
 
         student = Student.objects.get(pk=pk)
         stats = get_stats_student(student)
-        serializer = StudentStatsSerializer(instance=student_stats)
+        serializer = StudentStatsSerializer(instance=stats)
         return Response(serializer.data)
 
 

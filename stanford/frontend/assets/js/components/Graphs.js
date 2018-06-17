@@ -8,9 +8,9 @@ export class Graphs extends React.Component {
             <div className="Graphs">
                 <p><b>Statistics</b></p>
                 <hr/>
-                <p>Questions Answered: {this.props.data[0].questions_answered}</p>
-                <p>Number Correct: {this.props.data[0].num_correct}</p>
-                <p>Number Incorrect: {this.props.data[0].num_incorrect}</p>
+                <p>Questions Answered: {this.props.data.questions_answered}</p>
+                <p>Number Correct: {this.props.data.num_correct}</p>
+                <p>Number Incorrect: {this.props.data.num_incorrect}</p>
                 <Card>
                     <div className="card-body">
                         <ResponsiveContainer width='100%' height={350}>
