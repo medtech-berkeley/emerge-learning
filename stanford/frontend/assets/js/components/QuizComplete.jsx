@@ -13,7 +13,8 @@ export class QuizComplete extends React.Component {
 				    </h3>
 				  </div>
 				  <div class="card-body">
-				    <h5 class="card-title">You have successfully completed {this.props.categoryId}.</h5>
+                      <h5 class="card-title">You have successfully completed {this.props.categoryId}.</h5>
+                      <h4>Your Score: { this.props.num_correct } / { this.props.num_attempted } </h4>
 				  </div>
 				</div>
 			</Container>
@@ -22,5 +23,7 @@ export class QuizComplete extends React.Component {
 }
 
 QuizComplete.propTypes = {
-    categories: PropTypes.array
+    categoryId: PropTypes.number,
+    num_attempted: PropTypes.number,
+    num_correct: PropTypes.number
 };

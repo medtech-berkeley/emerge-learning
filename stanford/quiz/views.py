@@ -1,6 +1,9 @@
+import pytz
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+
+from quiz.utils import get_student_category_stats
 from .models import Question, QuestionUserData, Category, Student
 from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, StudentSerializer, UserSerializer, StudentStatsSerializer
 from .models import Student, Category, Question, Answer, QuestionUserData
@@ -20,6 +23,7 @@ class StudentViewSet(ModelViewSet):
         user=self.request.user
         queryset = Student.objects.filter(user=user)
         return queryset
+
 
 class QuestionViewSet(ModelViewSet):
     queryset = Question.objects.all()
@@ -45,12 +49,16 @@ class StudentsStatsViewSet(ViewSet):
     serializer_class = StudentStatsSerializer
 
     def list(self, request):
+        date = request.GET.get('date', None)
+        if date is not None:
+            date = timezone.datetime.strptime(date, '%Y-%m-%d').astimezone(pytz.utc)
+
         students_stats = []
         students = Student.objects.all()
         for student in students:
-            stats = get_stats_student(student)
+            stats = get_stats_student(student, date)
             students_stats.append(stats)
-        
+
         serializer = StudentStatsSerializer(instance=students_stats, many=True)
         return Response(serializer.data)
 
@@ -58,8 +66,13 @@ class StudentsStatsViewSet(ViewSet):
         if pk == 'self':
             pk = request.user.student.pk
 
+        date = request.GET.get('date', None)
+        if date is not None:
+            date = timezone.datetime.strptime(date, '%Y-%m-%d').astimezone(pytz.utc)
+
         student = Student.objects.get(pk=pk)
-        stats = get_stats_student(student)
+        stats = get_stats_student(student, date)
+
         serializer = StudentStatsSerializer(instance=stats)
         return Response(serializer.data)
 
@@ -84,8 +97,15 @@ def get_question(request):
             started_questions = set(data.question for data in user_data)
             question_set = [question for question in Question.objects.filter(category=category)
                             if question not in started_questions]
+
+            stats = get_student_category_stats(category, student)
             if len(question_set) == 0:
-                return JsonResponse(data={'accepted': True, 'completed': True})
+                response = {'accepted': True,
+                            'completed': True,
+                            'num_attempted': stats['num_attempted'],
+                            'num_correct': stats['num_correct']}
+                return JsonResponse(data=response)
+
             question = question_set[0]
             # create QuestionUserData as user has started to answer question
             question_data = QuestionUserData.objects.create(student=student, question=question)

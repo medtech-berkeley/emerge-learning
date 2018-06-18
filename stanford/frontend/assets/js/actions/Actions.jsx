@@ -1,12 +1,12 @@
 import 'whatwg-fetch';
 
-export const UPDATE_USERS = 'UPDATE_USERS'
-export const UPDATE_CATEGORIES = 'UPDATE_CATEGORIES'
-export const UPDATE_QUESTION_USER_DATA = 'UPDATE_CATEGORIES'
+export const UPDATE_USERS = 'UPDATE_USERS';
+export const UPDATE_CATEGORIES = 'UPDATE_CATEGORIES';
+export const UPDATE_QUESTION_USER_DATA = 'UPDATE_CATEGORIES';
 export const UPDATE_CURRENT_QUESTION = 'UPDATE_CURRENT_QUESTION';
-export const SELECT_CATEGORY = 'SELECT_CATEGORY'
+export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const UPDATE_SUBMIT_ERROR = 'DISPLAY_SUBMIT_ERROR';
-export const UPDATE_CATEGORY_COMPLETED = 'DISPLAY_CATEGORY_COMPLETED'
+export const UPDATE_CATEGORY_COMPLETED = 'DISPLAY_CATEGORY_COMPLETED';
 
 export function getUsers() {
 	return dispatch => fetch("/api/users", window.getHeader)
@@ -60,12 +60,12 @@ export function selectCategory(categoryId) {
 export function getCurrentQuestion(categoryId) {
 	return dispatch => fetch("/quiz/question?category="+categoryId, window.getHeader)
 		.then(r => r.json().then(question => {
-			console.log(question)
+			console.log(question);
 			if (question.completed) {
-				console.log("category completed.")
-				dispatch(updateCategoryCompleted(categoryId))
+				console.log("category completed.");
+				dispatch(updateCategoryCompleted(categoryId, question.num_attempted, question.num_correct))
 			} else {
-				console.log("dispatch update current question.")
+				console.log("dispatch update current question.");
 				dispatch(updateCurrentQuestion(question))
 			}
 		}));
@@ -102,10 +102,12 @@ export function updateSubmitError(reason) {
 	}
 }
 
-export function updateCategoryCompleted(categoryId) {
+export function updateCategoryCompleted(categoryId, num_attempted, num_correct) {
 	return {
 		type: UPDATE_CATEGORY_COMPLETED,
-		categoryId
+		categoryId,
+		num_attempted,
+		num_correct
 	}
 }
 

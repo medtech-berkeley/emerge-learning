@@ -41,10 +41,9 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = ('id', 'category', 'text', 'answers', 'created', 'max_time')
 
+
 class StudentStatsSerializer(serializers.Serializer):
     student = serializers.CharField()
     questions_answered = serializers.IntegerField(read_only=True)
     num_correct = serializers.IntegerField(read_only=True)
     num_incorrect = serializers.IntegerField(read_only=True)
-
-#     
