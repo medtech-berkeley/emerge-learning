@@ -22,9 +22,10 @@ class QuestionUserDataSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='text', allow_null=True)
     class Meta:
         model = Category
-        fields = ('name', 'start', 'end', 'sponsor', 'is_challenge', 'image')
+        fields = ('name', 'start', 'end', 'sponsor', 'is_challenge', 'image', 'tags')
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -41,10 +42,9 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = ('id', 'category', 'text', 'answers', 'created', 'max_time')
 
+
 class StudentStatsSerializer(serializers.Serializer):
     student = serializers.CharField()
     questions_answered = serializers.IntegerField(read_only=True)
     num_correct = serializers.IntegerField(read_only=True)
     num_incorrect = serializers.IntegerField(read_only=True)
-
-#     
