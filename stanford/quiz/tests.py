@@ -353,7 +353,7 @@ class QuizTestCase(TestCase):
 
             # get stats and make sure everyone got it correct
             stats = get_stats_question_total(question)
-            self.assertEqual(i + 1, stats['total_attempts'])
+            self.assertEqual(i + 1, stats['num_attempted'])
             self.assertEqual(i + 1, stats['num_correct'])
             self.assertEqual(0, stats['num_incorrect'])
 
@@ -381,7 +381,7 @@ class QuizTestCase(TestCase):
 
         stats = get_stats_question_total(question)
 
-        self.assertEqual(NUM_STUDENTS, stats['total_attempts'])
+        self.assertEqual(NUM_STUDENTS, stats['num_attempted'])
         self.assertEqual(ceil(NUM_STUDENTS / 2), stats['num_correct'])
         self.assertEqual(NUM_STUDENTS // 2, stats['num_incorrect'])
 
@@ -394,7 +394,7 @@ class QuizTestCase(TestCase):
         stats = get_stats_question_total(question)
         self.assertEqual(0, stats['num_correct'])
         self.assertEqual(0, stats['num_incorrect'])
-        self.assertEqual(0, stats['total_attempts'])
+        self.assertEqual(0, stats['num_attempted'])
 
     def test_stats_category_single_user(self):
         response = self.client.get("/quiz/question", {'category': 'cat1'})
@@ -416,7 +416,7 @@ class QuizTestCase(TestCase):
         self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
         stats = get_stats_category(category=question.category)
-        self.assertEqual(3, stats['total_attempts'])
+        self.assertEqual(3, stats['num_attempted'])
         self.assertEqual(2, stats['num_correct'])
         self.assertEqual(1, stats['num_incorrect'])
 
@@ -449,7 +449,7 @@ class QuizTestCase(TestCase):
                 client.post("/quiz/answer", {'question': question.id, 'answer': answer.id})
 
         stats = get_stats_category(category=question.category)
-        self.assertEqual(NUM_STUDENTS * 2 + ceil(NUM_STUDENTS / 2), stats['total_attempts'])
+        self.assertEqual(NUM_STUDENTS * 2 + ceil(NUM_STUDENTS / 2), stats['num_attempted'])
         self.assertEqual(NUM_STUDENTS + ceil(NUM_STUDENTS / 2), stats['num_correct'])
         self.assertEqual(NUM_STUDENTS, stats['num_incorrect'])
 
@@ -458,7 +458,7 @@ class QuizTestCase(TestCase):
         question = Question.objects.get(id=response.json()['id'])
         
         stats = get_stats_category(category=question.category)
-        self.assertEqual(0, stats['total_attempts'])
+        self.assertEqual(0, stats['num_attempted'])
         self.assertEqual(0, stats['num_correct'])
         self.assertEqual(0, stats['num_incorrect'])
 

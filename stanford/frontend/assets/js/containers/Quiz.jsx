@@ -3,7 +3,7 @@ import { QuizBase } from '../components/QuizBase'
 import { getCurrentQuestion, answerQuestion }from '../actions/Actions'
 
 const mapStateToProps = state => {
-	return {currentQuestion: state.ui.currentQuestion, categoryId: state.ui.categoryId, complete: state.ui.complete};
+	return {...state.ui};
 };
 
 const mapDispatchToProps = dispatch => {
