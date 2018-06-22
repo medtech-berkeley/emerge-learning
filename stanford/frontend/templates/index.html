@@ -7,25 +7,23 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="{% static 'dashboard/index.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
   </head>
   <body>
     	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		  <a class="navbar-brand" href="/">App</a>
+		  <a class="navbar-brand" href="/">MTAB</a>
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		    <span class="navbar-toggler-icon"></span>
 		  </button>
 
 		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 		    <ul class="navbar-nav mr-auto">
-		      <li class="nav-item active">
-		        <a class="nav-link" href="#">About <span class="sr-only">(current)</span></a>
-		      </li>
 		    </ul>
 		    <form action="/login" class="form-inline my-2 my-lg-0" style="transform:translateX(-10px);">
-		      <button type="submit" class="btn btn-primary">Log In</button>
+		      <button type="submit" class="btn btn-outline-primary">Log In</button>
 		    </form>
 		    <form action="/signup" class="form-inline my-2 my-lg-0">
 		      <button type="submit" class="btn btn-primary">Sign Up</button>
@@ -33,10 +31,10 @@
 		  </div>
 		</nav>
 		<div style="position: relative;text-align: center;">
-			<img src="http://www.nationsonline.org/gallery/Nepal/Mera-Peak-Panorama-Nepal.jpg" style="width: 100%; opacity: 0.5;">
+			<img src="https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/on-the-top-of-the-world-2d-landscape-sarah-bank.jpg" style="height: 32rem; width: 100%; opacity: 0.99;">
 			<div style="position: absolute; top: 40%;left: 50%; transform: translate(-50%, -50%);">
 			<br>
-			<h2 style="">Sign up to be an expert EMT!</h2>
+			<h1 id="landing-header" style="">Practice. Learn. Save Lives.</h1>
 			<form style="width: 60%; margin: auto;">
 			  <div class="form-group">
 			    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
@@ -50,9 +48,46 @@
 			  <div class="form-group">
 			    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirm Password">
 			  </div>
-			  <button style="margin-right: 0px; transform: translateX(0px);"type="submit" class="btn btn-primary btn-sm btn-block">Sign Up!</button>
+			  <button style="margin-right: 0px; transform: translateX(0px);"type="submit" class="btn btn-primary btn-block">Sign Up!</button>
 			</form>
 			</div>
 		</div>
+		<!-- Icons Grid -->
+	    <section id="icons-grid" class="features-icons bg-light text-center">
+	      <div class="container">
+	        <div class="row">
+	          <div class="col-lg-4">
+	            <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+	              <div class="features-icons-icon d-flex">
+<!-- 	                <i class="icon-screen-desktop m-auto text-primary"></i>
+ -->				<img id="first-img" src="{% static 'landingpage/img/ambulance.png' %}" alt="ambulance">
+	              </div>
+	              <h3>Learn From Experts</h3>
+	              <p class="lead mb-0">Learn from a curriculum developed by leading Emergency Medicine Doctors at Stanford University.</p>
+	            </div>
+	          </div>
+	          <div class="col-lg-4">
+	            <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+	              <div class="features-icons-icon d-flex">
+<!-- 	                <i src= class="icon-layers m-auto text-primary"></i>
+ -->	               	<img id="second-img" src="{% static 'landingpage/img/linechart.png' %}" alt="linechart">
+	              </div>
+	              <h3>Track Progress</h3>
+	              <p class="lead mb-0">Monitor and track your performance and learning with advanced statistics and data visualizations.</p>
+	            </div>
+	          </div>
+	          <div class="col-lg-4">
+	            <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+	              <div class="features-icons-icon d-flex">
+			        	<img id="third-img" src="{% static 'landingpage/img/trophy.png' %}" alt="coins">
+<!-- 	                <i class="icon-check m-auto text-primary"></i>
+ -->	              </div>
+	              <h3>Win Prizes</h3>
+	              <p class="lead mb-0">Compete for monetary prizes through tests of your knowledge!</p>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </section>
   </body>
 </html>

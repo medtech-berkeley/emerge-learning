@@ -2,6 +2,82 @@ h1, h2 {
     font-family: "Whitney SSm A", "Whitney SSm B", sans-serif;
 }
 
+body {
+    font-family: 'Lato','Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+
+.btn-primary{
+    background-color: #60C470;
+    border-color: #60C470;
+}
+
+.btn-outline-primary {
+    border-color: #60C470;
+    color: #60C470;
+}
+
+.btn-outline-primary:hover {
+    background-color: #3CCF3C;
+    color: white;
+    border-color: #3CCF3C;
+
+}
+
+.btn-primary:hover {
+    background-color: #3CCF3C;
+    border-color: #3CCF3C;
+}
+
+#landing-header {
+    color: white;
+    padding-bottom: 22px;
+}
+
+#icons-grid {
+    padding-top: 50px;
+}
+
+.features-icons {
+  padding-top: 20rem;
+  padding-bottom: 15rem;
+}
+
+.features-icons-icon img {
+    display:block;
+    margin:auto;
+}
+
+#first-img {
+    width:92px;
+    padding-bottom: 8px;
+}
+
+#second-img {
+    width: 92px;
+    padding-bottom: 0px;
+}
+
+#third-img {
+    padding-bottom: 5px;
+}
+
+
+.features-icons .features-icons-item {
+  max-width: 20rem;
+}
+
+.features-icons .features-icons-item .features-icons-icon {
+  height: 7rem;
+}
+
+.features-icons .features-icons-item .features-icons-icon i {
+  font-size: 4.5rem;
+}
+
+.features-icons .features-icons-item:hover .features-icons-icon i {
+  font-size: 5rem;
+}
+
 .navbar-light {
     background-color: #e3f2fd;
 }
