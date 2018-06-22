@@ -22,6 +22,12 @@ class Student(models.Model):
             student = Student.objects.create(user=instance)
             student.save()
 
+class Tag(models.Model):
+    text = models.CharField(max_length=64, primary_key=True)
+
+    def __str__(self):
+        return self.text        
+
 class Category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
     start = models.DateTimeField()
@@ -29,6 +35,7 @@ class Category(models.Model):
     sponsor = models.CharField(max_length=50)
     is_challenge = models.BooleanField()
     image = models.ImageField(upload_to="category_images", default='default.jpg')
+    tags = models.ManyToManyField(Tag, related_name="categories")
 
     def __str__(self):
         return self.name
