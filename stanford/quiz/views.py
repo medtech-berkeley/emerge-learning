@@ -4,13 +4,15 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
 from quiz.utils import get_student_category_stats
+
+from .utils import get_unanswered_questions
 from .models import Question, QuestionUserData, Category, Student
 from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, StudentSerializer, UserSerializer, StudentStatsSerializer
 from .models import Student, Category, Question, Answer, QuestionUserData
 from django.contrib.auth.models import User
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
-from quiz.utils import get_stats_student
+from .utils import get_stats_student
 
 
 # TODO: set up permissions for viewsets
@@ -76,7 +78,6 @@ class StudentsStatsViewSet(ViewSet):
         serializer = StudentStatsSerializer(instance=stats)
         return Response(serializer.data)
 
-
 @login_required
 def get_question(request):
     """
@@ -93,10 +94,7 @@ def get_question(request):
                 return JsonResponse({'accepted': False, 'reason': 'Missing or invalid category in request'}, status=400)
 
             # check for questions user has already started, exclude from final set
-            user_data = QuestionUserData.objects.filter(student=student, question__category=category)
-            started_questions = set(data.question for data in user_data)
-            question_set = [question for question in Question.objects.filter(category=category)
-                            if question not in started_questions]
+            question_set = get_unanswered_questions(student, category)
 
             stats = get_student_category_stats(category, student)
             if len(question_set) == 0:
@@ -178,3 +176,34 @@ def submit_answer(request):
                 return JsonResponse({'accepted': False, 'reason': 'Already answered'})
     else:
         return HttpResponse(status=405)
+
+
+@login_required
+def get_answers(request):
+    if request.method != 'GET':
+        return HttpResponse(status=405)
+
+    student = request.user.student
+    if student:
+        try:
+            category = Category.objects.get(name=request.GET['category'])
+        except (Category.DoesNotExist, KeyError):
+            return JsonResponse({'accepted': False, 'reason': 'Missing or invalid category in request'}, status=400)
+
+        question_set = get_unanswered_questions(student, category)
+        if len(question_set) > 0:
+            return JsonResponse({'accepted': False, 'reason': 'Category has not yet been completed'}, status=400)
+
+        result = []
+        user_data = QuestionUserData.objects.filter(question__category=category, student=student)
+        for qud in user_data:
+            question = {
+                'text': qud.question.text,
+                'answers': {answer.id:answer.text for answer in qud.question.answers.all()},
+                'correct': [answer.id for answer in qud.question.answers.filter(is_correct=True)],
+                'selected': qud.answer.pk if qud.answer else None
+            }
+            result.append(question)
+        return JsonResponse({'accepted': True, 'questions': result})
+
+    return HttpResponse(status=400)

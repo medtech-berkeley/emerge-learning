@@ -82,3 +82,11 @@ def get_student_category_stats(category, student):
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['num_attempted'] - stats['num_correct']
     return stats
+
+
+def get_unanswered_questions(student, category):
+    user_data = QuestionUserData.objects.filter(student=student, question__category=category)
+    started_questions = set(data.question for data in user_data)
+    question_set = [question for question in Question.objects.filter(category=category)
+                    if question not in started_questions]
+    return question_set
