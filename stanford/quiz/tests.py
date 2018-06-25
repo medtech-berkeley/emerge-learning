@@ -475,8 +475,9 @@ class QuizTestCase(TestCase):
             question_id = response.json()['id']
             question = Question.objects.get(id=question_id)
             answer = question.answers.filter(is_correct=True).first()
+            self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
-        response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+        response = self.client.post("/quiz/answers", {'category': 'cat1'})
         self.assertIn(response.status_code, range(200,300))
 
         num_answers = 0
