@@ -5,7 +5,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./config/nginx:/etc/nginx/conf.d
+      - ./docker/config/nginx:/etc/nginx/conf.d
       - static:/static
     depends_on:
       - interfaceserver
