@@ -1,19 +1,12 @@
 version: '2'
 services:
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-    volumes:
-      - ./docker/config/nginx:/etc/nginx/conf.d
-      - static:/static
-    depends_on:
-      - interfaceserver
   interfaceserver:
     build:
       context: .
       args:
         user_id: 1000
+    ports:
+      - "8000:8000"
     command: /entry/entrypoint-interface.sh
     user: stanford
     working_dir: /stanford
