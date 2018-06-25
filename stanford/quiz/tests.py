@@ -477,15 +477,19 @@ class QuizTestCase(TestCase):
             answer = question.answers.filter(is_correct=True).first()
             self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
-        response = self.client.post("/quiz/answers", {'category': 'cat1'})
+        response = self.client.get("/quiz/answers", {'category': 'cat1'})
         self.assertIn(response.status_code, range(200,300))
+        json = response.json()
+        self.assertTrue(json['accepted'])
 
         num_answers = 0
-        for question in response.json():
+        for question in json['questions']:
             num_answers += 1
+            self.assertIn('text', question)
             self.assertIn('answers', question)
             self.assertIn('correct', question)
             self.assertIn('selected', question)
+            self.assertIn(question['selected'], question['correct'])
 
         self.assertEqual(num_questions, num_answers)
 
