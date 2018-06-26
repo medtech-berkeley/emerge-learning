@@ -18,12 +18,12 @@ from django.urls import path, include, re_path
 from frontend.views import index
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet, StudentsStatsViewSet
-from quiz.views import get_question, submit_answer
+from quiz.views import get_question, submit_answer, get_answers
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import signup, logins, logout_view
 from django.conf import settings
-from quiz.utils import get_stats_student
+
 import os
 
 router = routers.SimpleRouter()
@@ -42,6 +42,7 @@ urlpatterns = [
     path('settings/', index),
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
+    path('quiz/answers', get_answers),
     path('api/', include(router.urls)),
     path('signup/', signup, name='signup'),
     path('login/', logins, name='login'),

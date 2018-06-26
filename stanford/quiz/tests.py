@@ -467,3 +467,39 @@ class QuizTestCase(TestCase):
 
     def test_stats_location_category(self):
         pass
+
+    def test_get_completed_answers(self):
+        num_questions = self.categories[0].questions.count()
+        for _ in range(num_questions):
+            response = self.client.get("/quiz/question", {'category': 'cat1'})
+            question_id = response.json()['id']
+            question = Question.objects.get(id=question_id)
+            answer = question.answers.filter(is_correct=True).first()
+            self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+
+        response = self.client.get("/quiz/answers", {'category': 'cat1'})
+        self.assertIn(response.status_code, range(200,300))
+        json = response.json()
+        self.assertTrue(json['accepted'])
+
+        num_answers = 0
+        for question in json['questions']:
+            num_answers += 1
+            self.assertIn('text', question)
+            self.assertIn('answers', question)
+            self.assertIn('correct', question)
+            self.assertIn('selected', question)
+            self.assertIn(question['selected'], question['correct'])
+
+        self.assertEqual(num_questions, num_answers)
+
+    def test_get_completed_answers_fail(self):
+        # start a category
+        self.client.get("/quiz/question", {'category': 'cat1'})
+        # try to get answers
+        response = self.client.get("/quiz/answers", {'category': 'cat1'})
+        self.assertFalse(200 <= response.status_code < 300, msg="Should not be able to get answers for a category "
+                                                                "that is not completed")
+
+
+
