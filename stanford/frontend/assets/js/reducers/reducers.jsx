@@ -1,5 +1,5 @@
 import { UPDATE_USERS, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED } from "../actions/Actions"
-import { UPDATE_USER } from "../actions/LoadUserActions"
+import { UPDATE_STUDENT, UPDATE_STUDENTS } from "../actions/LoadUserActions"
 import { UPDATE_DATA } from "../actions/DataActions"
 
 const initialState = {
@@ -7,47 +7,14 @@ const initialState = {
 		categories: [
 			{
 				"id":0,
-			    "name": "Brain Trauma Practice",
+			    "name": " ",
 			    "start": "2018-02-18T23:09:57.383629Z",
 			    "end": "2018-02-18T23:09:57.383654Z",
-			    "sponsor": "Stanford EMI",
+			    "sponsor": " ",
 			    "is_challenge": false,
-			    "img_src": "https://i.imgur.com/ryjOjG1.png",
+			    "img_src": " ",
 			    "time_limit": 20,
 			    "num_questions": 15
-			},
-			{
-				"id":1,
-			    "name": "Vehicle Collision",
-			    "start": "2018-02-18T23:10:38.287416Z",
-			    "end": "2018-02-18T23:10:38.287431Z",
-			    "sponsor": "Stanford EMI",
-			    "is_challenge": true,
-			   	"img_src": "https://i.imgur.com/p4zFKOJ.png",
-			   	"time_limit": 25,
-			   	"num_questions": 13
-			},
-			{
-				"id":2,
-			    "name": "Resuscitation Protocols",
-			    "start": "2018-02-18T23:11:09.668039Z",
-			    "end": "2018-02-18T23:11:09.668060Z",
-			    "sponsor": "Stanford EMI",
-			    "is_challenge": true,
-			    "img_src": "https://i.imgur.com/sq6ZrRI.png",
-			    "time_limit": 30,
-			    "num_questions": 12
-			},
-			{
-				"id":3,
-			    "name": "All Questions Practice",
-			    "start": "2018-02-18T23:11:53.137297Z",
-			    "end": "2018-02-18T23:11:53.137319Z",
-			    "sponsor": "Stanford EMI",
-			    "is_challenge": false,
-			    "img_src": "https://i.imgur.com/cx5KGx0.png",
-			    "time_limit": 15,
-			    "num_questions": 10
 			}
 		],
 		user: [{
@@ -61,6 +28,17 @@ const initialState = {
 			"description": "Sophomore at UC Berkeley",
 			"image": "https://scontent-lax3-2.xx.fbcdn.net/v/t35.18174-12/22092563_1710459192298519_1703759275_o.jpg?_nc_cat=0&oh=8b0dc0707bbddc672f51df34979439c8&oe=5ADB9B11"
 		}],
+		students: [{
+        "user": {
+            "username": "PLACEHOLDER",
+            "password": "pbkdf2_sha256$100000$g741LHEjcvCh$ISomNy9RhVXJsL25Rwy8SF6MX6wRweM+XKvEClZd/TA=",
+            "email": "arjunsv@berkeley.edu"
+        },
+        "name": "PLACE HOLDER",
+        "location": "Palo Alto",
+        "description": "Student",
+        "image": "http://127.0.0.1:8000/media/profile_images/image.jpg"
+    	}],
 		data: [{
 			"day": "1",
 			"points": 100
@@ -129,15 +107,15 @@ const initialState = {
 		complete: false,
 		num_correct: 0,
 		num_attempted: 0
-	}
+	},
 }
 
 export function stanfordApp(state = initialState, action) {
     switch (action.type) {
-    	case (UPDATE_USERS):
-    		let newStateUpdateUsers = Object.assign({}, state);
-	    	newStateUpdateUsers.api.users = action.users;
-	    	return newStateUpdateUsers;
+    	case (UPDATE_STUDENTS):
+    		let newStateUpdateStudents = Object.assign({}, state);
+	    	newStateUpdateStudents.api.students = action.students;
+	    	return newStateUpdateStudents;
     	case (UPDATE_CATEGORIES):
 			let newStateUpdateCategories = Object.assign({}, state);
 	    	newStateUpdateCategories.api.categories = action.categories;
@@ -159,17 +137,14 @@ export function stanfordApp(state = initialState, action) {
 	    	newStateUpdateSubmitError.api.questionUserData = action.questionUserData;
 	    	return newStateUpdateSubmitError;
     	case (UPDATE_CATEGORY_COMPLETED):
-            console.log("update category completed");
     		let newStateUpdateCC = Object.assign({}, state);
 	    	newStateUpdateCC.ui.complete = true;
 	    	newStateUpdateCC.ui.num_attempted = action.num_attempted;
 	    	newStateUpdateCC.ui.num_correct = action.num_correct;
 	    	return newStateUpdateCC;
-        case (UPDATE_USER):
+        case UPDATE_STUDENT:
 			let newStateUpdateUser = Object.assign({}, state);
 	    	newStateUpdateUser.api.user = action.user;
-	    	console.log("update jobs");
-	    	console.log(action);
 			return newStateUpdateUser;
 		case (UPDATE_DATA):
 			let newStateUpdateData = Object.assign({}, state);

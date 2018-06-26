@@ -6,26 +6,53 @@ body {
     font-family: 'Lato','Helvetica Neue',Helvetica,Arial,sans-serif;
 }
 
-.btn-primary{
-    background-color: #60C470;
-    border-color: #60C470;
+.top-stripe {
+    background-color: #5BC89A;
+    height: 3px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
-.btn-outline-primary {
-    border-color: #60C470;
-    color: #60C470;
-}
-
-.btn-outline-primary:hover {
-    background-color: #3CCF3C;
-    color: white;
-    border-color: #3CCF3C;
-
+.btn-primary {
+    background-color: #71B8F1;
+    border-color: #71B8F1;
 }
 
 .btn-primary:hover {
-    background-color: #3CCF3C;
-    border-color: #3CCF3C;
+    background-color: #71B8F1;
+    border-color: #71B8F1;
+}
+
+.btn-outline-primary {
+    border-color: #71B8F1;
+    color: #71B8F1;
+}
+
+.btn-outline-primary:hover {
+    background-color: #71B8F1;
+    color: white;
+    border-color: #71B8F1;
+}
+
+.btn-success {
+    background-color: #5BC89A;
+    border-color: #5BC89A;
+}
+
+.btn-success:hover {
+    background-color: #77DAA8;
+    border-color: #77DAA8;
+}
+
+.btn-outline-success {
+    border-color: #5BC89A;
+    color: #5BC89A;
+}
+
+.btn-outline-success:hover {
+    background-color: #5BC89A;
+    border-color: #5BC89A;
+    color: white;
 }
 
 #landing-header {
@@ -61,6 +88,37 @@ body {
     padding-bottom: 5px;
 }
 
+.section-text {
+    color: #6B6B6B;
+}
+
+th {
+    color: #7F7F7F;
+}
+
+.leaderboard-rank-0, .leaderboard-rank-1, .leaderboard-rank-2 {
+    color: #5BC89A;
+}
+
+.row-0, .row-1, .row-2{
+    background-color: #F7FFFB;
+}
+
+.icon-img {
+    margin-right: 10px;
+}
+
+.fa-caret-up {
+    color: #5BC89A;
+    padding-right: 5px;
+    transform: translateY(-1px);
+}
+
+.fa-caret-down {
+    color: red;
+    padding-right: 5px;
+    transform: translateY(-1px);
+}
 
 .features-icons .features-icons-item {
   max-width: 20rem;
@@ -80,6 +138,11 @@ body {
 
 .navbar-light {
     background-color: #e3f2fd;
+    -webkit-box-shadow: 0 4px 6px -6px #999;
+    -moz-box-shadow: 0 4px 6px -6px #999;
+    box-shadow: 0 4px 6px -6px #999;
+
+    /* the rest of your styling */
 }
 
 .content-area {
@@ -140,8 +203,8 @@ body {
 }
 
 .card-shadow:hover {
-    box-shadow: 0 5px 12px 0 rgba(0,0,0,0.2);
-    border-color: green;
+    /*    box-shadow: 0 5px 12px 0 rgba(0,0,0,0.2);
+*/    border-color: #5BC89A;
 }
 
 .card-answer {
@@ -166,7 +229,6 @@ body {
 .UserDashboard {
     transform: translateY(-25px);
 }
-
 
 .answer-box {
     border: 1px solid black;

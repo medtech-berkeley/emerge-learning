@@ -1,6 +1,7 @@
 import pytz
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 from quiz.utils import get_student_category_stats
@@ -20,11 +21,15 @@ from .utils import get_stats_student
 class StudentViewSet(ModelViewSet):
     model = Student
     serializer_class = StudentSerializer
+    queryset = Student.objects.all()
 
-    def get_queryset(self):
-        user=self.request.user
-        queryset = Student.objects.filter(user=user)
-        return queryset
+    def retrieve(self, request, pk=None):
+        if pk == 'self':
+            pk = request.user.student.pk
+            
+        student_object = get_object_or_404(Student, pk=pk)
+        serializer = StudentSerializer(instance=student_object)
+        return Response(serializer.data)
 
 
 class QuestionViewSet(ModelViewSet):
