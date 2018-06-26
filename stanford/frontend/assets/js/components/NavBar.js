@@ -5,26 +5,30 @@ import {Link} from "react-router-dom";
 export class NavBar extends React.Component {
     render() {
         return (
-            <Navbar color="primary" expand="lg">
-                <Container>
-                    <Nav>
-                        <div className="navbar-brand"><Link to="/">MTAB</Link></div>
-                      <NavItem>
-                          <Link to="/" className="nav-link">Dashboard</Link>
-                      </NavItem>
-                      <NavItem>
-                          <Link to="/profile" className="nav-link">Profile</Link>
-                      </NavItem>  
-                      <NavItem>
-                        <NavLink href="/settings">Settings</NavLink>
-                      </NavItem>
-                    </Nav>
-                </Container>
-                <Nav navbar>
-                    <Button href="/logout" color="primary" className="navbar-btn">
-                        Logout
-                    </Button>
-                </Nav>
-            </Navbar>);
+          <div>
+          <hr className="top-stripe"/>
+          <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <a className="navbar-brand" href="/"></a>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/#">Dashboard<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/profile">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/settings">Settings</a>
+            </li>
+              </ul>
+            <form action="/logout" className="form-inline my-2 my-lg-0">
+              <button type="submit" className="btn btn-outline-success">Log Out</button>
+            </form>
+          </div>
+        </nav>
+        </div>);
     }
 }
