@@ -184,7 +184,7 @@ def submit_answer(request):
 
 
 @login_required
-def get_answers(request):
+def get_category_results(request):
     if request.method != 'GET':
         return HttpResponse(status=405)
 
@@ -204,11 +204,11 @@ def get_answers(request):
         for qud in user_data:
             question = {
                 'text': qud.question.text,
-                'answers': {answer.id:answer.text for answer in qud.question.answers.all()},
+                'answers': [{"id": answer.id, "text": answer.text} for answer in qud.question.answers.all()],
                 'correct': [answer.id for answer in qud.question.answers.filter(is_correct=True)],
                 'selected': qud.answer.pk if qud.answer else None
             }
             result.append(question)
-        return JsonResponse({'accepted': True, 'questions': result})
+        return JsonResponse({'accepted': True, 'results': result})
 
     return HttpResponse(status=400)
