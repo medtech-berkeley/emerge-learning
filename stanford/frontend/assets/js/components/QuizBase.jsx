@@ -6,16 +6,24 @@ import { QuizComplete } from "./QuizComplete"
 
 export class QuizBase extends React.Component {
 	componentDidMount() {
-		console.log("QuizBase did mount.")
-		console.log(this.props.categoryId)
+		console.log("QuizBase did mount.");
+		console.log(this.props.categoryId);
 		this.props.getCurrentQuestion(this.props.categoryId)
 	}
 
 	render() {
 		return (
 			<div>
-			{!this.props.complete && <QuizQuestion categoryId={this.props.categoryId} currentQuestion={this.props.currentQuestion} answerQuestion={this.props.answerQuestion}/>}
-			{this.props.complete && <QuizComplete categoryId={this.props.categoryId} num_attempted={this.props.num_attempted} num_correct={this.props.num_correct}/>}
+			{!this.props.complete && <QuizQuestion categoryId={this.props.categoryId}
+                                                   text={this.props.currentQuestion.text}
+                                                   answers={this.props.currentQuestion.answers}
+                                                   id={this.props.currentQuestion.id}
+                                                   answerQuestion={this.props.answerQuestion}/>}
+			{this.props.complete && <QuizComplete getResults={this.props.getResults}
+                                                  categoryId={this.props.categoryId}
+                                                  num_attempted={this.props.num_attempted}
+                                                  num_correct={this.props.num_correct}
+                                                  results={ this.props.results }/>}
 			</div>
 		);
 	}
@@ -27,5 +35,9 @@ QuizBase.propTypes = {
 	answers: PropTypes.array,
     category: PropTypes.number,
 	num_attempted: PropTypes.number,
-	num_correct: PropTypes.number
+	num_correct: PropTypes.number,
+	results: PropTypes.array,
+    getCurrentQuestion: PropTypes.func,
+    answerQuestion: PropTypes.func,
+    getResults: PropTypes.func
 };

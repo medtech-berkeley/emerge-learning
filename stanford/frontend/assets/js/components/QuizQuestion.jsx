@@ -8,14 +8,18 @@ export class QuizQuestion extends React.Component {
 			<Container>
 				<Card className="question">
 				  <CardBody>
-					<h4 className="card-title">{this.props.categoryId}: Question 1</h4>
-					<p className="card-text">{this.props.currentQuestion.text}</p>
+                    { this.props.done ? null : <h4 className="card-title">{this.props.categoryId}: Question 1</h4> }
+					<p className="card-text">{this.props.text}</p>
 				  	<Row>
 					  {
-						  this.props.currentQuestion.answers.map((answer, i) =>(
+						  this.props.answers.map((answer, i) =>(
 						  <Col md={6} sm={12} key={i}>
-							  <div className="card card-answer">
-								  <div className="card-body" onClick={() => this.props.answerQuestion(this.props.currentQuestion.id, answer.id, this.props.categoryId)}>
+							  <div className={"card card-answer "
+                                    + (this.props.done && this.props.correct_answers.includes(answer.id) ? "card-answer-correct " : "")
+                                    + (this.props.done && !this.props.correct_answers.includes(answer.id) ? "card-answer-incorrect " : "")
+                                    + (this.props.done && this.props.selected === answer.id ? "card-answer-selected" : "")
+							  }>
+								  <div className="card-body" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
 								    <p className="card-text">{answer.text}</p>
 								  </div>
 								</div>
@@ -33,7 +37,10 @@ QuizQuestion.propTypes = {
     id: PropTypes.number,
 	text: PropTypes.string,
 	answers: PropTypes.array,
-    category: PropTypes.number
+    category: PropTypes.number,
+	correct_answers: PropTypes.array,
+    selected: PropTypes.number,
+    done: PropTypes.bool
 };
 
 {/*<div className={"answer-box"} style={{"background-color": this.getColor(i)}}>
