@@ -7,6 +7,7 @@ export const UPDATE_CURRENT_QUESTION = 'UPDATE_CURRENT_QUESTION';
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const UPDATE_SUBMIT_ERROR = 'DISPLAY_SUBMIT_ERROR';
 export const UPDATE_CATEGORY_COMPLETED = 'DISPLAY_CATEGORY_COMPLETED';
+export const UPDATE_CATEGORY_RESULTS = 'UPDATE_CATEGORY_RESULTS';
 
 export function getUsers() {
 	return dispatch => fetch("/api/users", window.getHeader)
@@ -108,6 +109,21 @@ export function updateCategoryCompleted(categoryId, num_attempted, num_correct) 
 		categoryId,
 		num_attempted,
 		num_correct
+	}
+}
+
+export function getResults(categoryId) {
+	return dispatch => fetch("/quiz/results?category=" + categoryId, window.getHeader)
+	.then(r => r.json().then(json => {
+	    // TODO: add check for accepted
+		dispatch(updateCategoryResults(json.results))
+	}));
+}
+
+export function updateCategoryResults(results) {
+	return {
+		type: UPDATE_CATEGORY_RESULTS,
+		results
 	}
 }
 

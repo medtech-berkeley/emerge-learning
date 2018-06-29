@@ -1,4 +1,4 @@
-import { UPDATE_USERS, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED } from "../actions/Actions"
+import { UPDATE_USERS, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_RESULTS } from "../actions/Actions"
 import { UPDATE_STUDENT, UPDATE_STUDENTS } from "../actions/LoadUserActions"
 import { UPDATE_DATA } from "../actions/DataActions"
 
@@ -106,9 +106,10 @@ const initialState = {
     },
 		complete: false,
 		num_correct: 0,
-		num_attempted: 0
+		num_attempted: 0,
+		results: [],
 	},
-}
+};
 
 export function stanfordApp(state = initialState, action) {
     switch (action.type) {
@@ -150,6 +151,10 @@ export function stanfordApp(state = initialState, action) {
 			let newStateUpdateData = Object.assign({}, state);
 			newStateUpdateData.api.data = action.data;
 			return newStateUpdateData;
+        case (UPDATE_CATEGORY_RESULTS):
+            let newState = Object.assign({}, state);
+            newState.ui.results = action.results;
+            return newState;
 	default:
 			return state;
     }

@@ -1,20 +1,26 @@
-import React from "react"
+import React from "react";
 import {Card, CardBody, CardHeader, CardFooter, Container, Row} from "reactstrap";
-import PropTypes from "prop-types"
+import {QuizResults} from "./QuizResults";
+import PropTypes from "prop-types";
 
 export class QuizComplete extends React.Component {
+	componentDidMount() {
+		this.props.getResults(this.props.categoryId)
+	}
+
 	render() {
 		return (
 			<Container>
-				<div class="card text-center">
-				  <div class="card-header">
+				<div className="card text-center">`
+				  <div className="card-header">
 				  	<h3>
 				    Great Work!
 				    </h3>
 				  </div>
-				  <div class="card-body">
-                      <h5 class="card-title">You have successfully completed {this.props.categoryId}.</h5>
+				  <div className="card-body">
+                      <h5 className="card-title">You have successfully completed {this.props.categoryId}.</h5>
                       <h4>Your Score: { this.props.num_correct } / { this.props.num_attempted } </h4>
+					  <QuizResults results={ this.props.results }/>
 				  </div>
 				</div>
 			</Container>
@@ -25,5 +31,7 @@ export class QuizComplete extends React.Component {
 QuizComplete.propTypes = {
     categoryId: PropTypes.number,
     num_attempted: PropTypes.number,
-    num_correct: PropTypes.number
+    num_correct: PropTypes.number,
+	results: PropTypes.array,
+	getResults: PropTypes.func
 };
