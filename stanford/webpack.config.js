@@ -13,14 +13,19 @@ module.exports = {
   },
 
   module: {
-    loaders: [
+    rules: [
       {
-      	test: /\.jsx?$/,
-      	exclude: /node_modules/,
-      	loader: 'babel-loader',
-     	}, // to transform JSX into JS
-    ],
+        test: /\.css$/,
+        loaders: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+      }, // to transform JSX into JS
+    ]
   },
+
 
   plugins: [
     new BundleTracker({filename: './webpack-stats.json'})
