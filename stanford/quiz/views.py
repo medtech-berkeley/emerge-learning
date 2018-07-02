@@ -230,8 +230,8 @@ def get_stats(request):
     student = request.user.student
     if student:
         try:
-            tags = request.GET['tags']
-            difficulties = request.GET['difficulties']
+            tags = request.GET.getlist('tags')
+            difficulties = request.GET.getlist('difficulties')
         except KeyError as e:
             print(e)
             return JsonResponse({'accepted': False, 'reason': 'Missing or invalid tags or difficulties in request'}, status=400)

@@ -95,6 +95,7 @@ class QuizTestCase(TestCase):
                                        end=timezone.now(), sponsor="none", is_challenge=False)
         cat4.tags.add(Tag.objects.create(text="Respiratory"))
         cat4.difficulty = Category.INTERMEDIATE
+        cat4.save()
 
         c4_q1 = Question.objects.create(text="c4_q1", category=cat4, max_time=datetime.timedelta(minutes=1))
         Answer.objects.create(text="a1", question=c4_q1, is_correct=True)
@@ -113,6 +114,7 @@ class QuizTestCase(TestCase):
                                        end=timezone.now(), sponsor="none", is_challenge=True)
         cat5.tags.add(Tag.objects.create(text="Circulation"))
         cat5.difficulty = Category.ADVANCED
+        cat5.save()
 
         c5_q1 = Question.objects.create(text="c5_q1", category=cat5, max_time=datetime.timedelta(minutes=1))
         Answer.objects.create(text="a1", question=c5_q1, is_correct=True)
@@ -568,12 +570,11 @@ class QuizTestCase(TestCase):
         answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
         answer_json = answer_response.json()
 
-        result_medium = self.client.get("/stats/", {'tags': ['Respiratory'], 'difficulties': ['Intermediate']})
-        print(result_medium)
+        result_medium = self.client.get("/stats/", {'tags': ['Respiratory', 'Surgery'], 'difficulties': ['Intermediate', 'Grandmaster']})
         self.assertEqual(1, result_medium.json()['stats']['num_correct'], msg=result_medium)
 
-        result_hard = self.client.get("/stats/", {'tags': ['Circulatory'], 'difficulties': ['Advanced']})
+        result_hard = self.client.get("/stats/", {'tags': ['Circulation'], 'difficulties': ['Advanced']})
         self.assertEqual(2, result_hard.json()['stats']['num_correct'], msg=result_hard)
 
-        result_medium_hard = self.client.get("/stats/", {'tags': ['Circulatory'], 'difficulties': ['Intermediate', 'Advanced']})
+        result_medium_hard = self.client.get("/stats/", {'tags': ['Circulation', 'Respiratory'], 'difficulties': ['Intermediate', 'Advanced']})
         self.assertEqual(3, result_medium_hard.json()['stats']['num_correct'], msg=result_medium_hard)
