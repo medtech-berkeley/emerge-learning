@@ -1,10 +1,21 @@
 import React from "react";
-import {Card, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Button, Container} from "reactstrap";
+import {Card, Dropdown, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Button, Container, Row, Col} from "reactstrap";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Legend, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import css from 'react-tabs/style/react-tabs.css';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
+import 'react-tabs/style/react-tabs.css';
 
 export class Graphs extends React.Component {
+    renderBarChart() {
+        return (
+            [{name: 'All Time', correct: this.props.data.num_correct, incorrect: this.props.data.num_incorrect},
+            {name: 'Last Month', correct: 1, incorrect: 0},
+            {name: 'Last Week', correct: 1, incorrect: 0},
+            {name: 'Last Day', correct: 0, incorrect: 0}]
+        )
+    }
+
     render() {
         return (
             <div className="Graphs">
@@ -15,6 +26,33 @@ export class Graphs extends React.Component {
                 <p>Number Incorrect: {this.props.data.num_incorrect}</p>
                 <Card>
                     <div className="card-body">
+                    <Row>
+                        <Col xs="6">
+                            <Select
+                                name="form-field-name"
+                                placeholder='Filter by tag'
+                                value=''
+                                // onChange={this.handleChange}
+                                options={[
+                                  { value: 'one', label: 'One' },
+                                  { value: 'two', label: 'Two' },
+                                  ]}
+                            />
+                        </Col>
+                        <Col xs="6">
+                            <Select
+                                name="form-field-name"
+                                placeholder='Filter by difficulty'
+                                value=''
+                                // onChange={this.handleChange}
+                                options={[
+                                  { value: 'one', label: 'One' },
+                                  { value: 'two', label: 'Two' },
+                                  ]}
+                            />
+                        </Col>
+                    </Row>
+                    <br/>
                     <Tabs>
                         <TabList>
                           <Tab>Bar Chart</Tab>
@@ -22,7 +60,7 @@ export class Graphs extends React.Component {
                         </TabList>
                         <TabPanel>
                           <ResponsiveContainer width='100%' height={350}>
-                            <BarChart width={600} height={300} data={bardata} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+                            <BarChart width={600} height={300} data={this.renderBarChart()} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
                                <CartesianGrid strokeDasharray="3 3"/>
                                <XAxis dataKey="name"/>
                                <YAxis />
@@ -51,13 +89,6 @@ export class Graphs extends React.Component {
             </div>);
     }
 }
-
-const bardata = [
-  {name: 'All Time', correct: 4000, incorrect: 2400},
-  {name: 'Last Month', correct: 2300, incorrect: 2000},
-  {name: 'Last Week', correct: 700, incorrect: 300},
-  {name: 'Last Day', correct: 100, incorrect: 90},
-];
 
 const linedata = [
       {name: '6/21', points: 320},
