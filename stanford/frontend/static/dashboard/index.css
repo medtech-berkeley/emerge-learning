@@ -266,3 +266,13 @@ th {
 .card-answer-selected {
     box-shadow: 0 0 6px rgb(247,202,24);
 }
+
+.signup {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    z-index: 15;
+    top: 40%;
+    left: 50%;
+    margin: -100px 0 0 -150px;
+}
