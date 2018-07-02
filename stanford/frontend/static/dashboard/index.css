@@ -301,4 +301,19 @@ th {
 @-o-keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
+
+.hover-hand:hover {
+    cursor: pointer;
+}
+
+.card-answer-correct {
+    background-color: #3FC380;
+}
+
+.card-answer-incorrect {
+    background-color: #EC644B;
+}
+
+.card-answer-selected {
+    box-shadow: 0 0 6px rgb(247,202,24);
 }
