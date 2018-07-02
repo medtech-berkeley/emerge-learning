@@ -2,12 +2,13 @@ from .models import Student, Question, Category, Answer, QuestionUserData
 from django.utils import timezone
 
 
-def get_stats_student(student, date=None):
+def get_stats_student(student, date=None, query_set=QuestionUserData.objects):
     if date is None:
         date = timezone.now()
 
     stats = {}
-    qud = QuestionUserData.objects.filter(student=student, time_completed__lte=date)
+    qud = query_set.filter(student=student, time_completed__lte=date)
+
     stats['student'] = student.name
     stats['questions_answered'] = qud.count()
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
