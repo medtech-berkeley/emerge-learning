@@ -29,8 +29,8 @@ export class Leaderboard extends React.Component {
                     <b>{index + 1}</b>
                   </td>
                   <td>
-                    {(student.name == "Mocha Vasudevan" || student.name == "Ethan Teo") && <i class="fa fa-caret-up"></i>}
-                    {(student.name != "Mocha Vasudevan" && student.name != "Ethan Teo") && <i class="fa fa-caret-down"></i>}
+                    {(student.name == "Mocha Vasudevan" || student.name == "Ethan Teo") && <i className="fa fa-caret-up"></i>}
+                    {(student.name != "Mocha Vasudevan" && student.name != "Ethan Teo") && <i className="fa fa-caret-down"></i>}
                     {Math.floor((Math.random() * 10)/2) + 1}
                   </td>
                   <td>
