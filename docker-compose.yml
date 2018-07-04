@@ -36,7 +36,10 @@ services:
 #      - redis
   database:
     image: postgres:9.5
+    volumes:
+      - db_data:/var/lib/postgresql 
 #  redis:
 #    image: redis:3.0-alpine
 volumes:
    static:
+   db_data:
