@@ -19,7 +19,7 @@ export class UserInfo extends React.Component {
                 <Card>
                 <div className="card-body">
                     <h3 className="card-title">{this.props.user.name}</h3>
-                    <h4>({this.props.user.username})</h4>
+                    <h4>({this.props.user.user ? this.props.user.user.username : 'Error'})</h4>
                     <p>
                         <i id="mapMarker" className="fa fa-map-marker"></i>
                         {this.props.user.location}
