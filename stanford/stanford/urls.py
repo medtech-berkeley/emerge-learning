@@ -18,7 +18,7 @@ from django.urls import path, include, re_path
 from frontend.views import index
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet, StudentsStatsViewSet
-from quiz.views import get_question, submit_answer, get_category_results
+from quiz.views import get_question, submit_answer, get_category_results, get_stats
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import signup, logins, logout_view
@@ -47,6 +47,7 @@ urlpatterns = [
     path('signup/', signup, name='signup'),
     path('login/', logins, name='login'),
     path('logout/', logout_view, name='logout'),
+    path('stats/', get_stats, name='stats')
     # re_path(r'.*', index),
 ]
 

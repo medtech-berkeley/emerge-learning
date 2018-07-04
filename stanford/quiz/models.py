@@ -37,6 +37,21 @@ class Category(models.Model):
     image = models.ImageField(upload_to="category_images", default='default.jpg')
     tags = models.ManyToManyField(Tag, related_name="categories")
 
+    NOVICE = 'Novice'
+    INTERMEDIATE = 'Intermediate'
+    ADVANCED = 'Advanced'
+    DIFFICULTY_CHOICES = (
+        (NOVICE, 'Novice'),
+        (INTERMEDIATE, 'Intermediate'),
+        (ADVANCED, 'Advanced'),
+    )
+
+    difficulty = models.CharField(
+        max_length=20,
+        choices=DIFFICULTY_CHOICES,
+        default=NOVICE,
+    )
+
     def __str__(self):
         return self.name
 
