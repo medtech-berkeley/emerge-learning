@@ -10,11 +10,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '=)')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', True)
-DOCKER = os.environ.get('DJANGO_DOCKER', False)
+DEBUG = os.environ.get('DJANGO_DEBUG', "TRUE") == "TRUE"
+DOCKER = os.environ.get('DJANGO_DOCKER', "FALSE") == "TRUE"
 TESTING = sys.argv[1:2] == ['test']
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'interfaceserver']
+ALLOWED_HOSTS = [os.envrion.get('DJANGO_HOST', 'localhost')]
 
 # Application definition
 INSTALLED_APPS = [
