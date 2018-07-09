@@ -52,7 +52,7 @@ export class Settings extends React.Component {
                   <label >Profile Photo</label>
                   <input type="file" name="image" className="form-control"/>
                 </div>
-                <button type="submit" className="btn btn-primary">Update</button>
+                <button type="submit" className="btn btn-success">Update</button>
             </form>
             </Container>
             </div>
