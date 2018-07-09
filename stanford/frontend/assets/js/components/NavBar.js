@@ -25,7 +25,7 @@ export class NavBar extends React.Component {
             </li>
               </ul>
             <form action="/logout" className="form-inline my-2 my-lg-0">
-              <button type="submit" className="btn btn-outline-success">Log Out</button>
+              <button type="submit" className="btn logout-btn btn-outline-success">Log Out</button>
             </form>
           </div>
         </nav>
