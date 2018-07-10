@@ -37,7 +37,7 @@ services:
   database:
     image: postgres:9.5
     volumes:
-      - db_data:/var/lib/postgresql 
+      - db_data:/var/lib/postgresql/data 
 #  redis:
 #    image: redis:3.0-alpine
 volumes:
