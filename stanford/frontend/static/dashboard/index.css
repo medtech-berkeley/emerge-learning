@@ -26,6 +26,10 @@ body {
 
 }
 
+.logout-btn {
+    margin-left: 12px;
+}
+
 .shinkai-background {
     max-width: 100%;
     height: -50%;
