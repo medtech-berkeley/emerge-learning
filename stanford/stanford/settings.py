@@ -192,7 +192,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+if DOCKER:
+    MEDIA_ROOT = '/media/'
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 if DOCKER:
     STATIC_ROOT = '/static/'
 else:
