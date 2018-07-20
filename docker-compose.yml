@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   nginx:
     image: nginx:latest
@@ -6,12 +6,13 @@ services:
       - "80:80"
     volumes:
       - ./docker/config/nginx:/etc/nginx/conf.d
+      - media_files:/media_files
       - static:/static
-      - media:/media
     depends_on:
       - interfaceserver
   interfaceserver:
     build: .
+    image: stanford-quiz
     command: /entry/entrypoint-interface.sh
     user: stanford
     working_dir: /stanford
@@ -21,28 +22,15 @@ services:
       - docker/docker.env
     depends_on:
       - database
-#      - redis
     volumes:
+      - media_files:/media
       - static:/static
-      - media:/media
       - ./reports:/reports
-#  workerserver:
-#    build: .
-#    command: /entry/entrypoint-worker.sh
-#    user: stanford
-#    working_dir: /stanford
-#    env_file:
-#      - docker/docker.env
-#    depends_on:
-#      - database
-#      - redis
   database:
     image: postgres:9.5
     volumes:
       - db_data:/var/lib/postgresql/data 
-#  redis:
-#    image: redis:3.0-alpine
 volumes:
+   media_files:
    static:
-   media:
    db_data:
