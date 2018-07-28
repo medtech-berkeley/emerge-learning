@@ -1,0 +1,7 @@
+version: '3'
+services:
+  nginx:
+    ports:
+      - "443:443"
+    volumes:
+      - ./docker/config/nginx/production.conf:/etc/nginx/conf.d/production.conf

@@ -5,7 +5,6 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./docker/config/nginx:/etc/nginx/conf.d
       - media_files:/media_files
       - static:/static
     depends_on:
