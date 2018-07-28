@@ -11,14 +11,7 @@ upstream stanford_server {
 server {
     server_name ${STANFORD_HOST};
     listen 80;
-    location /hub/ {
-        proxy_pass http://stanford_server;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-        proxy_read_timeout 86400;
-    }
-
+    
     location /client/ {
         proxy_pass http://stanford_server;
         proxy_http_version 1.1;
