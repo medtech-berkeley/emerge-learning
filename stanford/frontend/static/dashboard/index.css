@@ -7,7 +7,7 @@ body {
 }
 
 .login-body {
-    background-image: url(http://4.bp.blogspot.com/-gI4R3RDSTlE/VRlcqCO8a-I/AAAAAAAAKG0/fjKTItMU2aE/s1600/Kathmandu%2C%2BNepal.jpeg);
+    background-image: url("/static/dashboard/signup.jpeg");
     background-repeat: no-repeat;
     background-size: cover;
 }
