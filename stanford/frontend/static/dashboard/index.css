@@ -26,6 +26,25 @@ body {
 
 }
 
+.landing-content {
+    background-image: url("https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/on-the-top-of-the-world-2d-landscape-sarah-bank.jpg");
+    background-size: contain;
+    width: 100%;
+    height: 32rem;
+}
+
+.landing-header {
+    color: white;
+    padding-top: 50px;
+    padding-bottom: 22px;
+    text-align: center;
+}
+
+form.signup {
+    width: 330px;
+    margin: auto;
+}
+
 .logout-btn {
     margin-left: 12px;
 }
@@ -81,11 +100,6 @@ body {
     background-color: #5BC89A;
     border-color: #5BC89A;
     color: white;
-}
-
-#landing-header {
-    color: white;
-    padding-bottom: 22px;
 }
 
 #icons-grid {
@@ -303,8 +317,13 @@ th {
 
 /* Opera < 12.1 */
 @-o-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
 .hover-hand:hover {
     cursor: pointer;
@@ -320,4 +339,17 @@ th {
 
 .card-answer-selected {
     box-shadow: 0 0 6px rgb(247,202,24);
+}
+
+@media (max-width: 1100px) {
+    .landing-content {
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+}
+
+@media (max-width: 700px) {
+    form.signup {
+        width: 80%;
+    }
 }
