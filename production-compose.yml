@@ -12,5 +12,8 @@ services:
     command: /bin/bash -c "envsubst '$$STANFORD_HOST' < /nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
     environment:
       - STANFORD_HOST=pernixsoft.ml
+  interfaceserver:
+    environment:
+      - DJANGO_SSL=TRUE
 volumes:
   nginx_logs:
