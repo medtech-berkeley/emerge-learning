@@ -9,8 +9,7 @@ pipeline {
     }
     stage('Run tests') {
       steps {
-        sh 'docker-compose -f testing.yml up -d'
-        sh 'docker-compose exec -T interfaceserver bash run_tests.sh'
+        sh 'docker-compose -f docker-compose.yml -f testing.yml run -T interfaceserver bash run_tests.sh'
       }
     }
     stage('Collect and Publish Reports') {
