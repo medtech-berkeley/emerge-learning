@@ -7,6 +7,7 @@ services:
     volumes:
       - media_files:/media_files
       - static:/static
+      - /docker-volumes/data/letsencrypt:/usr/share/nginx/html
     depends_on:
       - interfaceserver
   interfaceserver:
