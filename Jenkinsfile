@@ -1,10 +1,11 @@
 pipeline {
   agent any
   stages {
-    stage('Set up') {
+    stage('Set up and build') {
       steps {
         sh 'mkdir reports && chmod -R 777 reports'
         sh 'python3 try_build.py'
+        sh 'mkdir -p reports && chmod 777 reports'
       }
     }
     stage('Run tests') {
