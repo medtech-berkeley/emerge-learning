@@ -15,5 +15,10 @@ services:
   interfaceserver:
     environment:
       - DJANGO_SSL=TRUE
+  database:
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
 volumes:
   nginx_logs:

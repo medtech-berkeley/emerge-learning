@@ -26,9 +26,6 @@ services:
       - ./reports:/reports
   database:
     image: postgres:9.5
-    volumes:
-      - db_data:/var/lib/postgresql/data 
 volumes:
    media_files:
    static:
-   db_data:

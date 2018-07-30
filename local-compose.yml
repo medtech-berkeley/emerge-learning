@@ -5,3 +5,8 @@ services:
       - "80:80"
     volumes:
       - ./docker/config/nginx/stanford.conf:/etc/nginx/conf.d/default.conf
+  database:
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
