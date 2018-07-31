@@ -2,8 +2,6 @@ version: '3'
 services:
   nginx:
     image: nginx:latest
-    ports:
-      - "80:80"
     volumes:
       - media_files:/media_files
       - static:/static
@@ -12,7 +10,7 @@ services:
       - interfaceserver
   interfaceserver:
     build: .
-    image: stanford-quiz
+    image: stanford-quiz:${ID:-latest}
     command: /entry/entrypoint-interface.sh
     user: stanford
     working_dir: /stanford
@@ -28,9 +26,6 @@ services:
       - ./reports:/reports
   database:
     image: postgres:9.5
-    volumes:
-      - db_data:/var/lib/postgresql/data 
 volumes:
    media_files:
    static:
-   db_data:
