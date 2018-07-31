@@ -6,7 +6,7 @@ import subprocess
 if os.system('docker-compose -p %s -f docker-compose.yml -f testing.yml build' % os.environ['ID']) == 1:
 	sys.exit(1)
 
-up_proc = subprocess.Popen(['docker-compose -p %s -f docker-compose.yml -f testing.yml' % os.environ['ID'], 'run', 'interfaceserver'], stdout=subprocess.PIPE)
+up_proc = subprocess.Popen(['docker-compose', '-p', os.environ['ID'], '-f', 'docker-compose.yml', '-f' 'testing.yml', 'run', 'interfaceserver'], stdout=subprocess.PIPE)
 
 while True:
 	up_proc.poll()
