@@ -10,7 +10,7 @@ services:
       - interfaceserver
   interfaceserver:
     build: .
-    image: stanford-quiz
+    image: stanford-quiz:${ID:-latest}
     command: /entry/entrypoint-interface.sh
     user: stanford
     working_dir: /stanford
