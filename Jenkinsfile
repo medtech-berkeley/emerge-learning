@@ -26,6 +26,9 @@ pipeline {
   post {
     always {
       sh 'docker-compose -f docker-compose.yml -f testing.yml down'
+      sh 'docker container prune -f'
+      sh 'docker volume prune -f'
+      sh 'docker network prune -f'
     }
 
   }
