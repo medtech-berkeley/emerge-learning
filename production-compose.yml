@@ -1,7 +1,7 @@
 version: '3'
 services:
   nginx:
-    container-name: stanford-nginx
+    container_name: stanford-nginx
     ports:
       - "443:443"
     volumes:
