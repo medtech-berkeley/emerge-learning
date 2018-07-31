@@ -8,14 +8,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '=)')
-
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = os.environ.get('DJANGO_DEBUG', "TRUE") == "TRUE"
 DOCKER = os.environ.get('DJANGO_DOCKER', "FALSE") == "TRUE"
 TESTING = sys.argv[1:2] == ['test']
-
+SSL = os.environ.get('DJANGO_SSL', "FALSE") == "TRUE"
 ALLOWED_HOSTS = [os.environ.get('DJANGO_HOST', 'localhost')]
 
+if SSL:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
