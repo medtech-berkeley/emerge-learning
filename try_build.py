@@ -13,9 +13,10 @@ while True:
 	if up_proc.returncode == 1:
 		break
 	line = up_proc.stdout.readline()
+	print(line)
 	if str(line, 'utf-8').startswith("Quit the server with CONTROL-C."):
-		os.system('docker-compose down')
+		os.system('docker-compose -f docker-compose.yml -f testing.yml down')
 		sys.exit(0)
 
-os.system('docker-compose down')
+os.system('docker-compose -f docker-compose.yml -f testing.yml down')
 sys.exit(1)
