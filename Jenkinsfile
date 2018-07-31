@@ -1,11 +1,11 @@
 pipeline {
   agent any
+  environment {
+    ID = "${env.GIT_BRANCH}-${env.BUILD_ID}";
+  }
   stages {
     stage('Set up and build') {
       steps {
-        script {
-          env.ID = '$BRANCH-$BUILD_ID'
-        }
         sh 'mkdir reports && chmod -R 777 reports'
         sh 'python3 try_build.py'
         sh 'mkdir -p reports && chmod 777 reports'
