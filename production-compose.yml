@@ -1,6 +1,7 @@
 version: '3'
 services:
   nginx:
+    container_name: stanford-nginx
     ports:
       - "443:443"
     volumes:
@@ -20,5 +21,4 @@ services:
       - db_data:/var/lib/postgresql/data
 volumes:
   db_data:
-volumes:
   nginx_logs:
