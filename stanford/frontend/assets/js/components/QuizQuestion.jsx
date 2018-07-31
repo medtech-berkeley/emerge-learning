@@ -22,29 +22,29 @@ export class QuizQuestion extends React.Component {
 
 								{/*	If the user is done and this is the correct answer we want to make it green. */}
 								{this.props.done && this.props.correct_answers.includes(answer.id) &&
-									<CardBody outline color="success" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+									<Card outline color="success" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
 										<p className="card-text">{answer.text}</p>
-									</CardBody>
+									</Card>
 								}
 								{/*	If the user is done and they selected an incorrect answer we want to make it red. */}
 								{this.props.done && this.props.selected === answer.id && !this.props.correct_answers.includes(answer.id) &&
-									<CardBody outline color="danger" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+									<Card outline color="danger" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
 										<p className="card-text">{answer.text}</p>
-									</CardBody>
+									</Card>
 								}
 								{/*We want to just render the rest of the answers:
 									done and not correct and not selected
 									not done render normally
 									*/}
 									{this.props.done && this.props.correct_answers.includes(answer.id) && this.props.selected !== answer.id &&
-										<CardBody outline color="success" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+										<Card outline color="success" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
 											<p className="card-text">{answer.text}</p>
-										</CardBody>
+										</Card>
 									}
 									{!this.props.done &&
-										<CardBody onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+										<Card onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
 											<p className="card-text">{answer.text}</p>
-										</CardBody>
+										</Card>
 									}
 								</div>
 						  </Col>))
