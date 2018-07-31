@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  environment {
+    ID = '$BRANCH-$BUILD_ID'
+  }
   stages {
     stage('Set up and build') {
       steps {
@@ -10,7 +13,7 @@ pipeline {
     }
     stage('Run tests') {
       steps {
-        sh 'docker-compose -f docker-compose.yml -f testing.yml run -T interfaceserver bash run_tests.sh'
+        sh 'docker-compose -p $ID -f docker-compose.yml -f testing.yml run -T interfaceserver bash run_tests.sh'
       }
     }
     stage('Collect and Publish Reports') {
@@ -22,7 +25,7 @@ pipeline {
   }
   post {
     always {
-      sh 'docker-compose down'
+      sh 'docker-compose -f docker-compose.yml -f testing.yml down'
     }
 
   }
