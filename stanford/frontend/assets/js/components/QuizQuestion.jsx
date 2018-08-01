@@ -13,12 +13,12 @@ export class QuizQuestion extends React.Component {
 		if(this.props.done) {
 			if (this.props.correct_answers.includes(answer.id)) {
 				return (
-					<Card outline color="success" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+					<Card outline color="success" className={"card-answer " + this.getAnswerClass(answer.id)} onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
 						<p className="card-text">{answer.text}</p>
 					</Card>);
 			} else if (this.props.selected === answer.id) {
 				return (
-					<Card outline color="danger" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+					<Card outline color="danger" className={"card-answer " + this.getAnswerClass(answer.id)} onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
 						<p className="card-text">{answer.text}</p>
 					</Card>);
 			}
@@ -26,7 +26,7 @@ export class QuizQuestion extends React.Component {
 		}
 
 		return (
-			<Card onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+			<Card className={"card-answer " + this.getAnswerClass(answer.id)} onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
 				<p className="card-text">{answer.text}</p>
 			</Card>);
 	}
@@ -58,9 +58,7 @@ export class QuizQuestion extends React.Component {
 					  {
 						  this.props.answers.map((answer, i) =>(
 						  <Col md={6} sm={12} key={i}>
-							  <div className={"card card-answer " + this.getAnswerClass(answer.id)}>
-							  	{ this.getQuestion(answer) }
-							  </div>
+						  	{ this.getQuestion(answer) }
 						  </Col>))
 					  }
 				    </Row>
