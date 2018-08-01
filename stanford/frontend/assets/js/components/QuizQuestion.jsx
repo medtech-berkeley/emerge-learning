@@ -32,7 +32,7 @@ export class QuizQuestion extends React.Component {
 	}
 
 	getAnswerClass(answer) {
-		answerClasses = "";
+		let answerClasses = "";
 		if(this.props.done) {
 			if(this.props.correct_answers.includes(answer.id)) {
 				answerClasses += "card-answer-correct ";
