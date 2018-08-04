@@ -236,13 +236,13 @@ th {
 	margin-right: 10px;
 }
 
-/*.x, .check {*/
-    /*font-size: 22px;*/
-/*}*/
-
 .results-question p {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.results-question {
+    margin-bottom: 20px;
 }
 
 .correct {
