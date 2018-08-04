@@ -27,7 +27,9 @@ export class QuizResults extends React.Component {
                     return (
                     <div className="text-left results-question">
                         <p>
-                            <strong>Question { i + 1 }: </strong> { result.text } { result.correct.includes(result.selected) ? <span class="correct check">CORRECT</span> : <span className="incorrect x">INCORRECT</span> }
+                            { result.correct.includes(result.selected) ? <span class="correct check">CORRECT</span> : <span className="incorrect x">INCORRECT</span> }
+                            <br />
+                            <strong>Question { i + 1 }: </strong> { result.text }
                         </p>
                         { result.answers.map((answer) => this.displayAnswer(result, answer)) }
                     </div>);
