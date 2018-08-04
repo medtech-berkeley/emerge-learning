@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 dockerize -wait tcp://database:5432
 # dockerize -wait tcp://redis:6379
 
