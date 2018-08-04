@@ -21,13 +21,17 @@ export class QuizResults extends React.Component {
                 {this.props.results.map((result, i) =>
                     <Card>
                       <CardHeader onClick={this.toggle} data-event={i} className="hover-hand">
-                          <h3 className="hover-hand" onClick={this.toggle} data-event={i}>Question {i} -- {result.correct.includes(result.selected) ?
-                              <Badge color='success'>Correct</Badge> :
-                              <Badge color='danger'>Incorrect</Badge>} </h3>
+                          <h3 className="hover-hand" onClick={this.toggle} data-event={i}>Question {i} -- 
+                              {
+                                result.correct.includes(result.selected) ?
+                                <Badge color='success'>Correct</Badge> :
+                                <Badge color='danger'>Incorrect</Badge> 
+                              } 
+                          </h3>
                       </CardHeader>
                       <CardBody>
                           <Collapse isOpen={this.state.collapse === i}>
-                            <QuizQuestion id={i} answerQuestion={()=>null} text={result.text} answers={result.answers} correct_answers={result.correct} selected={result.selected} done={true}/>
+                            <QuizQuestion id={i} answerQuestion={() => null} text={result.text} answers={result.answers} correct_answers={result.correct} selected={result.selected} done={true} />
                           </Collapse>
                       </CardBody>
                     </Card>

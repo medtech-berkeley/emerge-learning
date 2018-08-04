@@ -1,0 +1,7 @@
+<testsuite errors="1" failures="0" name="Django Project Tests" skips="0" tests="1" time="0.000"><testcase classname="unittest.loader._FailedTest" name="help" time="0.000050"><error message="Failed to import test module: help&#10;Traceback (most recent call last):&#10;  File &quot;/usr/lib/python3.6/unittest/loader.py&quot;, line 153, in loadTestsFromName&#10;    module = __import__(module_name)&#10;ModuleNotFoundError: No module named 'help'&#10;" type="builtins.ImportError">ImportError: Failed to import test module: help
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/unittest/loader.py", line 153, in loadTestsFromName
+    module = __import__(module_name)
+ModuleNotFoundError: No module named 'help'
+
+</error></testcase></testsuite>

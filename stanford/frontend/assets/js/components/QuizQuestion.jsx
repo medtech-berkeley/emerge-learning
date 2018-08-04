@@ -3,6 +3,50 @@ import {Card, CardBody, CardHeader, CardFooter, Container, Row, Col} from "react
 import PropTypes from "prop-types"
 
 export class QuizQuestion extends React.Component {
+	constructor(props) {
+      super(props);
+      this.getQuestion.bind(this);
+      this.getAnswerClass.bind(this);
+    }
+
+	getQuestion(answer) {
+		if(this.props.done) {
+			if (this.props.correct_answers.includes(answer.id)) {
+				return (
+					<Card outline color="success" className={"card-answer " + this.getAnswerClass(answer.id)} onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+						<p className="card-text">{answer.text}</p>
+					</Card>);
+			} else if (this.props.selected === answer.id) {
+				return (
+					<Card outline color="danger" className={"card-answer " + this.getAnswerClass(answer.id)} onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+						<p className="card-text">{answer.text}</p>
+					</Card>);
+			}
+
+		}
+
+		return (
+			<Card className={"card-answer " + this.getAnswerClass(answer.id)} onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+				<p className="card-text">{answer.text}</p>
+			</Card>);
+	}
+
+	getAnswerClass(answer) {
+		let answerClasses = "";
+		if(this.props.done) {
+			if(this.props.correct_answers.includes(answer.id)) {
+				answerClasses += "card-answer-correct ";
+			}
+			if (!this.props.correct_answers.includes(answer.id)) {
+				answerClasses += "card-answer-incorrect ";
+			}
+			if (this.props.selected === answer.id) {
+				answerClasses += "card-answer-selected";
+			}
+		}
+		return answerClasses;
+	}
+
 	render() {
 		return (
 			<Container>
@@ -14,39 +58,7 @@ export class QuizQuestion extends React.Component {
 					  {
 						  this.props.answers.map((answer, i) =>(
 						  <Col md={6} sm={12} key={i}>
-							  <div className={"card card-answer "
-                                    + (this.props.done && this.props.correct_answers.includes(answer.id) ? "card-answer-correct " : "")
-                                    + (this.props.done && !this.props.correct_answers.includes(answer.id) ? "card-answer-incorrect " : "")
-                                    + (this.props.done && this.props.selected === answer.id ? "card-answer-selected" : "")
-							  }>
-
-								{/*	If the user is done and this is the correct answer we want to make it green. */}
-								{this.props.done && this.props.correct_answers.includes(answer.id) &&
-									<div className="card-body" outline color ="success" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
-										<p className="card-text">{answer.text}</p>
-									</div>
-								}
-								{/*	If the user is done and they selected an incorrect answer we want to make it red. */}
-								{this.props.done && this.props.selected === answer.id && !this.props.correct_answers.includes(answer.id) &&
-									<div className="card-body" outline color ="danger" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
-										<p className="card-text">{answer.text}</p>
-									</div>
-								}
-								{/*We want to just render the rest of the answers:
-									done and not correct and not selected
-									not done render normally
-									*/}
-									{this.props.done && this.props.correct_answers.includes(answer.id) && this.props.selected !== answer.id &&
-										<div className="card-body" outline color ="success" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
-											<p className="card-text">{answer.text}</p>
-										</div>
-									}
-									{!this.props.done &&
-										<div className="card-body" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
-											<p className="card-text">{answer.text}</p>
-										</div>
-									}
-								</div>
+						  	{ this.getQuestion(answer) }
 						  </Col>))
 					  }
 				    </Row>
@@ -66,7 +78,3 @@ QuizQuestion.propTypes = {
     selected: PropTypes.number,
     done: PropTypes.bool
 };
-
-{/*<div className={"answer-box"} style={{"background-color": this.getColor(i)}}>
-									  {answer}
-								  </div>*/}
