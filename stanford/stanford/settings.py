@@ -14,7 +14,12 @@ DEBUG = os.environ.get('DJANGO_DEBUG', "TRUE") == "TRUE"
 DOCKER = os.environ.get('DJANGO_DOCKER', "FALSE") == "TRUE"
 TESTING = sys.argv[1:2] == ['test']
 SSL = os.environ.get('DJANGO_SSL', "FALSE") == "TRUE"
-ALLOWED_HOSTS = [os.environ.get('DJANGO_HOST', 'localhost')]
+DJANGO_HOSTNAME = os.environ.get('DJANGO_HOST', 'localhost')
+
+ALLOWED_HOSTS = [DJANGO_HOSTNAME]
+
+if DJANGO_HOSTNAME == 'localhost':
+    ALLOWED_HOSTS += ['0.0.0.0', '127.0.0.1']
 
 if SSL:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
