@@ -29,20 +29,29 @@
 		</nav>
         <div class="landing-content">
             <h1 class="landing-header">Practice. Learn. Save Lives.</h1>
-            <form class="signup">
+            <form class="signup" method="POST" action="{% url 'signup' %}">
+              {% if error %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <strong> {{error}} </strong>
+                </div>
+              {% endif %}
+              {% csrf_token %}
               <div class="form-group">
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+                <input type="email" class="form-control" name="email" placeholder="Email">
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Username">
+                <input type="text" class="form-control" name="username" placeholder="Username">
               </div>
               <div class="form-group">
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <input type="password" class="form-control" name="password" placeholder="Password">
               </div>
               <div class="form-group">
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirm Password">
+                <input type="password" class="form-control" name="password_confirm" placeholder="Confirm Password">
               </div>
-              <button style="margin-right: 0px; transform: translateX(0px);"type="submit" class="btn btn-success btn-block">Sign Up!</button>
+              <button type="submit" class="btn btn-success btn-block">Sign Up!</button>
             </form>
         </div>
 		<!-- Icons Grid -->

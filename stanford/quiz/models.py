@@ -11,7 +11,7 @@ class Student(models.Model):
     name = models.CharField(max_length=100, default="Enter Name")
     location = models.CharField(max_length=100, default="Enter location")
     description = models.CharField(max_length=500, default="Enter description")
-    image = models.ImageField(upload_to='profile_images', blank=True)
+    image = models.ImageField(upload_to='profile_images', default="/static/accounts/default_profile.jpg", blank=True)
 
     def __str__(self):
         return self.user.username
