@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 dockerize -wait tcp://database:5432 -timeout 20s
 
 python3 manage.py migrate
