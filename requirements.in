@@ -1,6 +1,8 @@
 django
 django-webpack-loader
 psycopg2-binary
+httplib2
+google-api-python-client
 djangorestframework
 django-oauth-toolkit
 django-cors-middleware
@@ -8,3 +10,5 @@ Pillow
 django-jenkins
 coverage
 django-extensions
+apiclient
+oauth2client
