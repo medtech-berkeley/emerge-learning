@@ -13,7 +13,7 @@ export class App extends React.Component {
         return (<div>
                     <Router history={history}>
                         <div>
-                            <NavBar/>
+                        <NavBar pathname={history.location.pathname}/>
                             <div className="content-area">
                                 <Route exact={true} path="/" component={MainDashboardApi}/>
                                 <Route path="/profile" component={UserDashboardApi}/>
