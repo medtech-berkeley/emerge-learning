@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from frontend.views import index
+from frontend.views import index, change_user_info
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet, StudentStatsViewSet
 from quiz.views import get_question, submit_answer, get_category_results, get_stats
@@ -38,6 +38,7 @@ router.register(r'studentstats', StudentStatsViewSet, 'StudentStats')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='dashboard'),
+    path('profile/update', change_user_info),
     path('profile/', index),
     path('settings/', index),
     path('quiz/question', get_question),

@@ -34,7 +34,7 @@ export class Settings extends React.Component {
             <div>
                 <Container>
             <h1>Update Profile</h1>
-            <form method = "POST" action="" encType="multipart/form-data">
+            <form method = "POST" action="/profile/update" encType="multipart/form-data">
                 <CSRFToken />
                 <div className="form-group">
                   <label >Full Name</label>

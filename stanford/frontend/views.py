@@ -1,9 +1,18 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from quiz.models import Student
+from django.http import HttpResponse, JsonResponse
+
 
 def index(request):
     if not request.user.is_authenticated:
-        return render(request, 'index.html')
+        info = {}
+        if request.GET.get('error'):
+            info = {'error': request.GET.get('error')}
+        return render(request, 'index.html', info)
+    return render(request, 'dashboard.html')
+
+
+def change_user_info(request):
     if request.method == 'POST':
         user = request.user
         student = Student.objects.get(user=user)
@@ -13,9 +22,9 @@ def index(request):
             student.location = request.POST['location']
         if request.POST['description']:
             student.description = request.POST['description']
-        if 'image' in request.FILES: 
+        if 'image' in request.FILES:
             student.image = request.FILES['image']
         student.save()
-        return render(request, 'dashboard.html')
+        return redirect('dashboard')
     else:
-        return render(request, 'dashboard.html')
+        return HttpResponse(status=405)
