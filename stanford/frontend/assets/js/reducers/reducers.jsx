@@ -41,34 +41,7 @@ const initialState = {
         "image": "http://127.0.0.1:8000/media/profile_images/image.jpg"
     	}],
     	leaderboardResult: [],
-		data: [{
-			"day": "1",
-			"points": 100
-		},
-		{
-			"day": "2",
-			"points": 180
-		},
-		{
-			"day": "3",
-			"points": 210
-		},
-		{
-			"day": "4",
-			"points": 200
-		},
-		{
-			"day": "5",
-			"points": 100
-		},
-		{
-			"day": "6",
-			"points": 80
-		},
-		{
-			"day": "7",
-			"points": 120
-		}],
+		data: {"accepted": true, "stats": {"name": "", "questions_answered": 0, "num_correct": 0, "num_incorrect": 0}},
 		question: {
 			answers: ['Kill her', 'Run away', 'Apply aloe-vera to her gunshot wound', 'Check her vitals'],
 			text: 'You find a woman with blue lips after a loud noise was heard. What do you do?',
