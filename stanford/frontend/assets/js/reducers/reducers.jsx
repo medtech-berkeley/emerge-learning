@@ -1,4 +1,5 @@
 import { UPDATE_USERS, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_RESULTS } from "../actions/Actions"
+import { UPDATE_LEADERBOARD } from "../actions/Actions"
 import { UPDATE_STUDENT, UPDATE_STUDENTS } from "../actions/LoadUserActions"
 import { UPDATE_DATA } from "../actions/DataActions"
 
@@ -39,6 +40,7 @@ const initialState = {
         "description": "Student",
         "image": "http://127.0.0.1:8000/media/profile_images/image.jpg"
     	}],
+    	leaderboardResult: [],
 		data: [{
 			"day": "1",
 			"points": 100
@@ -155,6 +157,11 @@ export function stanfordApp(state = initialState, action) {
             let newState = Object.assign({}, state);
             newState.ui.results = action.results;
             return newState;
+        case (UPDATE_LEADERBOARD):
+        	console.log('in reducer update leaderboard');
+        	let newStateLeaderboard = Object.assign({}, state);
+        	newStateLeaderboard.api.leaderboardResult = action.leaderboardResult;
+        	return newStateLeaderboard;
 	default:
 			return state;
     }

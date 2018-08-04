@@ -8,6 +8,7 @@ export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const UPDATE_SUBMIT_ERROR = 'DISPLAY_SUBMIT_ERROR';
 export const UPDATE_CATEGORY_COMPLETED = 'DISPLAY_CATEGORY_COMPLETED';
 export const UPDATE_CATEGORY_RESULTS = 'UPDATE_CATEGORY_RESULTS';
+export const UPDATE_LEADERBOARD = 'UPDATE_LEADERBOARD';
 
 export function getUsers() {
 	return dispatch => fetch("/api/users", window.getHeader)
@@ -127,4 +128,16 @@ export function updateCategoryResults(results) {
 	}
 }
 
+export function updateLeaderboard(leaderboardResult) {
+	return {
+		type: UPDATE_LEADERBOARD,
+		leaderboardResult
+	}
+}
 
+export function getLeaderboard() {
+	return dispatch => fetch("/api/studentstats")
+	.then(r => r.json().then(json => {
+		dispatch(updateLeaderboard(json))
+	}));
+}

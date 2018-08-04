@@ -9,7 +9,7 @@ def get_stats_student(student, date=None, query_set=QuestionUserData.objects):
     stats = {}
     qud = query_set.filter(student=student, time_completed__lte=date)
 
-    stats['student'] = student.name
+    stats['name'] = student.name
     stats['questions_answered'] = qud.count()
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['questions_answered'] - stats['num_correct']
