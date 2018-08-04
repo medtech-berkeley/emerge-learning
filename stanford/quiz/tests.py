@@ -578,3 +578,7 @@ class QuizTestCase(TestCase):
 
         result_medium_hard = self.client.get("/stats/", {'tags': ['Circulation', 'Respiratory'], 'difficulties': ['Intermediate', 'Advanced']})
         self.assertEqual(3, result_medium_hard.json()['stats']['num_correct'], msg=result_medium_hard)
+
+    # TODO: Test case where tags=None or difficulties=None
+    def test_get_stats_student_nullcase(self):
+        pass
