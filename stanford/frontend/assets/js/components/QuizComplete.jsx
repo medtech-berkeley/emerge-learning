@@ -11,7 +11,7 @@ export class QuizComplete extends React.Component {
 	render() {
 		return (
 			<Container>
-				<div className="card text-center">`
+				<div className="card text-center">
 				  <div className="card-header">
 				  	<h3>
 				    Great Work!
@@ -20,7 +20,9 @@ export class QuizComplete extends React.Component {
 				  <div className="card-body">
                       <h5 className="card-title">You have successfully completed {this.props.categoryId}.</h5>
                       <h4>Your Score: { this.props.num_correct } / { this.props.num_attempted } </h4>
-					  <QuizResults results={ this.props.results }/>
+					  <Container>
+					  	<QuizResults results={ this.props.results }/>
+					  </Container>
 				  </div>
 				</div>
 			</Container>

@@ -236,6 +236,23 @@ th {
 	margin-right: 10px;
 }
 
+.results-question p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.results-question {
+    margin-bottom: 20px;
+}
+
+.correct {
+    color: #6AC797;
+}
+
+.incorrect {
+    color: #FE725A;
+}
+
 .card-shadow {
     box-shadow: 0 1px 1px 0 rgba(0,0,0,0.2);
     transition: 0.3s;

@@ -8,44 +8,17 @@ export class QuizQuestion extends React.Component {
 			<Container>
 				<Card className="question">
 				  <CardBody>
-                    { this.props.done ? null : <h4 className="card-title">{this.props.categoryId}: Question 1</h4> }
+                    {/* TODO: add support for listing question no */}
+                    <h4 className="card-title">{this.props.categoryId}</h4>
 					<p className="card-text">{this.props.text}</p>
 				  	<Row>
 					  {
 						  this.props.answers.map((answer, i) =>(
 						  <Col md={6} sm={12} key={i}>
-							  <div className={"card card-answer "
-                                    + (this.props.done && this.props.correct_answers.includes(answer.id) ? "card-answer-correct " : "")
-                                    + (this.props.done && !this.props.correct_answers.includes(answer.id) ? "card-answer-incorrect " : "")
-                                    + (this.props.done && this.props.selected === answer.id ? "card-answer-selected" : "")
-							  }>
-
-								{/*	If the user is done and this is the correct answer we want to make it green. */}
-								{this.props.done && this.props.correct_answers.includes(answer.id) &&
-									<div className="card-body" outline color ="success" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
-										<p className="card-text">{answer.text}</p>
-									</div>
-								}
-								{/*	If the user is done and they selected an incorrect answer we want to make it red. */}
-								{this.props.done && this.props.selected === answer.id && !this.props.correct_answers.includes(answer.id) &&
-									<div className="card-body" outline color ="danger" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
-										<p className="card-text">{answer.text}</p>
-									</div>
-								}
-								{/*We want to just render the rest of the answers:
-									done and not correct and not selected
-									not done render normally
-									*/}
-									{this.props.done && this.props.correct_answers.includes(answer.id) && this.props.selected !== answer.id &&
-										<div className="card-body" outline color ="success" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
-											<p className="card-text">{answer.text}</p>
-										</div>
-									}
-									{!this.props.done &&
-										<div className="card-body" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
-											<p className="card-text">{answer.text}</p>
-										</div>
-									}
+							  <div className="card card-answer">
+								  <div className="card-body" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+								    <p className="card-text">{answer.text}</p>
+								  </div>
 								</div>
 						  </Col>))
 					  }
@@ -64,9 +37,4 @@ QuizQuestion.propTypes = {
     category: PropTypes.number,
 	correct_answers: PropTypes.array,
     selected: PropTypes.number,
-    done: PropTypes.bool
 };
-
-{/*<div className={"answer-box"} style={{"background-color": this.getColor(i)}}>
-									  {answer}
-								  </div>*/}

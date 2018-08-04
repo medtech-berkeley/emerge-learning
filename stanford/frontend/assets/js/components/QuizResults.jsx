@@ -6,31 +6,34 @@ import {QuizQuestion} from "./QuizQuestion";
 export class QuizResults extends React.Component {
     constructor(props) {
       super(props);
-      this.toggle = this.toggle.bind(this);
-      this.state = { collapse: null };
+      this.displayAnswer.bind(this);
     }
 
-    toggle(e) {
-      let event = e.target.dataset.event;
-      this.setState({ collapse: this.state.collapse === Number(event) ? null : Number(event) });
+    displayAnswer(result, answer) {
+        if(result.correct.includes(answer.id)) {
+            return <p className="correct">{answer.text}</p>
+        } else if (result.selected === answer.id) {
+            return <p className="incorrect">{answer.text}</p>
+        }
+        else {
+            return <p>{answer.text}</p>
+        }
     }
 
 	render() {
 		return (
 			<Container>
-                {this.props.results.map((result, i) =>
-                    <Card>
-                      <CardHeader onClick={this.toggle} data-event={i} className="hover-hand">
-                          <h3 className="hover-hand" onClick={this.toggle} data-event={i}>Question {i} -- {result.correct.includes(result.selected) ?
-                              <Badge color='success'>Correct</Badge> :
-                              <Badge color='danger'>Incorrect</Badge>} </h3>
-                      </CardHeader>
-                      <CardBody>
-                          <Collapse isOpen={this.state.collapse === i}>
-                            <QuizQuestion id={i} answerQuestion={()=>null} text={result.text} answers={result.answers} correct_answers={result.correct} selected={result.selected} done={true}/>
-                          </Collapse>
-                      </CardBody>
-                    </Card>
+                {this.props.results.map((result, i) => {
+                    return (
+                    <div className="text-left results-question">
+                        <p>
+                            { result.correct.includes(result.selected) ? <span class="correct check">CORRECT</span> : <span className="incorrect x">INCORRECT</span> }
+                            <br />
+                            <strong>Question { i + 1 }: </strong> { result.text }
+                        </p>
+                        { result.answers.map((answer) => this.displayAnswer(result, answer)) }
+                    </div>);
+                    }
                 )}
 			</Container>
 		);
