@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.6-alpine
 
 ARG user_id=1000
 
@@ -7,10 +7,10 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-RUN apt-get update && apt-get install -y dumb-init
+RUN apk update && apk add dumb-init postgresql-dev gcc python3-dev musl-dev jpeg-dev zlib-dev
 
 
-RUN useradd -u $user_id --system stanford && \
+RUN adduser -u $user_id stanford -D -H && \
     mkdir /stanford && \
     chown stanford:stanford /stanford
 
