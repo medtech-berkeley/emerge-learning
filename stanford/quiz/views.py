@@ -52,7 +52,7 @@ class QuestionUserDataViewSet(ModelViewSet):
     serializer_class = QuestionUserDataSerializer
 
 
-class StudentsStatsViewSet(ViewSet):
+class StudentStatsViewSet(ViewSet):
     serializer_class = StudentStatsSerializer
 
     def list(self, request):
@@ -64,6 +64,8 @@ class StudentsStatsViewSet(ViewSet):
         students = Student.objects.all()
         for student in students:
             stats = get_stats_student(student, date)
+            stats['location'] = student.location
+            stats['image'] = student.image
             students_stats.append(stats)
 
         serializer = StudentStatsSerializer(instance=students_stats, many=True)
@@ -210,5 +212,39 @@ def get_category_results(request):
             }
             result.append(question)
         return JsonResponse({'accepted': True, 'results': result})
+
+    return HttpResponse(status=400)
+
+@login_required
+def get_stats(request):
+    """
+    Returns object of QuestionUserData statistics filtered by student, tags, difficulty
+    :param request: POST request with a list of tags (strings) and list of difficulty (strings)
+    :return: JSON response with format as follows 
+    '''
+
+    '''
+    """
+    if request.method != 'GET':
+        return HttpResponse(status=405)
+
+    student = request.user.student
+    if student:
+        try:
+            tags = request.GET.getlist('tags')
+            difficulties = request.GET.getlist('difficulties')
+        except KeyError as e:
+            print(e)
+            return JsonResponse({'accepted': False, 'reason': 'Missing or invalid tags or difficulties in request'}, status=400)
+
+        query_set = QuestionUserData.objects
+
+        if tags:
+            query_set = QuestionUserData.objects.filter(question__category__tags__text__in=tags)
+        if difficulties:
+            query_set = QuestionUserData.objects.filter(question__category__difficulty__in=difficulties)
+
+        stats = get_stats_student(student, query_set=query_set)
+        return JsonResponse({'accepted': True, 'stats': stats})
 
     return HttpResponse(status=400)

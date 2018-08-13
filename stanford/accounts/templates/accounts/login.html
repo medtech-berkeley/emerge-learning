@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  
     {% load static %}
     <link href="{% static 'accounts/accounts.css' %}" rel="stylesheet">
-
+    <link href="{% static 'dashboard/index.css' %}" rel="stylesheet">
   </head>
-  <body>
+  <body class="login-body">
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -20,7 +20,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/">App</a>
+  <a class="navbar-brand" href="/"></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -28,19 +28,17 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">About <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="#"><span class="sr-only">(current)</span></a>
       </li>
     </ul>
     <form action="/login" class="form-inline my-2 my-lg-0" style="transform:translateX(-10px);">
-      <button type="submit" class="btn btn-primary">Log In</button>
+      <button type="submit" class="btn btn-outline-primary">Log In</button>
     </form>
-    <form action="/signup" class="form-inline my-2 my-lg-0">
-      <button type="submit" class="btn btn-primary">Sign Up</button>
+    <form action="/#" class="form-inline my-2 my-lg-0">
+      <button type="submit" class="btn btn-success">Sign Up</button>
     </form>
   </div>
 </nav>
-
-
 <div class="login">
   {% if error %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -51,8 +49,8 @@
 
     </div>
   {% endif %}
-<div class="card" style="width: 18rem;">
-  <div class="card-body" style="text-align: center">
+<div class="card login-card">
+  <div class="card-body login-card-body" style="text-align: center">
     <h5 class="card-title">Log In</h5>
         <form method = "POST" action = "{% url 'login' %}">
         {% csrf_token %}
@@ -64,16 +62,11 @@
           <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
         </div>
 
-        <button type="submit" class="btn btn-primary btn-sm btn-block">Log In</button>
+        <button type="submit" class="btn btn-success btn-block">Log In</button>
       
         </form>
   </div>
 </div>
 </div>
-
-
-    
-
-
-  </body>
+</body>
 </html>

@@ -1,16 +1,19 @@
 pipeline {
   agent any
+  environment {
+    ID = "${env.GIT_BRANCH}-${env.BUILD_ID}";
+  }
   stages {
-    stage('Set up') {
+    stage('Set up and build') {
       steps {
         sh 'mkdir reports && chmod -R 777 reports'
         sh 'python3 try_build.py'
+        sh 'mkdir -p reports && chmod 777 reports'
       }
     }
     stage('Run tests') {
       steps {
-        sh 'docker-compose -f testing.yml up -d'
-        sh 'docker-compose exec -T interfaceserver bash run_tests.sh'
+        sh 'docker-compose -p $ID -f docker-compose.yml -f testing.yml run -T interfaceserver sh run_tests.sh'
       }
     }
     stage('Collect and Publish Reports') {
@@ -22,9 +25,10 @@ pipeline {
   }
   post {
     always {
-      sh 'docker-compose down'
-      cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenSuccess: true, cleanWhenUnstable: true, cleanupMatrixParent: true, deleteDirs: true)
-
+      sh 'docker-compose -f docker-compose.yml -f testing.yml down'
+      sh 'docker container prune -f'
+      sh 'docker volume prune -f'
+      sh 'docker network prune -f'
     }
 
   }

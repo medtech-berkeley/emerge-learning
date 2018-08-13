@@ -18,7 +18,7 @@ class StudentSerializer(serializers.ModelSerializer):
 class QuestionUserDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionUserData
-        fields = ('student', 'question', 'answer', 'time_started', 'time_completed')
+        fields = ('name', 'question', 'answer', 'time_started', 'time_completed')
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -44,7 +44,9 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class StudentStatsSerializer(serializers.Serializer):
-    student = serializers.CharField()
+    name = serializers.CharField()
+    location = serializers.CharField()
+    image = serializers.ImageField()
     questions_answered = serializers.IntegerField(read_only=True)
     num_correct = serializers.IntegerField(read_only=True)
     num_incorrect = serializers.IntegerField(read_only=True)

@@ -10,7 +10,7 @@ from django.test import TestCase, Client
 from django.utils import timezone
 
 from .sheetreader import Sheet
-from .models import Question, Category, QuestionUserData, Answer, Student
+from .models import Question, Category, QuestionUserData, Answer, Student, Tag
 from .utils import get_stats_student, get_stats_question_total, get_stats_category
 
 @skip
@@ -91,8 +91,46 @@ class QuizTestCase(TestCase):
         Answer.objects.create(text="a3", question=c3_q2, is_correct=True)
         Answer.objects.create(text="a4", question=c3_q2, is_correct=False)
 
-        self.categories = [cat1, cat2, cat3]
-        self.questions = [c1_q1, c1_q2, c1_q3, c2_q1, c2_q2, c2_q3, c3_q1, c3_q2]
+        cat4 = Category.objects.create(name="cat4", start=timezone.now(),
+                                       end=timezone.now(), sponsor="none", is_challenge=False)
+        cat4.tags.add(Tag.objects.create(text="Respiratory"))
+        cat4.difficulty = Category.INTERMEDIATE
+        cat4.save()
+
+        c4_q1 = Question.objects.create(text="c4_q1", category=cat4, max_time=datetime.timedelta(minutes=1))
+        Answer.objects.create(text="a1", question=c4_q1, is_correct=True)
+        Answer.objects.create(text="a2", question=c4_q1, is_correct=False)
+        Answer.objects.create(text="a3", question=c4_q1, is_correct=True)
+        Answer.objects.create(text="a4", question=c4_q1, is_correct=False)
+
+        c4_q2 = Question.objects.create(text="c4_q2", category=cat4, max_time=datetime.timedelta(minutes=1))
+        Answer.objects.create(text="a1", question=c4_q2, is_correct=True)
+        Answer.objects.create(text="a2", question=c4_q2, is_correct=False)
+        Answer.objects.create(text="a3", question=c4_q2, is_correct=True)
+        Answer.objects.create(text="a4", question=c4_q2, is_correct=False)
+
+
+        cat5 = Category.objects.create(name="cat5", start=timezone.now(),
+                                       end=timezone.now(), sponsor="none", is_challenge=True)
+        cat5.tags.add(Tag.objects.create(text="Circulation"))
+        cat5.difficulty = Category.ADVANCED
+        cat5.save()
+
+        c5_q1 = Question.objects.create(text="c5_q1", category=cat5, max_time=datetime.timedelta(minutes=1))
+        Answer.objects.create(text="a1", question=c5_q1, is_correct=True)
+        Answer.objects.create(text="a2", question=c5_q1, is_correct=False)
+        Answer.objects.create(text="a3", question=c5_q1, is_correct=True)
+        Answer.objects.create(text="a4", question=c5_q1, is_correct=False)
+
+
+        c5_q2 = Question.objects.create(text="c5_q2", category=cat5, max_time=datetime.timedelta(minutes=1))
+        Answer.objects.create(text="a1", question=c5_q2, is_correct=True)
+        Answer.objects.create(text="a2", question=c5_q2, is_correct=False)
+        Answer.objects.create(text="a3", question=c5_q2, is_correct=True)
+        Answer.objects.create(text="a4", question=c5_q2, is_correct=False)
+
+        self.categories = [cat1, cat2, cat3, cat4, cat5]
+        self.questions = [c1_q1, c1_q2, c1_q3, c2_q1, c2_q2, c2_q3, c3_q1, c3_q2, c4_q1, c4_q2, c5_q1, c5_q2]
         self.client, self.student = self._create_client_and_student("sean", "nah", "London Bridge")
 
     @staticmethod
@@ -501,5 +539,47 @@ class QuizTestCase(TestCase):
         self.assertFalse(200 <= response.status_code < 300, msg="Should not be able to get answers for a category "
                                                                 "that is not completed")
 
+    def test_get_stats_student(self):
+        response = self.client.get("/quiz/question", {'category': 'cat4'})
+        question_id = response.json()['id']
+        question = Question.objects.get(id=question_id)
+        answer = question.answers.filter(is_correct=True).first()
 
+        self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
+        response = self.client.get("/quiz/question", {'category': 'cat4'})
+        question_id = response.json()['id']
+        question = Question.objects.get(id=question_id)
+        answer = question.answers.filter(is_correct=False).first()
+
+        self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+
+        # test multiple open at same time
+        response = self.client.get("/quiz/question", {'category': 'cat5'})
+        question_id = response.json()['id']
+        question = Question.objects.get(id=question_id)
+        answer = question.answers.filter(is_correct=True).first()
+
+        response2 = self.client.get("/quiz/question", {'category': 'cat5'})
+        question_id2 = response2.json()['id']
+        question2 = Question.objects.get(id=question_id2)
+        answer2 = question2.answers.filter(is_correct=True).first()
+
+        self.client.post("/quiz/answer", {'question': question_id2, 'answer': answer2.id})
+
+        answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+        answer_json = answer_response.json()
+
+        result_medium = self.client.get("/stats/", {'tags': ['Respiratory', 'Surgery'], 'difficulties': ['Intermediate', 'Grandmaster']})
+        self.assertEqual(1, result_medium.json()['stats']['num_correct'], msg=result_medium)
+
+        result_hard = self.client.get("/stats/", {'tags': ['Circulation'], 'difficulties': ['Advanced']})
+        self.assertEqual(2, result_hard.json()['stats']['num_correct'], msg=result_hard)
+
+        result_medium_hard = self.client.get("/stats/", {'tags': ['Circulation', 'Respiratory'], 'difficulties': ['Intermediate', 'Advanced']})
+        self.assertEqual(3, result_medium_hard.json()['stats']['num_correct'], msg=result_medium_hard)
+
+    # TODO: Test case where tags=None or difficulties=None
+    def test_get_stats_student_nullcase(self):
+        pass
+   

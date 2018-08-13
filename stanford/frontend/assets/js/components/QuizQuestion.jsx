@@ -8,17 +8,14 @@ export class QuizQuestion extends React.Component {
 			<Container>
 				<Card className="question">
 				  <CardBody>
-                    { this.props.done ? null : <h4 className="card-title">{this.props.categoryId}: Question 1</h4> }
+                    {/* TODO: add support for listing question no */}
+                    <h4 className="card-title">{this.props.categoryId}</h4>
 					<p className="card-text">{this.props.text}</p>
 				  	<Row>
 					  {
 						  this.props.answers.map((answer, i) =>(
 						  <Col md={6} sm={12} key={i}>
-							  <div className={"card card-answer "
-                                    + (this.props.done && this.props.correct_answers.includes(answer.id) ? "card-answer-correct " : "")
-                                    + (this.props.done && !this.props.correct_answers.includes(answer.id) ? "card-answer-incorrect " : "")
-                                    + (this.props.done && this.props.selected === answer.id ? "card-answer-selected" : "")
-							  }>
+							  <div className="card card-answer">
 								  <div className="card-body" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
 								    <p className="card-text">{answer.text}</p>
 								  </div>
@@ -40,9 +37,4 @@ QuizQuestion.propTypes = {
     category: PropTypes.number,
 	correct_answers: PropTypes.array,
     selected: PropTypes.number,
-    done: PropTypes.bool
 };
-
-{/*<div className={"answer-box"} style={{"background-color": this.getColor(i)}}>
-									  {answer}
-								  </div>*/}

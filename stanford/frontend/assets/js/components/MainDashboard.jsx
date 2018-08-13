@@ -10,6 +10,7 @@ export class MainDashboard extends React.Component {
     componentWillMount() {
         this.props.refreshStudents();
         this.props.getCategories();
+        this.props.getLeaderboard();
     }
 
 	render() {
@@ -34,7 +35,7 @@ export class MainDashboard extends React.Component {
                             />
                             <br />
                             <p className="section-text">LEADERBOARD</p>
-                            <Leaderboard students={this.props.students} />
+                            <Leaderboard leaderboardResult={this.props.leaderboardResult} />
                         </div>
                     </div>
                 </Container>

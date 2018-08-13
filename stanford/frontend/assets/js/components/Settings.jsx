@@ -2,6 +2,7 @@ import React from "react"
 import {Card, CardBody, CardHeader, CardFooter, Container, Row, Col} from "reactstrap";
 import PropTypes from "prop-types"
 import {SettingsPane, SettingsPage, SettingsContent, SettingsMenu} from 'react-settings-pane'
+import {NavBar} from "./NavBar";
 
 // CSRF TOKEN STUFF
 
@@ -34,7 +35,7 @@ export class Settings extends React.Component {
             <div>
                 <Container>
             <h1>Update Profile</h1>
-            <form method = "POST" action="" encType="multipart/form-data">
+            <form method = "POST" action="/profile/update" encType="multipart/form-data">
                 <CSRFToken />
                 <div className="form-group">
                   <label >Full Name</label>
@@ -52,7 +53,7 @@ export class Settings extends React.Component {
                   <label >Profile Photo</label>
                   <input type="file" name="image" className="form-control"/>
                 </div>
-                <button type="submit" className="btn btn-primary">Update</button>
+                <button type="submit" className="btn btn-success">Update</button>
             </form>
             </Container>
             </div>

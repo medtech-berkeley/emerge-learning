@@ -11,7 +11,7 @@ class Student(models.Model):
     name = models.CharField(max_length=100, default="Enter Name")
     location = models.CharField(max_length=100, default="Enter location")
     description = models.CharField(max_length=500, default="Enter description")
-    image = models.ImageField(upload_to='profile_images', blank=True)
+    image = models.ImageField(upload_to='profile_images', default="/static/accounts/default_profile.jpg", blank=True)
 
     def __str__(self):
         return self.user.username
@@ -36,6 +36,21 @@ class Category(models.Model):
     is_challenge = models.BooleanField()
     image = models.ImageField(upload_to="category_images", default='default.jpg')
     tags = models.ManyToManyField(Tag, related_name="categories")
+
+    NOVICE = 'Novice'
+    INTERMEDIATE = 'Intermediate'
+    ADVANCED = 'Advanced'
+    DIFFICULTY_CHOICES = (
+        (NOVICE, 'Novice'),
+        (INTERMEDIATE, 'Intermediate'),
+        (ADVANCED, 'Advanced'),
+    )
+
+    difficulty = models.CharField(
+        max_length=20,
+        choices=DIFFICULTY_CHOICES,
+        default=NOVICE,
+    )
 
     def __str__(self):
         return self.name

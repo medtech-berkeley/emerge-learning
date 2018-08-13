@@ -13,15 +13,14 @@ export class Leaderboard extends React.Component {
       <thead>
           <tr>
             <th>Rank</th>
-            <th>Change</th>
             <th>Name</th>
             <th>Score</th>
             <th>Location</th>
-            <th>Occupation</th>
+            <th>Status</th>
           </tr>
       </thead>
       <tbody>
-            {this.props.students.map(
+            {this.props.leaderboardResult.map(
                function(student, index){
                 return (
                 <tr className={"row-" + index.toString()}>
@@ -29,19 +28,14 @@ export class Leaderboard extends React.Component {
                     <b>{index + 1}</b>
                   </td>
                   <td>
-                    {(student.name == "Mocha Vasudevan" || student.name == "Ethan Teo") && <i class="fa fa-caret-up"></i>}
-                    {(student.name != "Mocha Vasudevan" && student.name != "Ethan Teo") && <i class="fa fa-caret-down"></i>}
-                    {Math.floor((Math.random() * 10)/2) + 1}
-                  </td>
-                  <td>
                     <img src={student.image} className="icon-img img-circle" width="30" height="30"/>
                     {student.name}
                   </td>
                   <td className="leaderboard-score">
-                    {Math.floor((Math.random() * 100)/(3*index+1)) + 1}
+                    {student.num_correct}
                   </td>
                   <td>{student.location}</td>
-                  <td>{student.description}</td>
+                  <td>Student</td>
                </tr>
                )
              }

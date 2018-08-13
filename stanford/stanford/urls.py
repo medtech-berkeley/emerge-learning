@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from frontend.views import index
+from frontend.views import index, change_user_info
 from rest_framework import routers
-from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet, StudentsStatsViewSet
-from quiz.views import get_question, submit_answer, get_category_results
+from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet, StudentStatsViewSet
+from quiz.views import get_question, submit_answer, get_category_results, get_stats
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import logins, logout_view
@@ -32,12 +32,13 @@ router.register(r'answers', AnswerViewSet, 'Answer')
 router.register(r'categories', CategoryViewSet, 'Category')
 router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData')
 router.register(r'students', StudentViewSet, 'Student')
-router.register(r'data', StudentsStatsViewSet, 'StudentStats')
+router.register(r'studentstats', StudentStatsViewSet, 'StudentStats')
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='dashboard'),
+    path('profile/update', change_user_info),
     path('profile/', index),
     path('settings/', index),
     path('quiz/question', get_question),
@@ -46,6 +47,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('login/', logins, name='login'),
     path('logout/', logout_view, name='logout'),
+    path('stats/', get_stats, name='stats')
     # re_path(r'.*', index),
 ]
 
