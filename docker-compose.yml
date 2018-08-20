@@ -9,7 +9,7 @@ services:
       - interfaceserver
   interfaceserver:
     build: .
-    image: stanford-quiz:${ID:-latest}
+    image: builder.pernixsoft.ml:5000/stanford-quiz:${ID:-latest}
     command: sh /entry/entrypoint-interface.sh
     user: stanford
     working_dir: /stanford
