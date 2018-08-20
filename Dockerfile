@@ -1,5 +1,14 @@
-FROM python:3.6-alpine
+FROM node:8-alpine as react-pkg
+RUN apk update && apk upgrade && \
+    apk add --no-cache bash git openssh
+COPY stanford/webpack.config.js stanford/.babelrc /stanford/
+COPY stanford/package.json stanford/package-lock.json /stanford/
+RUN cd /stanford && npm install
+COPY stanford/frontend/assets /stanford/frontend/assets
+RUN cd /stanford && npm run build
 
+
+FROM python:3.6-alpine
 ARG user_id=1000
 
 ENV DOCKERIZE_VERSION v0.6.1
@@ -20,6 +29,7 @@ RUN pip install --upgrade pip && pip install -r /stanford/requirements.txt
 COPY --chown=stanford:stanford ./stanford/ /stanford/
 COPY --chown=stanford:stanford ./run_tests.sh /stanford/
 ADD --chown=stanford:stanford docker/entrypoint-*.sh /entry/
+COPY --from=react-pkg /stanford/frontend/assets/bundles/main.js /stanford/frontend/assets/bundles/main.js
 
 RUN mkdir -p /static && chown -R stanford:stanford /static
 RUN mkdir -p /media && chown -R stanford:stanford /media
