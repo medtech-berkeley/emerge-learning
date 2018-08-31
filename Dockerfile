@@ -29,6 +29,7 @@ RUN pip install --upgrade pip && pip install -r /stanford/requirements.txt
 COPY --chown=stanford:stanford ./stanford/ /stanford/
 COPY --chown=stanford:stanford ./run_tests.sh /stanford/
 ADD --chown=stanford:stanford docker/entrypoint-*.sh /entry/
+COPY --from=react-pkg /stanford/webpack-stats.json /stanford
 COPY --from=react-pkg /stanford/frontend/assets/bundles/main.js /stanford/frontend/assets/bundles/main.js
 
 RUN mkdir -p /static && chown -R stanford:stanford /static
