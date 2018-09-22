@@ -10,7 +10,7 @@ export function updateData(data) {
 }
 
 export function refreshData() {
-	return dispatch => fetch("/api/data/self", window.getHeader)
+	return dispatch => fetch("/stats", window.getHeader)
 		.then(r => r.json().then(data => {
 			dispatch(updateData(data))
 		}));
