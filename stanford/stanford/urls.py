@@ -21,7 +21,7 @@ from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, Question
 from quiz.views import get_question, submit_answer, get_category_results, get_stats
 from django.conf import settings
 from django.conf.urls.static import static
-from accounts.views import signup, logins, logout_view
+from accounts.views import logins, logout_view
 from django.conf import settings
 
 import os
@@ -45,7 +45,6 @@ urlpatterns = [
     path('quiz/answer', submit_answer),
     path('quiz/results', get_category_results),
     path('api/', include(router.urls)),
-    path('signup/', signup, name='signup'),
     path('login/', logins, name='login'),
     path('logout/', logout_view, name='logout'),
     path('stats/', get_stats, name='stats')

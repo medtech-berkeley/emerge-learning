@@ -103,6 +103,11 @@ form.signup {
     color: white;
 }
 
+#landing-header {
+    color: white;
+    padding-bottom: 22px;
+}
+
 #icons-grid {
     padding-top: 50px;
 }
