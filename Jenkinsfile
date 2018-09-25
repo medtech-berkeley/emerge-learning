@@ -22,6 +22,15 @@ pipeline {
         cobertura(autoUpdateHealth: true, failNoReports: true, failUnstable: true, coberturaReportFile: 'reports/coverage.xml')
       }
     }
+    stage('Publish Changes') {
+      when {
+        branch 'master'
+      }
+      steps {
+        sh 'docker tag builder.pernixsoft.ml:5000/stanford-quiz:$ID builder.pernixsoft.ml:5000/stanford-quiz:latest'
+        sh 'docker push builder.pernixsoft.ml:5000/stanford-quiz:latest'
+      }
+    }
   }
   post {
     always {
