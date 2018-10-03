@@ -1,5 +1,16 @@
 import datetime
 
+DEVICE_CHOICES = [
+    ('COMP', 'Computer'),
+    ('PHON', 'Smart Phone'),
+    ('TABL', 'Tablet')
+]
+
+INTERNET_CHOICES = [
+    (1, 'Poor/unreliable'),
+    (2, 'Adequate'),
+    (3, 'Excellent')
+]
 
 YEAR_CHOICES = []
 for r in range(1900, (datetime.datetime.now().year+1)):

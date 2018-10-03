@@ -6,7 +6,8 @@ from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_CHOICES, ORG_CHOICES
+from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_CHOICES, \
+                             ORG_CHOICES, DEVICE_CHOICES, INTERNET_CHOICES
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -120,6 +121,14 @@ class GVK_EMRI_Demographics(models.Model):
     pediatrics_refresher = models.BooleanField()
     pediatrics_date = models.DateField(null=True)
 
-
     pediatrics_refresher = models.BooleanField()
     pediatrics_date = models.DateField(null=True)
+
+    leadership_refresher = models.BooleanField()
+    leadership_date = models.DateField(null=True)
+
+    most_used_device = models.CharField(max_length=4, choices=DEVICE_CHOICES)
+    internet_reliability = models.IntegerField(choices=DEVICE_CHOICES)
+
+    work_device_hours = models.DecimalField(max_digits=4, decimal_places=2)
+    personal_device_hours = models.DecimalField(max_digits=4, decimal_places=2)
