@@ -1,18 +1,31 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-# Create your models here.
+from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_CHOICES, ORG_CHOICES
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default="Enter Name")
     location = models.CharField(max_length=100, default="Enter location")
     description = models.CharField(max_length=500, default="Enter description")
+    
+    completed_survey = models.BooleanField(default=False)
     image = models.ImageField(upload_to='profile_images', default="/static/accounts/default_profile.jpg", blank=True)
+    birth_year = models.IntegerField(choices=YEAR_CHOICES, default=datetime.datetime.now().year)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='U')
+    job = models.CharField(max_length=4, choices=JOB_CHOICES, default='OTH')
+    education_level = models.CharField(max_length=3, default="LPS")
+    country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='AX')
+    state = models.CharField(max_length=2, default="Denial")
+    years_of_experience = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    organization = models.CharField(max_length=3, choices=ORG_CHOICES, default='OTH')
 
+    
     def __str__(self):
         return self.user.username
 
@@ -80,7 +93,7 @@ class QuestionUserData(models.Model):
     Stores student-specific metadata for each question. Time it took to complete, what the student answered, etc
     """
 
-    student = models.ForeignKey(Student, related_name="question_data", on_delete=models.DO_NOTHING)
+    student = models.ForeignKey(Student, related_name="question_data", on_delete=models.CASCADE)
     question = models.ForeignKey(Question, related_name="question_data", on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, null=True, related_name="question_data", on_delete=models.CASCADE)
     time_started = models.DateTimeField(default=timezone.now)
@@ -91,3 +104,22 @@ class QuestionUserData(models.Model):
 
     class Meta:
         unique_together = ('question', 'student')
+
+
+class GVK_EMRI_Demographics(models.Model):
+    student = models.OneToOneField(Student, on_delete=models.CASCADE)
+    med_cardio_refresher = models.BooleanField()
+    med_cardio_date = models.DateField(null=True)
+
+    obgyn_refresher = models.BooleanField()
+    obgyn_date = models.DateField(null=True)
+    
+    trauma_refresher = models.BooleanField()
+    trauma_date = models.DateField(null=True)
+
+    pediatrics_refresher = models.BooleanField()
+    pediatrics_date = models.DateField(null=True)
+
+
+    pediatrics_refresher = models.BooleanField()
+    pediatrics_date = models.DateField(null=True)
