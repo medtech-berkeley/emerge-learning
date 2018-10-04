@@ -5,14 +5,14 @@ from django.contrib.auth.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'password', 'email')
+        fields = ('username', 'email')
 
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 
     class Meta:
         model = Student
-        fields = ('user', 'name', 'location', 'description', 'image')
+        fields = ('user', 'name', 'location', 'description', 'image', 'completed_survey')
 
 
 class QuestionUserDataSerializer(serializers.ModelSerializer):
