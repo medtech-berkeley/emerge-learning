@@ -22,7 +22,7 @@ class Student(models.Model):
     job = models.CharField(max_length=4, choices=JOB_CHOICES, default='OTH')
     education_level = models.CharField(max_length=3, default="LPS")
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='AX')
-    state = models.CharField(max_length=2, default="Denial")
+    state = models.CharField(max_length=20, default="Denial")
     years_of_experience = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     organization = models.CharField(max_length=3, choices=ORG_CHOICES, default='OTH')
 
