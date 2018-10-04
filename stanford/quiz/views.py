@@ -267,10 +267,13 @@ def submit_demographics_form(request):
                     return HttpResponse(400)
                 setattr(student, field, request.POST[field])
             
+            student.completed_survey = True
+            
             if student.organization == 'GVK':
                 gvk_fields = {field:request.Post[field] for field in optional_fields}
                 extra_info = GVK_EMRI_Demographics(student=student, **gvk_fields)
                 extra_info.save()
+                
             student.save()
             
         return HttpResponse(200)

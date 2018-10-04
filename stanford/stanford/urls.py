@@ -18,7 +18,7 @@ from django.urls import path, include, re_path
 from frontend.views import index, change_user_info
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet, StudentStatsViewSet
-from quiz.views import get_question, submit_answer, get_category_results, get_stats
+from quiz.views import get_question, submit_answer, get_category_results, get_stats, submit_demographics_form
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import signup, logins, logout_view
@@ -40,6 +40,7 @@ urlpatterns = [
     path('', index, name='dashboard'),
     path('profile/update', change_user_info),
     path('profile/', index),
+    path('profile/demosurvey', submit_demographics_form),
     path('settings/', index),
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
