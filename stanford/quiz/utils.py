@@ -10,9 +10,13 @@ def get_stats_student(student, date=None, query_set=QuestionUserData.objects):
     qud = query_set.filter(student=student, time_completed__lte=date)
 
     stats['name'] = student.name
-    stats['questions_answered'] = qud.count()
-    stats['num_correct'] = qud.filter(answer__is_correct=True).count()
-    stats['num_incorrect'] = stats['questions_answered'] - stats['num_correct']
+    
+    subject_stats = {}
+    subject_stats['questions_answered'] = qud.count()
+    subject_stats['num_correct'] = qud.filter(answer__is_correct=True).count()
+    subject_stats['num_incorrect'] = subject_stats['questions_answered'] - subject_stats['num_correct']
+
+    stats['subjects'] = subject_stats
     return stats
 
 

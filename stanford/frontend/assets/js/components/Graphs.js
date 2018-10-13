@@ -7,12 +7,13 @@ import css from 'react-tabs/style/react-tabs.css';
 export class Graphs extends React.Component {
     render() {
         return (
+
             <div className="Graphs">
                 <p><b>Performance</b></p>
                 <hr/>
-                <p>Questions Answered: {this.props.data.questions_answered}</p>
-                <p>Number Correct: {this.props.data.num_correct}</p>
-                <p>Number Incorrect: {this.props.data.num_incorrect}</p>
+                <p>Questions Answered: {this.props.data.subjects && this.props.data.subjects.questions_answered}</p>
+                <p>Number Correct: {this.props.data.subjects && this.props.data.subjects.num_correct}</p>
+                <p>Number Incorrect: {this.props.data.subjects && this.props.data.subjects.num_incorrect}</p>
                 <Card>
                     <div className="card-body">
                     <Tabs>
