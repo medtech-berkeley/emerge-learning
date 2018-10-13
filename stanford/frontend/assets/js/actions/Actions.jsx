@@ -9,6 +9,7 @@ export const UPDATE_SUBMIT_ERROR = 'DISPLAY_SUBMIT_ERROR';
 export const UPDATE_CATEGORY_COMPLETED = 'DISPLAY_CATEGORY_COMPLETED';
 export const UPDATE_CATEGORY_RESULTS = 'UPDATE_CATEGORY_RESULTS';
 export const UPDATE_LEADERBOARD = 'UPDATE_LEADERBOARD';
+export const UPDATE_TIMER = 'UPDATE_TIMER';
 
 export function getUsers() {
 	return dispatch => fetch("/api/users", window.getHeader)
@@ -23,6 +24,20 @@ export function updateUsers(users) {
 		users
 	}
 }
+
+export function startTime() {
+	return dispatch => {
+		setInterval(() => dispatch(updateTimer(Math.floor((new Date).getTime()/1000))), 500);
+	}
+}
+
+export function updateTimer(time) {
+	return {
+		type: UPDATE_TIMER,
+		time
+	}
+}
+
 
 export function getCategories() {
 	return dispatch => fetch("/api/categories", window.getHeader)
@@ -54,7 +69,7 @@ export function updateQuestionUserData(questionUserData) {
 
 export function selectCategory(categoryId) {
 	return {
-		type: SELECT_CATEGORY, 
+		type: SELECT_CATEGORY,
 		categoryId
 	}
 }

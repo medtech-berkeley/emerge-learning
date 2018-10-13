@@ -3,6 +3,9 @@ import {Card, CardBody, CardHeader, CardFooter, Container, Row, Col} from "react
 import PropTypes from "prop-types"
 
 export class QuizQuestion extends React.Component {
+	getTimeLeft(){
+		return this.props.currentTime;
+	}
 	render() {
 		return (
 			<Container>
@@ -11,6 +14,7 @@ export class QuizQuestion extends React.Component {
                     {/* TODO: add support for listing question no */}
                     <h4 className="card-title">{this.props.categoryId}</h4>
 					<p className="card-text">{this.props.text}</p>
+				<p className="card-text">{this.getTimeLeft()}</p>
 				  	<Row>
 					  {
 						  this.props.answers.map((answer, i) =>(
@@ -37,4 +41,5 @@ QuizQuestion.propTypes = {
     category: PropTypes.number,
 	correct_answers: PropTypes.array,
     selected: PropTypes.number,
+		currentTime: PropTypes.number,
 };
