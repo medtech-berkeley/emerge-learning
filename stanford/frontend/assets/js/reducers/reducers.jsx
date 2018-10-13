@@ -1,5 +1,5 @@
 import { UPDATE_USERS, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_RESULTS } from "../actions/Actions"
-import { UPDATE_LEADERBOARD } from "../actions/Actions"
+import { UPDATE_LEADERBOARD, UPDATE_TIMER } from "../actions/Actions"
 import { UPDATE_STUDENT, UPDATE_STUDENTS } from "../actions/LoadUserActions"
 import { UPDATE_DATA } from "../actions/DataActions"
 
@@ -76,6 +76,7 @@ const initialState = {
 		}
 	},
 	ui: {
+		currentTime: 67,
 		categoryId: -1,
 		currentQuestion: {
         "id": -1,
@@ -104,7 +105,8 @@ const initialState = {
             }
         ],
         "created": "2018-04-25T09:21:22.618444Z",
-        "max_time": "1 10:00:00"
+				"time_started": "2018-04-25T09:21:22.618444Z",
+        "max_time": "10:00:00"
     },
 		complete: false,
 		num_correct: 0,
@@ -115,6 +117,10 @@ const initialState = {
 
 export function stanfordApp(state = initialState, action) {
     switch (action.type) {
+			case (UPDATE_TIMER):
+				let newStateUpdateTimer = Object.assign({}, state);
+				newStateUpdateTimer.ui.currentTime = action.time;
+				return newStateUpdateTimer;
     	case (UPDATE_STUDENTS):
     		let newStateUpdateStudents = Object.assign({}, state);
 	    	newStateUpdateStudents.api.students = action.students;
@@ -130,7 +136,7 @@ export function stanfordApp(state = initialState, action) {
 	    case (SELECT_CATEGORY):
 	    	let newStateSelectCategory = Object.assign({}, state);
 	    	newStateSelectCategory.ui.categoryId = action.categoryId;
-	    	return newStateSelectCategory;	
+	    	return newStateSelectCategory;
     	case (UPDATE_CURRENT_QUESTION):
     		let newStateCurrentQuestion = Object.assign({}, state);
 	    	newStateCurrentQuestion.ui.currentQuestion = action.currentQuestion;
