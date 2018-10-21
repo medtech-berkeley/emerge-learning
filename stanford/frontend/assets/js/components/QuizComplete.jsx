@@ -31,9 +31,9 @@ export class QuizComplete extends React.Component {
 }
 
 QuizComplete.propTypes = {
-    categoryId: PropTypes.number,
-    num_attempted: PropTypes.number,
-    num_correct: PropTypes.number,
+  categoryId: PropTypes.number,
+  num_attempted: PropTypes.number,
+  num_correct: PropTypes.number,
 	results: PropTypes.array,
 	getResults: PropTypes.func
 };

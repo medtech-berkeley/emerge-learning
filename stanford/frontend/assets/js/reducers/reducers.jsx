@@ -78,11 +78,13 @@ const initialState = {
 	ui: {
 		currentTime: 67,
 		categoryId: -1,
+		timeStarted: Math.floor((new Date).getTime()/1000),
+        maxTime: 300,
 		currentQuestion: {
-        "id": -1,
-        "category": "Default",
-        "text": "Default",
-        "answers": [
+        id: -1,
+        category: "Default",
+        text: "Default",
+        answers: [
             {
                 "id": 1,
                 "text": "Default a1.",
@@ -104,9 +106,7 @@ const initialState = {
                 "is_correct": false
             }
         ],
-        "created": "2018-04-25T09:21:22.618444Z",
-				"time_started": "2018-04-25T09:21:22.618444Z",
-        "max_time": "10:00:00"
+        created: "2018-04-25T09:21:22.618444Z"
     },
 		complete: false,
 		num_correct: 0,
@@ -117,10 +117,10 @@ const initialState = {
 
 export function stanfordApp(state = initialState, action) {
     switch (action.type) {
-			case (UPDATE_TIMER):
-				let newStateUpdateTimer = Object.assign({}, state);
-				newStateUpdateTimer.ui.currentTime = action.time;
-				return newStateUpdateTimer;
+		case (UPDATE_TIMER):
+			let newStateUpdateTimer = Object.assign({}, state);
+			newStateUpdateTimer.ui.currentTime = action.time;
+			return newStateUpdateTimer;
     	case (UPDATE_STUDENTS):
     		let newStateUpdateStudents = Object.assign({}, state);
 	    	newStateUpdateStudents.api.students = action.students;

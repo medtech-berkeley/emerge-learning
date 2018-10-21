@@ -35,11 +35,13 @@ export class QuizQuestion extends React.Component {
 }
 
 QuizQuestion.propTypes = {
-    id: PropTypes.number,
+  id: PropTypes.number,
 	text: PropTypes.string,
 	answers: PropTypes.array,
-    category: PropTypes.number,
+  category: PropTypes.number,
 	correct_answers: PropTypes.array,
-    selected: PropTypes.number,
-		currentTime: PropTypes.number,
+  selected: PropTypes.number,
+	currentTime: PropTypes.number,
+	timeStarted: PropTypes.number,
+	maxTime: PropTypes.number,
 };
