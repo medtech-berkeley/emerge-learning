@@ -15,7 +15,7 @@ services:
     volumes:
       - ./stanford/webpack-stats.json:/stanford/webpack-stats.json
       - ./stanford/package.json:/stanford/package.json
-      - ./stanford/frontend/bundles:/stanford/frontend/bundles
+      - ./stanford/frontend/assets:/stanford/frontend/assets
   interfaceserver:
     depends_on:
       - reactserver

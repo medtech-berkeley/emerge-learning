@@ -7,13 +7,13 @@ pipeline {
     stage('Set up and build') {
       steps {
         sh 'mkdir reports && chmod -R 777 reports'
-        sh 'python3 try_build.py'
+        sh 'python3 build.py'
         sh 'mkdir -p reports && chmod 777 reports'
       }
     }
     stage('Run tests') {
       steps {
-        sh 'docker-compose -p $ID -f docker-compose.yml -f testing.yml run -T interfaceserver sh run_tests.sh'
+        sh 'docker-compose -p $ID -f docker-compose.yml -f testing.yml run -T interfaceserver sh test.sh'
       }
     }
     stage('Collect and Publish Reports') {
@@ -42,3 +42,4 @@ pipeline {
 
   }
 }
+
