@@ -14,6 +14,7 @@ services:
     command: sh -c "npm install package.json; npm run watch"
     volumes:
       - ./stanford/webpack.config.js:/stanford/webpack.config.js
+      - ./stanford/webpack.config.js:/stanford/webpack-stats.json
       - ./stanford/.babelrc:/stanford/.babelrc
       - ./stanford/node_modules:/stanford/node_modules
       - ./stanford/package.json:/stanford/package.json
