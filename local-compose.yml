@@ -1,10 +1,29 @@
-version: '3'
+version: '3.4'
 services:
   nginx:
     ports:
       - "80:80"
     volumes:
       - ./docker/config/nginx/stanford.conf:/etc/nginx/conf.d/default.conf
+      - ./stanford/frontend/assets/bundles:/static/bundles
+  reactserver:
+    build:
+      context: .
+      target: react-pkg
+    working_dir: /stanford
+    command: sh -c "npm install package.json; npm run watch"
+    volumes:
+      - ./stanford/webpack.config.js:/stanford/webpack.config.js
+      - ./stanford/.babelrc:/stanford/.babelrc
+      - ./stanford/node_modules:/stanford/node_modules
+      - ./stanford/package.json:/stanford/package.json
+      - ./stanford/package-lock.json:/stanford/package-lock.json
+      - ./stanford/frontend:/stanford/frontend
+  interfaceserver:
+    depends_on:
+      - reactserver
+    volumes:
+      - ./stanford:/stanford
   database:
     volumes:
       - db_data:/var/lib/postgresql/data

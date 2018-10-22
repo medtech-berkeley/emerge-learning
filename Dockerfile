@@ -1,11 +1,13 @@
 FROM node:8-alpine as react-pkg
 RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
-COPY stanford/webpack.config.js stanford/.babelrc /stanford/
-COPY stanford/package.json stanford/package-lock.json /stanford/
+    apk add --no-cache bash git openssh dumb-init
+USER node
+COPY --chown=node:node stanford/webpack.config.js stanford/.babelrc /stanford/
+COPY --chown=node:node stanford/package.json stanford/package-lock.json /stanford/
 RUN cd /stanford && npm install
-COPY stanford/frontend/assets /stanford/frontend/assets
+COPY --chown=node:node stanford/frontend/assets /stanford/frontend/assets
 RUN cd /stanford && npm run build
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 
 FROM python:3.6-alpine
