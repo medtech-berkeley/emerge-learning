@@ -9,15 +9,18 @@ The project requires three services to run properly.
 
 All of these services are defined in `docker-compose.yml` and have a variety of configuration options you defined in that file. By default running `docker-compose up` will run the server but will not bind a port so that you can access it from outside the docker container. For that we have two additional configuration files: `production-compose.yml` and `local-compose.yml`.
 
+# Compose helper script
+There is a simple helper script provided named `compose`. This should work on Mac and Linux and could potentially work in Windows but this is untested. Alternatively, you can replace everywhere you see `./compose [CMD]` with `docker-compose -f docker-compose.yml -f local-compose.yml [CMD]`.
+
 # Building
 To build run:
 ```
-docker-compose build
+./compose build
 ```
 
 You can verify that is runs properly by running
 ```
-docker-compose up
+./compose up
 ```
 And waiting for the Django startup line (`Starting development server at http://0.0.0.0:8000/`). IF there aren't any Python errors in the output then the configuration likely worked.
 
@@ -32,34 +35,28 @@ The local development server should allow you to mount your local directory into
 
 To run a command locally you can do the following:
 ```
-docker-compose -f docker-compose.yml -f local-compose.yml [DOCKER_CMD_HERE]
+./compose [DOCKER_CMD_HERE]
 ```
 
 To start up the server:
 ```
-docker-compose -f docker-compose.yml -f local-compose.yml up
+./compose up
 ```
 To run it in detached mode, you can append a `-d` to the previous command and Docker will not block your terminal while running.
 
 This is only necessary for the `up` and `run` commands. If you already have a container running (through `up -d` for example) you can use the following command to enter it:
 ```
-docker-compose exec [SERVICE_NAME] [COMMAND]
+./compose exec [SERVICE_NAME] [COMMAND]
 ```
 
 For example to enter the interface (Django) server with a command prompt
 ```
-docker-compose exec interfaceserver sh
+./compose exec interfaceserver sh
 ```
 
 Or to run a manage.py command:
 ```
-docker-compose exec interfaceserver stanford/manage.py [MANAGE.PY COMMAND]
-```
-
-### Mounting a local directory
-You can use the following command to mount your local directory into the docker container so you do not need to rebuild on every code change:
-```
-docker-compose build
+./compose exec interfaceserver /stanford/manage.py [MANAGE.PY COMMAND]
 ```
 
 Note for Windows:
