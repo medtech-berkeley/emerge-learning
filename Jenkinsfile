@@ -7,7 +7,7 @@ pipeline {
     stage('Set up and build') {
       steps {
         sh 'mkdir reports && chmod -R 777 reports'
-        sh 'python3 build.py'
+        sh 'docker-compose -p $ID build'
         sh 'mkdir -p reports && chmod 777 reports'
       }
     }
