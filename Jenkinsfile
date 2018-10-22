@@ -13,7 +13,7 @@ pipeline {
     }
     stage('Run tests') {
       steps {
-        sh 'docker-compose -p $ID -f docker-compose.yml -f testing.yml run -T interfaceserver sh test.sh'
+        sh 'docker-compose -p $ID -f docker-compose.yml -f testing.yml run -v ./reports:/reports -T interfaceserver sh test.sh'
       }
     }
     stage('Collect and Publish Reports') {

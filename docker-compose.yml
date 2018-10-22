@@ -22,7 +22,6 @@ services:
     volumes:
       - media_files:/media
       - static:/static
-      - ./reports:/reports
   database:
     image: postgres:9.5
 volumes:
