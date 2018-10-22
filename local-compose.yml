@@ -13,18 +13,15 @@ services:
     working_dir: /stanford
     command: sh -c "npm install package.json; npm run watch"
     volumes:
-      - ./stanford/webpack.config.js:/stanford/webpack.config.js
-      - ./stanford/webpack.config.js:/stanford/webpack-stats.json
-      - ./stanford/.babelrc:/stanford/.babelrc
-      - ./stanford/node_modules:/stanford/node_modules
+      - ./stanford/webpack-stats.json:/stanford/webpack-stats.json
       - ./stanford/package.json:/stanford/package.json
-      - ./stanford/package-lock.json:/stanford/package-lock.json
-      - ./stanford/frontend:/stanford/frontend
+      - ./stanford/frontend/bundles:/stanford/frontend/bundles
   interfaceserver:
     depends_on:
       - reactserver
     volumes:
       - ./stanford:/stanford
+      - ./stanford/frontend/assets/bundles:/static/bundles
   database:
     volumes:
       - db_data:/var/lib/postgresql/data
