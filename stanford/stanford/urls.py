@@ -49,8 +49,8 @@ urlpatterns = [
     path('signup/', signup, name='signup'),
     path('login/', logins, name='login'),
     path('logout/', logout_view, name='logout'),
-    path('stats/', get_stats, name='stats')
-    # re_path(r'.*', index),
+    path('stats/', get_stats, name='stats'),
+    re_path(r'^.*$', index)
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
