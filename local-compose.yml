@@ -14,8 +14,7 @@ services:
     command: sh -c "npm install package.json; npm run watch"
     volumes:
       - ./stanford/webpack-stats.json:/stanford/webpack-stats.json
-      - ./stanford/package.json:/stanford/package.json
-      - ./stanford/frontend/assets:/stanford/frontend/assets
+      - ./stanford/:/stanford/
   interfaceserver:
     depends_on:
       - reactserver
