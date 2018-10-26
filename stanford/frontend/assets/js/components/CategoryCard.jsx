@@ -10,7 +10,7 @@ export class CategoryCard extends React.Component {
 				<div className="card card-shadow">
 			        <div className="row no-gutters">
 			            <div className="category-img col-auto">
-			                <img src={this.props.image} className="img-fluid" alt=""/>
+			                <img width="64" height="64" src={this.props.image} className="img-fluid" alt={this.props.name}/>
 			            </div>
 			            <div className="col">
 			                <div className="card-body">
