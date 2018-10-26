@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Question, QuestionUserData, Category, Answer, Student
+from .models import Question, QuestionUserData, Category, CategoryUserData, Answer, Student
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -26,6 +26,12 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('name', 'start', 'end', 'sponsor', 'is_challenge', 'max_time', 'image', 'tags')
+
+
+class CategoryUserDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CategoryUserData
+        fields = ('category', 'student', 'time_started', 'time_completed')
 
 
 class AnswerSerializer(serializers.ModelSerializer):

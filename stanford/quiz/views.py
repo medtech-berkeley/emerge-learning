@@ -8,7 +8,8 @@ from quiz.utils import get_student_category_stats
 
 from .utils import get_unanswered_questions
 from .models import Question, QuestionUserData, Category, Student
-from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, StudentSerializer, UserSerializer, StudentStatsSerializer
+from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer
+from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, CategoryUserDataSerializer
 from .models import Student, Category, Question, Answer, QuestionUserData, CategoryUserData, GVK_EMRI_Demographics
 from django.contrib.auth.models import User
 from rest_framework.viewsets import ModelViewSet, ViewSet
@@ -45,6 +46,10 @@ class AnswerViewSet(ModelViewSet):
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+class CategoryUserDataViewSet(ModelViewSet):
+    queryset = CategoryUserData.objects.all()
+    serializer_class = CategoryUserDataSerializer
 
 
 class QuestionUserDataViewSet(ModelViewSet):
