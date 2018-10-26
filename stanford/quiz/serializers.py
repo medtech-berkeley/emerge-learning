@@ -18,7 +18,7 @@ class StudentSerializer(serializers.ModelSerializer):
 class QuestionUserDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionUserData
-        fields = ('name', 'question', 'answer', 'time_started', 'time_completed')
+        fields = ('question', 'answer', 'time_started', 'time_completed')
 
 
 class CategorySerializer(serializers.ModelSerializer):
