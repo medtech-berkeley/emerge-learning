@@ -1,1 +1,1 @@
-{"status":"error","error":"ModuleNotFoundError","message":"Module not found: Error: Can't resolve 'react-dom-confetti' in '/stanford/frontend/assets/js/components'"}
+{"status":"done","chunks":{"main":[{"name":"main.js","path":"/stanford/frontend/assets/bundles/main.js"}]}}
