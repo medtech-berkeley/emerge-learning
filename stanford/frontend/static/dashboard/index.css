@@ -360,6 +360,10 @@ th {
     box-shadow: 0 0 6px rgb(247,202,24);
 }
 
+#confetti {
+    transform:translateX(50%);
+}
+
 @media (max-width: 1100px) {
     .landing-content {
         background-size: cover;
