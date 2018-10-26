@@ -32,7 +32,6 @@ const initialState = {
 		students: [{
         "user": {
             "username": "PLACEHOLDER",
-            "password": "pbkdf2_sha256$100000$g741LHEjcvCh$ISomNy9RhVXJsL25Rwy8SF6MX6wRweM+XKvEClZd/TA=",
             "email": "arjunsv@berkeley.edu"
         },
         "name": "PLACE HOLDER",
@@ -164,7 +163,6 @@ export function stanfordApp(state = initialState, action) {
             newState.ui.results = action.results;
             return newState;
         case (UPDATE_LEADERBOARD):
-        	console.log('in reducer update leaderboard');
         	let newStateLeaderboard = Object.assign({}, state);
         	newStateLeaderboard.api.leaderboardResult = action.leaderboardResult;
         	return newStateLeaderboard;
