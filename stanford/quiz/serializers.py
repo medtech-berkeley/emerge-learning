@@ -25,7 +25,7 @@ class CategorySerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='text', allow_null=True)
     class Meta:
         model = Category
-        fields = ('name', 'start', 'end', 'sponsor', 'is_challenge', 'image', 'tags')
+        fields = ('name', 'start', 'end', 'sponsor', 'is_challenge', 'max_time', 'image', 'tags')
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -40,7 +40,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'category', 'text', 'answers', 'created', 'max_time')
+        fields = ('id', 'category', 'text', 'answers', 'created')
 
 
 class StudentStatsSerializer(serializers.Serializer):

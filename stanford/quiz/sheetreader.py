@@ -72,7 +72,7 @@ class Sheet:
         for row in self.rows:
             question_text = row[4]
             correct_answer = row[1]
-            curr_q = Question.objects.create(text=question_text, category=all_questions, created=timezone.now(), max_time=datetime.time(minute=1))
+            curr_q = Question.objects.create(text=question_text, category=all_questions, created=timezone.now())
             curr_a = Answer.objects.create(text=correct_answer, is_correct=True, question=curr_q)
             for choice in answer_choices:
                 if choice != correct_answer:

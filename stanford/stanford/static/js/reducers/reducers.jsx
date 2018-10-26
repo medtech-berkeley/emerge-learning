@@ -51,6 +51,7 @@ const initialState = {
 	},
 	ui: {
 		categoryId: -1,
+        maxTime: "1 10:00:00"
 		currentQuestion: {
         "id": -1,
         "category": "Default",
@@ -77,8 +78,7 @@ const initialState = {
                 "is_correct": false
             }
         ],
-        "created": "2018-04-25T09:21:22.618444Z",
-        "max_time": "1 10:00:00"
+        "created": "2018-04-25T09:21:22.618444Z"
     },
 		complete: false,
 	}
