@@ -47,9 +47,16 @@ class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+
 class CategoryUserDataViewSet(ModelViewSet):
     queryset = CategoryUserData.objects.all()
     serializer_class = CategoryUserDataSerializer
+
+    def retrieve(self, request, pk=None):
+        student = self.request.user.student
+        category_data = get_object_or_404(CategoryUserData, student=student, category=pk)
+        serializer = CategoryUserDataSerializer(instance=category_data)
+        return Response(serializer.data)
 
 
 class QuestionUserDataViewSet(ModelViewSet):

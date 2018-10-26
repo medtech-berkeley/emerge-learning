@@ -8,7 +8,8 @@ export class QuizBase extends React.Component {
 	componentDidMount() {
 		console.log("QuizBase did mount.");
 		console.log(this.props.categoryId);
-		this.props.getCurrentQuestion(this.props.categoryId)
+		this.props.getCategoryData(this.props.categoryId);
+		this.props.getCurrentQuestion(this.props.categoryId);
 	}
 
 	render() {
@@ -42,6 +43,7 @@ QuizBase.propTypes = {
 	num_correct: PropTypes.number,
 	results: PropTypes.array,
     getCurrentQuestion: PropTypes.func,
+    getCategoryData: PropTypes.func,
     answerQuestion: PropTypes.func,
     getResults: PropTypes.func,
 	currentTime: PropTypes.number,
