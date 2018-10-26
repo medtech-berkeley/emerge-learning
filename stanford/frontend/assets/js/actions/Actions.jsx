@@ -8,6 +8,7 @@ export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const UPDATE_SUBMIT_ERROR = 'DISPLAY_SUBMIT_ERROR';
 export const UPDATE_CATEGORY_COMPLETED = 'DISPLAY_CATEGORY_COMPLETED';
 export const UPDATE_CATEGORY_RESULTS = 'UPDATE_CATEGORY_RESULTS';
+export const UPDATE_CATEGORY_DATA = 'UPDATE_CATEGORY_DATA';
 export const UPDATE_LEADERBOARD = 'UPDATE_LEADERBOARD';
 export const UPDATE_TIMER = 'UPDATE_TIMER';
 
@@ -74,6 +75,15 @@ export function selectCategory(categoryId) {
 	}
 }
 
+export function updateCategoryData(maxTime, timeStarted, timeCompleted) {
+	return {
+		type: UPDATE_CATEGORY_DATA,
+		maxTime,
+		timeStarted,
+		timeCompleted
+	}
+}
+
 export function getCurrentQuestion(categoryId) {
 	return dispatch => fetch("/quiz/question?category="+categoryId, window.getHeader)
 		.then(r => r.json().then(question => {
@@ -85,6 +95,23 @@ export function getCurrentQuestion(categoryId) {
 				console.log("dispatch update current question.");
 				dispatch(updateCurrentQuestion(question))
 			}
+		}));
+}
+
+export function getCategoryData(categoryId) {
+	return dispatch => fetch("/api/categoryuserdata/" + categoryId, window.getHeader)
+		.then(r => r.json().then(categoryUserData => {
+			fetch("/api/categories/" + categoryId, window.getHeader)
+			.then(r => r.json().then(category => {
+				var time = category.max_time.split(':');
+				let maxTime = (+time[0]) * 60 * 60 + (+time[1]) * 60 + (+time[2]);
+				let timeStarted = Math.floor(Date.parse(categoryUserData.time_started));
+				let timeCompleted;
+				if (categoryUserData.time_completed) {
+					timeCompleted = Math.floor(Date.parse(categoryUserData.time_completed));
+				}
+				dispatch(updateCategoryData(maxTime, timeStarted, timeCompleted));
+			}));
 		}));
 }
 
