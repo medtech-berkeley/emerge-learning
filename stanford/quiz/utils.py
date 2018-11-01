@@ -28,7 +28,7 @@ def get_subject_stats(student, date=None, query_set=QuestionUserData.objects):
 def get_subject_stat(student, query_set, subject, date=None):
     if date is None:
         date = timezone.now()
-    qud = query_set.filter(student=student, time_completed__lte=date, question__category__name__contains=subject)
+    qud = query_set.filter(student=student, time_completed__lte=date, question__category__tags=subject)
 
     stat = {}
     total = qud.count()
