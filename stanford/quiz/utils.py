@@ -6,9 +6,14 @@ def get_stats_student(student, date=None, query_set=QuestionUserData.objects):
     stats = {}
     stats['name'] = student.name
     stats['subjects'] = get_subject_stats(student, date, query_set=query_set)
+
+    if date is None:
+        date = timezone.now()
+    qud = query_set.filter(student=student, time_completed__lte=date)
     stats['questions_answered'] = qud.count()
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['questions_answered'] - stats['num_correct']
+
     return stats
 
 def get_subject_stats(student, date=None, query_set=QuestionUserData.objects):
@@ -23,7 +28,7 @@ def get_subject_stats(student, date=None, query_set=QuestionUserData.objects):
 def get_subject_stat(student, query_set, subject, date=None):
     if date is None:
         date = timezone.now()
-    qud = query_set.filter(student=student, time_completed__lte=date, question__category__tag__contains=subject)
+    qud = query_set.filter(student=student, time_completed__lte=date, question__category__name__contains=subject)
 
     stat = {}
     total = qud.count()
@@ -33,8 +38,6 @@ def get_subject_stat(student, query_set, subject, date=None):
         stat['percent_correct'] = str(int(qud.filter(answer__is_correct=True).count() * 100 / total))
 
     return stat
-
-
 
 
 
