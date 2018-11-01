@@ -56,7 +56,8 @@ export class Graphs extends React.Component {
                     <div className="card-body">
                     <Tabs>
                         <TabList>
-                          <Tab>Performance Over Time</Tab>
+                          <Tab>Performance !!!!</Tab>
+                          <Tab>Test</Tab>
                         </TabList>
                         <TabPanel>
                           <ResponsiveContainer width='100%' height={350}>

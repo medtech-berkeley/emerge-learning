@@ -46,3 +46,6 @@ class QuestionSerializer(serializers.ModelSerializer):
 class StudentStatsSerializer(serializers.Serializer):
     name = serializers.CharField()
     subjects = serializers.DictField()
+    questions_answered = serializers.IntegerField()
+    num_correct = serializers.IntegerField()
+    num_incorrect = serializers.IntegerField()
