@@ -50,3 +50,4 @@ class StudentStatsSerializer(serializers.Serializer):
     questions_answered = serializers.IntegerField(read_only=True)
     num_correct = serializers.IntegerField(read_only=True)
     num_incorrect = serializers.IntegerField(read_only=True)
+    performance = serializers.DictField()
