@@ -1,5 +1,4 @@
 """stanford URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
 Examples:
@@ -39,9 +38,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='dashboard'),
     path('profile/update', change_user_info),
-    path('profile/', index),
     path('profile/demosurvey', submit_demographics_form),
-    path('settings/', index),
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('quiz/results', get_category_results),
@@ -49,8 +46,8 @@ urlpatterns = [
     path('signup/', signup, name='signup'),
     path('login/', logins, name='login'),
     path('logout/', logout_view, name='logout'),
-    path('stats/', get_stats, name='stats')
-    #re_path(r'^.*$', index)
+    path('stats/', get_stats, name='stats'),
+    re_path(r'^.*/$', index)
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
