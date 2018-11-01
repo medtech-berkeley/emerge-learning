@@ -5,20 +5,59 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import css from 'react-tabs/style/react-tabs.css';
 
 export class Graphs extends React.Component {
+
+    getSubjectData() {
+      if (this.props.data.subjects) {
+        return ([
+          {name: 'Circulation', Accuracy: Number(this.props.data.subjects.circulation.percent_correct)},
+          {name: 'Airway', Accuracy: Number(this.props.data.subjects.airway.percent_correct)},
+          {name: 'Basic Procedures', Accuracy: Number(this.props.data.subjects.basicprocedures.percent_correct)},
+          {name: 'EMS Knowledge', Accuracy: Number(this.props.data.subjects.emsknowledge.percent_correct)},
+        ]);
+      } else {
+        return ([
+          {name: 'Circulation', Accuracy: 1000},
+          {name: 'Airway', Accuracy: 20},
+          {name: 'Basic Procedures', Accuracy: 30},
+          {name: 'EMS Knowledge', Accuracy: 20},
+        ]);
+      }
+    }
+
+
     render() {
+      console.log(this.props.data)
         return (
             <div className="Graphs">
                 <p><b>Performance</b></p>
                 <hr/>
-                <p>Questions Answered: {this.props.data.questions_answered}</p>
-                <p>Number Correct: {this.props.data.num_correct}</p>
-                <p>Number Incorrect: {this.props.data.num_incorrect}</p>
                 <Card>
                     <div className="card-body">
                     <Tabs>
                         <TabList>
-                          <Tab>Bar Chart</Tab>
-                          <Tab>Line Graph</Tab>
+                          <Tab>Percentage</Tab>
+                        </TabList>
+                        <TabPanel>
+                          <ResponsiveContainer width='100%' height={350}>
+                            <BarChart layout="vertical" width={600} height={300} data={this.getSubjectData()} margin={{top: 20, right: 20, left: 50, bottom: 5}}>
+                               <CartesianGrid strokeDasharray="3 3"/>
+                               <XAxis type="number" domain={[0, 100]}/>
+                               <YAxis dataKey="name" type="category"/>
+                               <Tooltip/>
+                               <Legend />
+                               <Bar dataKey="Accuracy" fill="#8884d8" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                        </TabPanel>
+                    </Tabs>
+                    </div>
+                </Card>                
+                <Card>
+                    <div className="card-body">
+                    <Tabs>
+                        <TabList>
+                          <Tab>Performance !!!!</Tab>
+                          <Tab>Test</Tab>
                         </TabList>
                         <TabPanel>
                           <ResponsiveContainer width='100%' height={350}>
