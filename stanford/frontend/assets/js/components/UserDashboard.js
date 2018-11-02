@@ -36,7 +36,7 @@ export class UserDashboard extends React.Component {
 						</Row>
 						<br/>
 						<Row>
-							<Graphs user={this.props.user} questionUserData={this.props.questionUserData}/>
+							<Graphs data={this.props.data} user={this.props.user} questionUserData={this.props.questionUserData}/>
 						</Row>
 						<br/>
 						<Row>

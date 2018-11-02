@@ -69,6 +69,34 @@ const initialState = {
             "time_started": "2018-10-31T05:15:08.748471Z",
             "time_completed": "2018-10-31T05:15:21.998949Z"
         }],
+        data: [{
+            "day": "1",
+            "points": 100
+        },
+        {
+            "day": "2",
+            "points": 180
+        },
+        {
+            "day": "3",
+            "points": 210
+        },
+        {
+            "day": "4",
+            "points": 200
+        },
+        {
+            "day": "5",
+            "points": 100
+        },
+        {
+            "day": "6",
+            "points": 80
+        },
+        {
+            "day": "7",
+            "points": 120
+}],
         question: {
             answers: ['Kill her', 'Run away', 'Apply aloe-vera to her gunshot wound', 'Check her vitals'],
             text: 'You find a woman with blue lips after a loud noise was heard. What do you do?',

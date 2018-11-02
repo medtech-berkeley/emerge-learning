@@ -5,7 +5,7 @@ import { refreshData } from '../actions/DataActions'
 import { getQuestionUserData } from '../actions/Actions'
 
 const mapStateToProps = state => {
-    return {user: state.api.user, questionUserData: state.api.questionUserData, data: state.api.questionUserData};
+    return {user: state.api.user, questionUserData: state.api.questionUserData, data: state.api.data};
 };
 
 const mapDispatchToProps = (dispatch) => {
