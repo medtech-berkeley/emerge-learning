@@ -98,6 +98,20 @@ export function answerQuestion(questionId, answerId, categoryId) {
 }
 
 
+export function uploadQuestionCSV(file) {
+    let headers = Object.assign({}, window.postFormHeader);
+    let data = new FormData();
+    data.append("file", file);
+    headers.body = data;
+	return dispatch => fetch("/instructor/uploadquestions", headers)
+		.then(r => r.json.then(upload => {
+			if (upload.accepted) {
+				console.log("uploaded")
+			} else {
+				console.log("upload failed")
+			}
+		}));
+}
 
 export function updateSubmitError(reason) {
 	return {

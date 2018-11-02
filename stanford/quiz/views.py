@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-
+from django.shortcuts import redirect
 from quiz.utils import get_student_category_stats
 
 from .utils import get_unanswered_questions
@@ -14,6 +14,8 @@ from django.contrib.auth.models import User
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
 from .utils import get_stats_student
+from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
+from django.core.files.base import File, ContentFile
 
 
 # TODO: set up permissions for viewsets
@@ -279,3 +281,20 @@ def submit_demographics_form(request):
         return HttpResponse(200)
     else:
         return HttpResponse(status=403)
+
+
+def upload_questions(request):
+    if request.method == 'POST':
+        question_file = ContentFile(request.FILES['file'].read().decode('utf-8'))
+        LoadFromCSV(question_file)
+        return redirect('dashboard')
+    else:
+        return redirect('dashboard')
+
+def upload_categories(request):
+    if request.method == 'POST':
+        category_file = ContentFile(request.FILES['file'].read().decode('utf-8'))
+        LoadCategoryFromCSV(category_file)
+        return redirect('dashboard')
+    else:
+        return redirect('dashboard')

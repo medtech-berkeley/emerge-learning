@@ -1,34 +1,65 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Button, Jumbotron } from 'reactstrap';
+import { Button, Container, Row } from 'reactstrap';
+
+// CSRF TOKEN STUFF
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+
+const CSRFToken = () => {
+    return (
+        <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
+    );
+};
 
 export class Instructor extends React.Component {
 
     render() {
         return ( 
             <div>
-                <Jumbotron>
-                <h1 className="display-3" > Welcome to a Terrible Instructor JS file </h1> 
-                <p className="lead" > This is a simple mock up. </p> 
-                <hr className="my-2" />
-                <p> Two file - upload links are below. First is questions, second is categories. </p> 
-                <p className="lead">
+                <Container style={{"textAlign": "center"}}>
+                <h1> Upload Quizzes </h1> 
+                <br/>
+                    <p>Upload Questions</p>
+                    <Row style={{"display": "inline-block"}}>
                     <Button outline color="success" size="sm">
-                        <form action="/" >
-                            <input type="file" name="fileone" accept=".csv" />
+                        <form method="POST" action="/instructor/uploadquestions/" encType="multipart/form-data" >
+                        <CSRFToken />
+                            <input type="file" name="file" accept=".csv"/>
                             <input type="submit" />
                         </form>
                     </Button> 
-                    {   } 
+                    </Row>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <p>Upload Categories</p>
+                    <Row style={{"display": "inline-block"}}>
                     <Button outline color="success" size="sm" >
-                        <form action="/">
-                            <input type="file" name="filetwo" accept=".csv" />
+                        <form method="POST" action="/instructor/uploadcategories/" encType="multipart/form-data" >
+                        <CSRFToken />
+                            <input type="file" name="file" accept=".csv" />
                             <input type="submit" />
                         </form>
-                    </Button>  
-                </p>
-                </Jumbotron>
+                    </Button>
+                    </Row>  
                 <br/>
+                </Container>
             </div>
         )
     }

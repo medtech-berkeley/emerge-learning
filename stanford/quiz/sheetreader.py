@@ -18,7 +18,7 @@ import datetime
 #     flags = None
 
 def LoadFromCSV(file):
-    with file.open() as f:
+    with file.open("rt") as f:
         reader = csv.reader(f)
         for row in reader:
             row = [x for x in row if x != '']
@@ -37,7 +37,7 @@ def LoadFromCSV(file):
             q.save()
 
 def LoadCategoryFromCSV(file):
-    with file.open() as f:
+    with file.open("rt") as f:
         reader = csv.reader(f)
         for row in reader:
             #row structure: |Name|Start|End|Sponsor|is_challenge|tags|image|difficulty
