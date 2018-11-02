@@ -163,8 +163,8 @@ export class Graphs extends React.Component {
                                <YAxis />
                                <Tooltip/>
                                <Legend />
-                               <Bar dataKey="correct" stackId="a" fill="#8884d8" />
-                               <Bar dataKey="incorrect" stackId="a" fill="#82ca9d" />
+                               <Bar dataKey="correct" fill="#8884d8" />
+                               <Bar dataKey="incorrect" fill="#82ca9d" />
                           </BarChart>
                         </ResponsiveContainer>
                         </TabPanel>
