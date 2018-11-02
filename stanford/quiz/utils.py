@@ -3,17 +3,44 @@ from django.utils import timezone
 
 
 def get_stats_student(student, date=None, query_set=QuestionUserData.objects):
+    stats = {}
+    stats['name'] = student.name
+    stats['subjects'] = get_subject_stats(student, date, query_set=query_set)
+
     if date is None:
         date = timezone.now()
-
-    stats = {}
     qud = query_set.filter(student=student, time_completed__lte=date)
-
-    stats['name'] = student.name
     stats['questions_answered'] = qud.count()
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['questions_answered'] - stats['num_correct']
+
     return stats
+
+def get_subject_stats(student, date=None, query_set=QuestionUserData.objects):
+    subject_stats = {}
+    subjects = ['Circulation', 'Airway', 'Basic Procedures', 'EMS Knowledge']
+
+    for subject in subjects:
+        subject_stats[subject.replace(" ", "").lower()] = get_subject_stat(student, query_set, subject, date)
+
+    return subject_stats
+
+def get_subject_stat(student, query_set, subject, date=None):
+    if date is None:
+        date = timezone.now()
+    qud = query_set.filter(student=student, time_completed__lte=date, question__category__tags=subject)
+
+    stat = {}
+    total = qud.count()
+    if total == 0:
+        stat['percent_correct'] = '0'
+    else:
+        stat['percent_correct'] = str(int(qud.filter(answer__is_correct=True).count() * 100 / total))
+
+    return stat
+
+
+
 
 
 def get_stats_question_total(question, date=None):
