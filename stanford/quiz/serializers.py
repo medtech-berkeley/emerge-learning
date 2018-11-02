@@ -51,8 +51,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class StudentStatsSerializer(serializers.Serializer):
     name = serializers.CharField()
-    location = serializers.CharField()
-    image = serializers.ImageField()
-    questions_answered = serializers.IntegerField(read_only=True)
-    num_correct = serializers.IntegerField(read_only=True)
-    num_incorrect = serializers.IntegerField(read_only=True)
+    subjects = serializers.DictField()
+    questions_answered = serializers.IntegerField()
+    num_correct = serializers.IntegerField()
+    num_incorrect = serializers.IntegerField()
