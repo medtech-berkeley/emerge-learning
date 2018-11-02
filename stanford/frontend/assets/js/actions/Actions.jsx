@@ -97,6 +97,8 @@ export function answerQuestion(questionId, answerId, categoryId) {
 		}));
 }
 
+
+
 export function updateSubmitError(reason) {
 	return {
 		type: UPDATE_SUBMIT_ERROR,
