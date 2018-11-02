@@ -6,13 +6,106 @@ import css from 'react-tabs/style/react-tabs.css';
 
 export class Graphs extends React.Component {
     render() {
+        const dateNow = Date.now();
+
+        const questionUserArr = (this.props.questionUserData.filter((singleQuestion) => {
+          return (singleQuestion["student"]["user"]["username"] == (this.props.user.user ? this.props.user.user.username : 'Error'));
+        }));
+
+        const sortedQuestions = questionUserArr.map((singleQuestion) => {
+          return [singleQuestion["answer"]["is_correct"], Date.parse(singleQuestion["time_completed"])];
+        })
+        var questionBucket = 
+        {
+          "correct":{
+            "total":0,
+            "month":0,
+            "week":0,
+            "day6":0,"day5":0,"day4":0,"day3":0,"day2":0,"day1":0,"day0":0
+            },
+          "incorrect":{
+            "total":0,
+            "month":0,
+            "week":0,
+            "day":0
+            }
+          }
+        for (var i=0; i < sortedQuestions.length; i++) {
+          var dateQ = sortedQuestions[i][1];
+          if (sortedQuestions[i][0]) {
+            questionBucket["correct"]["total"] += 1;
+            if (dateQ > (dateNow - 2592000000)) {
+              questionBucket["correct"]["month"] += 1;
+              if (dateQ > (dateNow - 604800000)) {
+                questionBucket["correct"]["week"] += 1;
+                if (dateQ < (dateNow - 86400000 * 6)) {
+                  questionBucket["correct"]["day6"] += 1;
+                } else if (dateQ < (dateNow - 86400000 * 5)) {
+                  questionBucket["correct"]["day5"] += 1;
+                } else if (dateQ < (dateNow - 86400000 * 4)) {
+                  questionBucket["correct"]["day4"] += 1;
+                } else if (dateQ < (dateNow - 86400000 * 3)) {
+                  questionBucket["correct"]["day3"] += 1;
+                } else if (dateQ < (dateNow - 86400000 * 2)) {
+                  questionBucket["correct"]["day2"] += 1;
+                } else if (dateQ < (dateNow - 86400000 * 1)) {
+                  questionBucket["correct"]["day1"] += 1;
+                } else {
+                  questionBucket["correct"]["day0"] += 1;
+                }
+              }
+            }
+          } else {
+            questionBucket["incorrect"]["total"] += 1;
+            if (dateQ > (dateNow - 2592000000)) {
+              questionBucket["incorrect"]["month"] += 1;
+              if (dateQ > (dateNow - 604800000)) {
+                questionBucket["incorrect"]["week"] += 1;
+                if (dateQ > (dateNow - 86400000)) {
+                  questionBucket["incorrect"]["day"] += 1;
+                }
+              }
+            }
+          }
+        }
+        
+        const bardata = [
+          {name: 'All Time', 
+           correct: questionBucket["correct"]["total"], 
+           incorrect: questionBucket["incorrect"]["total"]},
+          {name: 'Last Month', 
+           correct: questionBucket["correct"]["month"], 
+           incorrect: questionBucket["incorrect"]["month"]},
+          {name: 'Last Week',
+           correct: questionBucket["correct"]["week"],
+           incorrect: questionBucket["incorrect"]["week"]},
+          {name: 'Last Day', 
+           correct: questionBucket["correct"]["day0"],
+           incorrect: questionBucket["incorrect"]["day"]},
+        ];
+
+        function strDate(aDate) {
+          var myDate = new Date(aDate);
+          return String((myDate.getMonth() + 1)) + '/' + String(myDate.getDate());
+        }
+
+        const linedata = [
+              {name: strDate(dateNow - 86400000*6), points: questionBucket["correct"]["day6"]},
+              {name: strDate(dateNow - 86400000*5), points: questionBucket["correct"]["day5"]},
+              {name: strDate(dateNow - 86400000*4), points: questionBucket["correct"]["day4"]},
+              {name: strDate(dateNow - 86400000*3), points: questionBucket["correct"]["day3"]},
+              {name: strDate(dateNow - 86400000*2), points: questionBucket["correct"]["day2"]},
+              {name: strDate(dateNow - 86400000), points: questionBucket["correct"]["day1"]},
+              {name: strDate(dateNow), points: questionBucket["correct"]["day0"]},
+        ];
         return (
             <div className="Graphs">
                 <p><b>Performance</b></p>
                 <hr/>
-                <p>Questions Answered: {this.props.data.questions_answered}</p>
-                <p>Number Correct: {this.props.data.num_correct}</p>
-                <p>Number Incorrect: {this.props.data.num_incorrect}</p>
+                {console.log(questionBucket)}
+                <p>Questions Answered: {questionUserArr.length}</p>
+                <p>Number Correct: {questionBucket["correct"]["total"]} </p>
+                <p>Number Incorrect: {questionBucket["incorrect"]["total"]} </p>
                 <Card>
                     <div className="card-body">
                     <Tabs>
@@ -51,20 +144,3 @@ export class Graphs extends React.Component {
             </div>);
     }
 }
-
-const bardata = [
-  {name: 'All Time', correct: 4000, incorrect: 2400},
-  {name: 'Last Month', correct: 2300, incorrect: 2000},
-  {name: 'Last Week', correct: 700, incorrect: 300},
-  {name: 'Last Day', correct: 100, incorrect: 90},
-];
-
-const linedata = [
-      {name: '6/21', points: 320},
-      {name: '6/22', points: 200},
-      {name: '6/23', points: 40},
-      {name: '6/24', points: 70},
-      {name: '6/25', points: 430},
-      {name: '6/26', points: 40},
-      {name: '6/27', points: 150},
-];
