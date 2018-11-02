@@ -13,8 +13,28 @@ def get_stats_student(student, date=None, query_set=QuestionUserData.objects):
     stats['questions_answered'] = qud.count()
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['questions_answered'] - stats['num_correct']
-
+    stats['performance'] = get_performance_stats(student, date)
     return stats
+
+def get_performance_stats(student, date=None):
+    if date is None:
+        date = timezone.now()
+        #"2018-11-01T20:29:13.109657Z"
+
+    performance_stats = {}
+
+    for i in range(7):
+        new_date = date - timezone.timedelta(days=i)
+        qud = QuestionUserData.objects.filter(student=student, time_completed__date=new_date)
+
+        day_label = "day" + str(i)
+
+        performance_stats[day_label] = {'date' : new_date.date(),
+                                        'num_attempted' : qud.count(),
+                                        'num_correct' : qud.filter(answer__is_correct=True).count()}
+
+    return performance_stats
+
 
 def get_subject_stats(student, date=None, query_set=QuestionUserData.objects):
     subject_stats = {}
@@ -38,9 +58,6 @@ def get_subject_stat(student, query_set, subject, date=None):
         stat['percent_correct'] = str(int(qud.filter(answer__is_correct=True).count() * 100 / total))
 
     return stat
-
-
-
 
 
 def get_stats_question_total(question, date=None):
