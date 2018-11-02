@@ -15,6 +15,7 @@ import {Button, Col, Container, Row} from "reactstrap";
 export class UserDashboard extends React.Component {
 
 	componentWillMount() {
+		this.props.getQuestionUserData();
 		this.props.refreshData();
 		this.props.refreshUser();
 	}
@@ -35,7 +36,7 @@ export class UserDashboard extends React.Component {
 						</Row>
 						<br/>
 						<Row>
-							<Graphs data={this.props.data}/>
+							<Graphs data={this.props.data} user={this.props.user} questionUserData={this.props.questionUserData}/>
 						</Row>
 						<br/>
 						<Row>
