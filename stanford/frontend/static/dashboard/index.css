@@ -209,6 +209,12 @@ th {
 
 .Badges {
     width: 100%;
+    transform: translateX(-15px);
+    margin-right: 40px;
+}
+
+.PointsHeader {
+    width: 115%;
 }
 
 .Graphs {
