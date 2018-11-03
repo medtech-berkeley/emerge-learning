@@ -55,7 +55,9 @@ export class QuizQuestion extends React.Component {
 						</div>
 					</Row>
 					<Row>
-						<p className="card-text question-text">{this.props.text}</p>
+						<div>
+							<p className="card-text question-text">{this.props.text}</p>
+						</div>
 					</Row>
 					<Row>
 					{
