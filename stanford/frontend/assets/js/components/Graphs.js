@@ -8,18 +8,19 @@ export class Graphs extends React.Component {
 
     getSubjectData() {
       if (this.props.data.subjects) {
-        return ([
-          {name: 'Circulation', Accuracy: Number(this.props.data.subjects.circulation.percent_correct)},
-          {name: 'Airway', Accuracy: Number(this.props.data.subjects.airway.percent_correct)},
-          {name: 'Basic Procedures', Accuracy: Number(this.props.data.subjects.basicprocedures.percent_correct)},
-          {name: 'EMS Knowledge', Accuracy: Number(this.props.data.subjects.emsknowledge.percent_correct)},
-        ]);
+        console.log(this.props.data.subjects);
+        const subjectNames = Object.keys(this.props.data.subjects)
+        var graphElements = []
+        for (var name of subjectNames) {
+          graphElements.push({name: name, Accuracy: Number(this.props.data.subjects[name])})
+        }
+        return (graphElements);
       } else {
         return ([
-          {name: 'Circulation', Accuracy: 1000},
-          {name: 'Airway', Accuracy: 20},
-          {name: 'Basic Procedures', Accuracy: 30},
-          {name: 'EMS Knowledge', Accuracy: 20},
+          {name: 'Circulation', Accuracy: 0},
+          {name: 'Airway', Accuracy: 0},
+          {name: 'Basic Procedures', Accuracy: 0},
+          {name: 'EMS Knowledge', Accuracy: 0},
         ]);
       }
     }
@@ -134,7 +135,7 @@ export class Graphs extends React.Component {
                     <div className="card-body">
                     <Tabs>
                         <TabList>
-                          <Tab>Performance By Subject</Tab>
+                          <Tab>Performance Breakdown</Tab>
                         </TabList>
                         <TabPanel>
                           <ResponsiveContainer width='100%' height={350}>
@@ -167,8 +168,8 @@ export class Graphs extends React.Component {
                                <YAxis />
                                <Tooltip/>
                                <Legend />
-                               <Bar dataKey="correct" fill="#8884d8" />
-                               <Bar dataKey="incorrect" fill="#82ca9d" />
+                               <Bar dataKey="correct" fill="#76C59D" />
+                               <Bar dataKey="incorrect" fill="#B3B3B3" />
                           </BarChart>
                         </ResponsiveContainer>
                         </TabPanel>
