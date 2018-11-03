@@ -130,7 +130,7 @@ export class Graphs extends React.Component {
                     <div className="card-body">
                     <Tabs>
                         <TabList>
-                          <Tab>Percentage</Tab>
+                          <Tab>Performance By Subject</Tab>
                         </TabList>
                         <TabPanel>
                           <ResponsiveContainer width='100%' height={350}>
@@ -146,13 +146,14 @@ export class Graphs extends React.Component {
                         </TabPanel>
                     </Tabs>
                     </div>
-                </Card>                
+                </Card>
+                <br/>                
                 <Card>
                     <div className="card-body">
                     <Tabs>
                         <TabList>
-                          <Tab>Performance !!!!</Tab>
-                          <Tab>Test</Tab>
+                          <Tab>Performance Over Time (Bar)</Tab>
+                          <Tab>Performance Over Time (Line)</Tab>
                         </TabList>
                         <TabPanel>
                           <ResponsiveContainer width='100%' height={350}>
@@ -162,8 +163,8 @@ export class Graphs extends React.Component {
                                <YAxis />
                                <Tooltip/>
                                <Legend />
-                               <Bar dataKey="correct" stackId="a" fill="#8884d8" />
-                               <Bar dataKey="incorrect" stackId="a" fill="#82ca9d" />
+                               <Bar dataKey="correct" fill="#8884d8" />
+                               <Bar dataKey="incorrect" fill="#82ca9d" />
                           </BarChart>
                         </ResponsiveContainer>
                         </TabPanel>

@@ -8,8 +8,9 @@ from secrets import token_hex
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.utils import timezone
-
-from .sheetreader import Sheet
+from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
+from django.core.files.base import File
+#from .sheetreader import Sheet
 from .models import Question, Category, QuestionUserData, Answer, Student, Tag
 from .utils import get_stats_student, get_stats_question_total, get_stats_category
 
@@ -34,6 +35,33 @@ class SheetsTestCase(TestCase):
         for answer, row in zip(Answer.objects.all(), self.test_sheet.rows):
             csv_answer_text = row[1]
             self.assertIn(answer.text, 'ABCDEF')
+
+class TestSheetReading(TestCase):
+    def setUp(self):
+        self.test_sheet = File(open("quiz/Test.csv"))
+        self.test_sheet2 = File(open("quiz/Test - Categories.csv"))
+
+    def test_print(self):
+        print(self.test_sheet)
+
+    def test_all(self):
+        LoadCategoryFromCSV(self.test_sheet2)
+        self.assertEqual(len(Category.objects.all()), 12)
+        print("12 categories found")
+        self.assertEqual(len(Tag.objects.all()), 33)
+        print("33 tags found")
+        Category.objects.create(name="cat1", start=timezone.now(),
+                                               end=timezone.now(), sponsor="none", is_challenge=False).save()
+        LoadFromCSV(self.test_sheet)
+        x = Question.objects.all()
+        # for i in range(len(x)):
+        #     ans = Answer.objects.filter(question=x[i])
+        #     print(x[i].text)
+        #     for an in ans:
+        #         print(an.text, " CORRECT" if an.is_correct else " WRONG")
+        self.assertEqual(len(Question.objects.all()), 3)
+        print("3 questions found")
+
 
 
 class QuizTestCase(TestCase):
@@ -168,7 +196,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(question3['category'], 'cat3')
         self.assertNotEqual(question, question3)
         self.assertNotEqual(question2, question3)
-    
+
     def test_get_question_all_complete(self):
         questions = []
         for i in range(3):
@@ -494,14 +522,14 @@ class QuizTestCase(TestCase):
     def test_stats_category_null(self):
         response = self.client.get("/quiz/question", {'category': 'cat1'})
         question = Question.objects.get(id=response.json()['id'])
-        
+
         stats = get_stats_category(category=question.category)
         self.assertEqual(0, stats['num_attempted'])
         self.assertEqual(0, stats['num_correct'])
         self.assertEqual(0, stats['num_incorrect'])
 
     def test_stats_location_total(self):
-        pass 
+        pass
 
     def test_stats_location_category(self):
         pass
@@ -579,7 +607,6 @@ class QuizTestCase(TestCase):
         result_medium_hard = self.client.get("/stats/", {'tags': ['Circulation', 'Respiratory'], 'difficulties': ['Intermediate', 'Advanced']})
         self.assertEqual(3, result_medium_hard.json()['stats']['num_correct'], msg=result_medium_hard)
 
-    # TODO: Test case where tags=None or difficulties=None
+    #TODO: Test case where tags=None or difficulties=None
     def test_get_stats_student_nullcase(self):
         pass
-   
