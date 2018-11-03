@@ -12,7 +12,7 @@ import Instructor from "./containers/InstructorContainer"
 
 export class App extends React.Component {
     componentDidMount(){
-      window.store.dispatch(startTime())
+      window.store.dispatch(startTime());
     }
 
     render() {
