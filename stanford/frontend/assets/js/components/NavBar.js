@@ -24,14 +24,14 @@ export class NavBar extends React.Component {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav ml-auto">
-            <li className={this.getClassListNavItem('/')}>
-              <a className="nav-link" href="/#">Dashboard<span className="sr-only"></span></a>
+            <li className={this.getClassListNavItem('/dashboard/')}>
+              <a className="nav-link" href="/dashboard">Dashboard<span className="sr-only"></span></a>
             </li>
-            <li className={this.getClassListNavItem('/profile/')}>
-              <a className="nav-link" href="/profile">Profile</a>
+            <li className={this.getClassListNavItem('/dashboard/profile/')}>
+              <a className="nav-link" href="/dashboard/profile">Profile</a>
             </li>
-            <li className={this.getClassListNavItem('/settings/')}>
-              <a className="nav-link" href="/settings">Settings</a>
+            <li className={this.getClassListNavItem('/dashboard/settings/')}>
+              <a className="nav-link" href="/dashboard/settings">Settings</a>
             </li>
               </ul>
             <form action="/logout" className="form-inline my-2 my-lg-0">
