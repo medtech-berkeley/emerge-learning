@@ -14,11 +14,11 @@ class StudentSerializer(serializers.ModelSerializer):
         model = Student
         fields = ('user', 'name', 'location', 'description', 'image', 'completed_survey')
 
-
-class QuestionUserDataSerializer(serializers.ModelSerializer):
+class SmallStudentSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
     class Meta:
-        model = QuestionUserData
-
+        model = Student
+        fields = ('user',)
 
 class CategorySerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='text', allow_null=True)
@@ -33,6 +33,17 @@ class AnswerSerializer(serializers.ModelSerializer):
         model = Answer
         fields = ('id', 'text', 'is_correct')
 
+class SecureAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ('is_correct',)
+
+class QuestionUserDataSerializer(serializers.ModelSerializer):
+    student = SmallStudentSerializer()
+    answer = SecureAnswerSerializer()
+    class Meta:
+        model = QuestionUserData
+        fields = ('student', 'question', 'answer', 'time_started', 'time_completed')
 
 class QuestionMediaSerialzier(serializers.ModelSerializer):
     class Meta:
@@ -45,12 +56,13 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'category', 'text', 'answers', 'created', 'media')
+        fields = ('id', 'category', 'text', 'answers', 'created', 'media', 'max_time')
 
 
 class StudentStatsSerializer(serializers.Serializer):
     name = serializers.CharField()
+    questions_answered = serializers.IntegerField(read_only=True)
+    num_correct = serializers.IntegerField(read_only=True)
+    num_incorrect = serializers.IntegerField(read_only=True)
     subjects = serializers.DictField()
-    questions_answered = serializers.IntegerField()
-    num_correct = serializers.IntegerField()
-    num_incorrect = serializers.IntegerField()
+    performance = serializers.DictField()

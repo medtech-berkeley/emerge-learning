@@ -7,6 +7,7 @@ import {Router, Route, Switch} from "react-router-dom";
 import UserDashboardApi from "./containers/UserDashboardApi";
 import Quiz from "./containers/Quiz";
 import Settings from "./containers/SettingsContainer";
+import Instructor from "./containers/InstructorContainer"
 
 export class App extends React.Component {
     render() {
@@ -18,6 +19,7 @@ export class App extends React.Component {
                                 <Route exact={true} path="/dashboard" component={MainDashboardApi}/>
                                 <Route path="/dashboard/profile" component={UserDashboardApi}/>
                                 <Route path="/dashboard/settings" component={Settings}/>
+                                <Route path="/dashboard/instructor" component={Instructor}/>
                                 <Route path="/dashboard/quiz/:quizId" component={Quiz}/>
                             </div>
                         </div>

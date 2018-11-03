@@ -15,7 +15,7 @@ class Student(models.Model):
     name = models.CharField(max_length=100, default="Enter Name")
     location = models.CharField(max_length=100, default="Enter location")
     description = models.CharField(max_length=500, default="Enter description")
-    
+
     completed_survey = models.BooleanField(default=False)
     image = models.ImageField(upload_to='profile_images', default="/static/accounts/default_profile.jpg", blank=True)
     birth_year = models.IntegerField(choices=YEAR_CHOICES, default=timezone.now().year)
@@ -27,7 +27,7 @@ class Student(models.Model):
     years_of_experience = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     organization = models.CharField(max_length=3, choices=ORG_CHOICES, default='OTH')
 
-    
+
     def __str__(self):
         return self.user.username
 
@@ -41,7 +41,7 @@ class Tag(models.Model):
     text = models.CharField(max_length=64, primary_key=True)
 
     def __str__(self):
-        return self.text        
+        return self.text
 
 class Category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
@@ -75,7 +75,7 @@ class Question(models.Model):
     text = models.CharField(max_length=300)
     category = models.ForeignKey(Category, related_name="questions", on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
-    max_time = models.DurationField()
+    max_time = models.DurationField(default=datetime.timedelta(minutes=1))
     media = models.ForeignKey('QuestionMedia', related_name="media", null=True, on_delete=models.DO_NOTHING)
 
 
@@ -132,7 +132,7 @@ class GVK_EMRI_Demographics(models.Model):
 
     obgyn_refresher = models.BooleanField()
     obgyn_date = models.DateField(null=True)
-    
+
     trauma_refresher = models.BooleanField()
     trauma_date = models.DateField(null=True)
 

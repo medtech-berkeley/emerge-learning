@@ -5,7 +5,8 @@ import {NavBar} from "./NavBar";
 import {UserInfo} from "./UserInfo";
 import {Badges} from "./Badges";
 import {Graphs} from "./Graphs";
-import {Recent} from "./Recent"
+import {Recent} from "./Recent";
+import {PointsHeader} from "./PointsHeader";
 
 import {Button, Col, Container, Row} from "reactstrap";
 // import {NavBar} from "./NavBar";
@@ -15,6 +16,7 @@ import {Button, Col, Container, Row} from "reactstrap";
 export class UserDashboard extends React.Component {
 
 	componentWillMount() {
+		this.props.getQuestionUserData();
 		this.props.refreshData();
 		this.props.refreshUser();
 	}
@@ -28,18 +30,18 @@ export class UserDashboard extends React.Component {
 						<Row>
 							<UserInfo user={this.props.user}/>
 						</Row>
-					</Col>
-					<Col>
+						<br/>
 						<Row>
 							<Badges/>
+						</Row>						
+					</Col>
+					<Col xs="9">
+						<Row>
+							<PointsHeader/>
 						</Row>
 						<br/>
 						<Row>
-							<Graphs data={this.props.data}/>
-						</Row>
-						<br/>
-						<Row>
-							<Recent/>
+							<Graphs data={this.props.data} user={this.props.user} questionUserData={this.props.questionUserData}/>
 						</Row>
 					</Col>
 				</Row>
