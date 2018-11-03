@@ -11,7 +11,7 @@ from django.utils import timezone
 from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
 from django.core.files.base import File
 #from .sheetreader import Sheet
-from .models import Question, Category, QuestionUserData, Answer, Student, Tag
+from .models import Question, Category, CategoryUserData, QuestionUserData, Answer, Student, Tag
 from .utils import get_stats_student, get_stats_question_total, get_stats_category
 
 @skip
