@@ -3,11 +3,10 @@ import {CategoriesBox} from "./CategoriesBox"
 import {Leaderboard} from "./Leaderboard"
 import PropTypes from "prop-types"
 import {Container} from "reactstrap";
-import {NavBar} from "./NavBar";
 
 
 export class MainDashboard extends React.Component {
-    componentWillMount() {
+    componentDidMount() {
         this.props.refreshStudents();
         this.props.getCategories();
         this.props.getLeaderboard();
