@@ -105,10 +105,10 @@ export function getCategoryData(categoryId) {
 			.then(r => r.json().then(category => {
 				var time = category.max_time.split(':');
 				let maxTime = (+time[0]) * 60 * 60 + (+time[1]) * 60 + (+time[2]);
-				let timeStarted = Math.floor(Date.parse(categoryUserData.time_started));
+				let timeStarted = Math.floor(Date.parse(categoryUserData.time_started) / 1000);
 				let timeCompleted;
 				if (categoryUserData.time_completed) {
-					timeCompleted = Math.floor(Date.parse(categoryUserData.time_completed));
+					timeCompleted = Math.floor(Date.parse(categoryUserData.time_completed) / 1000);
 				}
 				dispatch(updateCategoryData(maxTime, timeStarted, timeCompleted));
 			}));
