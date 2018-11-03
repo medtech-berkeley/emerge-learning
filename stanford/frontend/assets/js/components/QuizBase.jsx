@@ -8,8 +8,8 @@ export class QuizBase extends React.Component {
 	componentDidMount() {
 		console.log("QuizBase did mount.");
 		console.log(this.props.categoryId);
-		this.props.getCategoryData(this.props.categoryId);
 		this.props.getCurrentQuestion(this.props.categoryId);
+		this.props.getCategoryData(this.props.categoryId);
 	}
 
 	render() {

@@ -23,9 +23,28 @@ export class QuizQuestion extends React.Component {
 		return null;
 	}
 
+	getSecondsLeft() {
+		return this.props.maxTime - (this.props.currentTime - this.props.timeStarted);
+	}
+
+	minutes() {
+		return Math.floor(this.getSecondsLeft() / 60.0);
+	}
+
+	seconds() {
+		return this.getSecondsLeft() % 60;
+	}
+
+	showTimer() {
+		return (
+			<p>CLOCK ICON HERE: {this.minutes()}:{this.seconds()}</p>
+		);
+	}
+
 	render() {
 		return (
 			<Container>
+				{ this.showTimer() }
 				<Card className="question">
 				  <CardBody>
 					{/* TODO: add support for listing question no */}
