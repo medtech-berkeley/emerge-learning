@@ -37,18 +37,22 @@ export class QuizQuestion extends React.Component {
 
 	showTimer() {
 		return (
-			<p>CLOCK ICON HERE: {this.minutes()}:{this.seconds()}</p>
+			<div style={{"display": "inline-block", "float":"right"}}>
+			<i class="fa fa-clock-o" style={{"padding-right": "8px"}} aria-hidden="true"></i>
+			Time Remaining: {this.minutes()}:{this.seconds()}</div>
 		);
 	}
 
 	render() {
 		return (
 			<Container>
-				{ this.showTimer() }
 				<Card className="question">
 				  <CardBody>
 					{/* TODO: add support for listing question no */}
-					<h4 className="card-title">{this.props.name}</h4>
+					<span>
+					  <h4 className="card-title" style={{"display": "inline-block"}}>{this.props.categoryId}</h4>
+					  { this.showTimer() }
+					 </span>
 					<Row>
 						<div className="media-box">
 							{this.getMediaField()}
