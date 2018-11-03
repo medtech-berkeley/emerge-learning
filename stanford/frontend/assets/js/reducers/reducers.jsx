@@ -106,35 +106,36 @@ const initialState = {
 	currentTime: 67,
 	categoryId: -1,
 	timeStarted: Math.floor((new Date).getTime()/1000),
-        maxTime: 300,
-        categoryId: -1,
-        currentQuestion: {
-        "id": -1,
-        "category": "Default",
-        "text": "Default",
-        "answers": [
-            {
-                "id": 1,
-                "text": "Default a1.",
-                "is_correct": false
-            },
-            {
-                "id": 2,
-                "text": "Default a2",
-                "is_correct": true
-            },
-            {
-                "id": 3,
-                "text": "Default a3",
-                "is_correct": false
-            },
-            {
-                "id": 4,
-                "text": "Default a4",
-                "is_correct": false
-            }
-        ],
-        created: "2018-04-25T09:21:22.618444Z"
+    maxTime: 300,
+    categoryId: -1,
+    categoryName: "Blood Science",
+    currentQuestion: {
+    "id": -1,
+    "category": "Default",
+    "text": "Default",
+    "answers": [
+        {
+            "id": 1,
+            "text": "Default a1.",
+            "is_correct": false
+        },
+        {
+            "id": 2,
+            "text": "Default a2",
+            "is_correct": true
+        },
+        {
+            "id": 3,
+            "text": "Default a3",
+            "is_correct": false
+        },
+        {
+            "id": 4,
+            "text": "Default a4",
+            "is_correct": false
+        }
+    ],
+    created: "2018-04-25T09:21:22.618444Z"
     },
         complete: false,
         num_correct: 0,
@@ -149,43 +150,44 @@ export function stanfordApp(state = initialState, action) {
 	case (UPDATE_TIMER):
 		newState.ui.currentTime = action.time;
 		break;
-    	case (UPDATE_STUDENTS):
-	    	newState.api.students = action.students;
-	    	break;
-    	case (UPDATE_CATEGORIES):
-	    	newState.api.categories = action.categories;
-	    	break;
-    	case (UPDATE_QUESTION_USER_DATA):
-	    	newState.api.questionUserData = action.questionUserData;
-	    	break;
+    case (UPDATE_STUDENTS):
+        newState.api.students = action.students;
+        break;
+    case (UPDATE_CATEGORIES):
+        newState.api.categories = action.categories;
+        break;
+    case (UPDATE_QUESTION_USER_DATA):
+        newState.api.questionUserData = action.questionUserData;
+        break;
 	case (SELECT_CATEGORY):
-	    	newState.ui.categoryId = action.categoryId;
-	    	break;
-    	case (UPDATE_CURRENT_QUESTION):
-	    	newState.ui.currentQuestion = action.currentQuestion;
-	    	break;
-    	case (UPDATE_SUBMIT_ERROR):
-	    	newState.api.questionUserData = action.questionUserData;
-	    	break;
-    	case (UPDATE_CATEGORY_COMPLETED):
-	    	newState.ui.complete = true;
-	    	newState.ui.num_attempted = action.num_attempted;
-	    	newState.ui.num_correct = action.num_correct;
-	    	break;
-        case UPDATE_STUDENT:
-	    	newState.api.user = action.user;
-		break;
+        newState.ui.categoryId = action.categoryId;
+        break;
+    case (UPDATE_CURRENT_QUESTION):
+        newState.ui.currentQuestion = action.currentQuestion;
+        break;
+    case (UPDATE_SUBMIT_ERROR):
+        newState.api.questionUserData = action.questionUserData;
+        break;
+    case (UPDATE_CATEGORY_COMPLETED):
+        newState.ui.complete = true;
+        newState.ui.num_attempted = action.num_attempted;
+        newState.ui.num_correct = action.num_correct;
+        break;
+    case UPDATE_STUDENT:
+        newState.api.user = action.user;
+        break;
 	case (UPDATE_DATA):
 		newState.api.data = action.data;
 		break;
-        case (UPDATE_CATEGORY_RESULTS):
-            newState.ui.results = action.results;
-            break;
-        case (UPDATE_LEADERBOARD):
-        	newState.api.leaderboardResult = action.leaderboardResult;
-		break;
+    case (UPDATE_CATEGORY_RESULTS):
+        newState.ui.results = action.results;
+        break;
+    case (UPDATE_LEADERBOARD):
+        newState.api.leaderboardResult = action.leaderboardResult;
+        break;
 	case (UPDATE_CATEGORY_DATA):
-		newState.ui.maxTime = action.maxTime;
+        newState.ui.maxTime = action.maxTime;
+        newState.ui.categoryName = action.name;
 		newState.ui.timeCompleted = action.timeCompleted;
 		newState.ui.timeStarted = action.timeStarted;
 		break;

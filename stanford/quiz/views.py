@@ -121,20 +121,23 @@ def get_question(request):
 
             started_question = QuestionUserData.objects.filter(question__category=category.id, student=student, answer=None)
 
-            if started_question.exists():
+            out_of_time = (category_data.time_completed or timezone.now()) > category_data.time_started + category.max_time
+
+            if not out_of_time and started_question.exists():
                 question = started_question.first().question
             else:
                 # check for questions user has already started, exclude from final set
                 question_set = get_unanswered_questions(student, category)
 
                 stats = get_student_category_stats(category, student)
-                if len(question_set) == 0:
+                if len(question_set) == 0 or out_of_time:
                     if category_data.time_completed is None:
                         category_data.time_completed = timezone.now()
                         category_data.save()
 
                     response = {'accepted': True,
                                 'completed': True,
+                                'out_of_time': True,
                                 'num_attempted': stats['num_attempted'],
                                 'num_correct': stats['num_correct']}
                     return JsonResponse(data=response)

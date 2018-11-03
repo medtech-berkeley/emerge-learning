@@ -17,21 +17,23 @@ export class QuizBase extends React.Component {
 		return (
 			<div>
 			{!this.props.complete && <QuizQuestion categoryId={this.quizID}
-                                                   text={this.props.currentQuestion.text}
-												   answers={this.props.currentQuestion.answers}
-												   name={this.props.currentQuestion.name}
-                                                   id={this.props.currentQuestion.id}
-                                                   answerQuestion={this.props.answerQuestion}
-                                                   media={this.props.currentQuestion.media}
-												   currentTime={this.props.currentTime}
-												   timeStarted={this.props.timeStarted}
-												   maxTime={this.props.maxTime}/>}
+													text={this.props.currentQuestion.text}
+													answers={this.props.currentQuestion.answers}
+													name={this.props.categoryName}
+													id={this.props.currentQuestion.id}
+													answerQuestion={this.props.answerQuestion}
+													media={this.props.currentQuestion.media}
+													currentTime={this.props.currentTime}
+													timeStarted={this.props.timeStarted}
+													maxTime={this.props.maxTime}
+													endQuiz={() => this.props.getCurrentQuestion(this.quizID)}
+													/>}
 			{this.props.complete && <QuizComplete getResults={this.props.getResults}
-												  name={this.props.currentQuestion.name}
-                                                  categoryId={this.quizID}
-                                                  num_attempted={this.props.num_attempted}
-                                                  num_correct={this.props.num_correct}
-                                                  results={ this.props.results }/>}
+													name={this.props.categoryName}
+													categoryId={this.quizID}
+													num_attempted={this.props.num_attempted}
+													num_correct={this.props.num_correct}
+													results={ this.props.results }/>}
 			</div>
 		);
 	}
@@ -41,7 +43,8 @@ QuizBase.propTypes = {
     id: PropTypes.number,
 	text: PropTypes.string,
 	answers: PropTypes.array,
-    category: PropTypes.number,
+	category: PropTypes.number,
+	categoryName: PropTypes.string,
 	num_attempted: PropTypes.number,
 	num_correct: PropTypes.number,
 	results: PropTypes.array,
