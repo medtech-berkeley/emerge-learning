@@ -37,26 +37,26 @@ export class Instructor extends React.Component {
                 <br/>
                     <p>Upload Questions</p>
                     <Row style={{"display": "inline-block"}}>
-                    <Button outline color="success" size="sm">
+                    <Container outline color="success" size="sm">
                         <form method="POST" action="/instructor/uploadquestions/" encType="multipart/form-data" >
                         <CSRFToken />
                             <input type="file" name="file" accept=".csv"/>
                             <input type="submit" />
                         </form>
-                    </Button> 
+                    </Container> 
                     </Row>
                     <br/>
                     <br/>
                     <br/>
                     <p>Upload Categories</p>
                     <Row style={{"display": "inline-block"}}>
-                    <Button outline color="success" size="sm" >
+                    <Container outline color="success" size="sm" >
                         <form method="POST" action="/instructor/uploadcategories/" encType="multipart/form-data" >
                         <CSRFToken />
                             <input type="file" name="file" accept=".csv" />
                             <input type="submit" />
                         </form>
-                    </Button>
+                    </Container>
                     </Row>  
                 <br/>
                 </Container>
