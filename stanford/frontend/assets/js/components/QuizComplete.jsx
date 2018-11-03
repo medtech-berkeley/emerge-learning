@@ -43,7 +43,7 @@ export class QuizComplete extends React.Component {
 				    </h3>
 				  </div>
 				  <div className="card-body">
-                      <h5 className="card-title">You have successfully completed {this.props.categoryId}.</h5>
+                      <h5 className="card-title">You have successfully completed {this.props.name}.</h5>
                       <h4>Your Score: { this.props.num_correct } / { this.props.num_attempted }
                       <div id="confetti" style={{transform:"translateX(50%)"}}>
 						<Confetti active={ this.state.showConfetti } config={ this.config }/>

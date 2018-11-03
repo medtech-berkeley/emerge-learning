@@ -48,7 +48,7 @@ export class QuizQuestion extends React.Component {
 				<Card className="question">
 				  <CardBody>
 					{/* TODO: add support for listing question no */}
-					<h4 className="card-title">{this.props.categoryId}</h4>
+					<h4 className="card-title">{this.props.name}</h4>
 					<Row>
 						<div className="media-box">
 							{this.getMediaField()}
