@@ -26,6 +26,7 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ('name', 'start', 'end', 'sponsor', 'is_challenge', 'image', 'tags')
 
+
 class AnswerSerializer(serializers.ModelSerializer):
     # TODO: Get rid of is_correct in serializer
     class Meta:

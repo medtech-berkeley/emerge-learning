@@ -111,6 +111,7 @@ class QuestionUserData(models.Model):
     """
     Stores student-specific metadata for each question. Time it took to complete, what the student answered, etc
     """
+
     student = models.ForeignKey(Student, related_name="question_data", on_delete=models.CASCADE)
     question = models.ForeignKey(Question, related_name="question_data", on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, null=True, related_name="question_data", on_delete=models.CASCADE)
