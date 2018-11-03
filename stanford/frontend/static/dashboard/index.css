@@ -209,6 +209,12 @@ th {
 
 .Badges {
     width: 100%;
+    transform: translateX(-15px);
+    margin-right: 40px;
+}
+
+.PointsHeader {
+    width: 115%;
 }
 
 .Graphs {
@@ -288,6 +294,17 @@ th {
 
 .UserDashboard {
     transform: translateY(-25px);
+}
+
+.question-media {
+    max-width: 600px;
+    max-height: 400px;
+}
+
+.media-box {
+    max-width: 600px;
+    max-height: 400px;
+    margin: 25px auto;
 }
 
 .answer-box {

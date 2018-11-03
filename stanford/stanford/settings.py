@@ -23,6 +23,10 @@ if DJANGO_HOSTNAME == 'localhost':
 
 if SSL:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+FILE_UPLOAD_PERMISSIONS = 0o644
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

@@ -2,7 +2,7 @@ import 'whatwg-fetch';
 
 export const UPDATE_USERS = 'UPDATE_USERS';
 export const UPDATE_CATEGORIES = 'UPDATE_CATEGORIES';
-export const UPDATE_QUESTION_USER_DATA = 'UPDATE_CATEGORIES';
+export const UPDATE_QUESTION_USER_DATA = 'UPDATE_QUESTION_USER_DATA';
 export const UPDATE_CURRENT_QUESTION = 'UPDATE_CURRENT_QUESTION';
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const UPDATE_SUBMIT_ERROR = 'DISPLAY_SUBMIT_ERROR';
@@ -135,6 +135,22 @@ export function answerQuestion(questionId, answerId, categoryId) {
 				console.log("answer accepted")
 			} else {
 				dispatch(updateSubmitError(answer.reason));
+			}
+		}));
+}
+
+
+export function uploadQuestionCSV(file) {
+    let headers = Object.assign({}, window.postFormHeader);
+    let data = new FormData();
+    data.append("file", file);
+    headers.body = data;
+	return dispatch => fetch("/instructor/uploadquestions", headers)
+		.then(r => r.json.then(upload => {
+			if (upload.accepted) {
+				console.log("uploaded")
+			} else {
+				console.log("upload failed")
 			}
 		}));
 }

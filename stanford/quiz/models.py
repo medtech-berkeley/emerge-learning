@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from os import path
 
 from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_CHOICES, \
                              ORG_CHOICES, DEVICE_CHOICES, INTERNET_CHOICES
@@ -14,7 +15,7 @@ class Student(models.Model):
     name = models.CharField(max_length=100, default="Enter Name")
     location = models.CharField(max_length=100, default="Enter location")
     description = models.CharField(max_length=500, default="Enter description")
-    
+
     completed_survey = models.BooleanField(default=False)
     image = models.ImageField(upload_to='profile_images', default="/static/accounts/default_profile.jpg", blank=True)
     birth_year = models.IntegerField(choices=YEAR_CHOICES, default=timezone.now().year)
@@ -26,7 +27,7 @@ class Student(models.Model):
     years_of_experience = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     organization = models.CharField(max_length=3, choices=ORG_CHOICES, default='OTH')
 
-    
+
     def __str__(self):
         return self.user.username
 
@@ -40,7 +41,7 @@ class Tag(models.Model):
     text = models.CharField(max_length=64, primary_key=True)
 
     def __str__(self):
-        return self.text        
+        return self.text
 
 class Category(models.Model):
     name = models.CharField(max_length=100, primary_key=True)
@@ -75,9 +76,26 @@ class Question(models.Model):
     text = models.CharField(max_length=300)
     category = models.ForeignKey(Category, related_name="questions", on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
+    media = models.ForeignKey('QuestionMedia', related_name="media", null=True, on_delete=models.DO_NOTHING)
+
 
     def __str__(self):
         return self.category.name + " - Question " + str(self.id)
+
+
+class QuestionMedia(models.Model):
+    IMAGE = 'IMG'
+    VIDEO = 'VID'
+    MEDIA_CHOICES = (
+        (IMAGE, 'Image'),
+        (VIDEO, 'Video')
+    )
+
+    media_file = models.FileField(upload_to="questions/")
+    media_type = models.CharField(max_length=3, choices=MEDIA_CHOICES)
+
+    def __str__(self):
+        return f"{self.media_type} - {path.basename(self.media_file.name)}"
 
 
 class Answer(models.Model):
@@ -130,7 +148,7 @@ class GVK_EMRI_Demographics(models.Model):
 
     obgyn_refresher = models.BooleanField()
     obgyn_date = models.DateField(null=True)
-    
+
     trauma_refresher = models.BooleanField()
     trauma_date = models.DateField(null=True)
 

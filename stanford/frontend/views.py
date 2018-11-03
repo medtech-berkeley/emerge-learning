@@ -9,7 +9,12 @@ def index(request):
         if request.GET.get('error'):
             info = {'error': request.GET.get('error')}
         return render(request, 'index.html', info)
-    return render(request, 'dashboard.html')
+    return redirect('dashboard')
+
+def dashboard(request):
+    if request.user.is_authenticated:
+        return render(request, 'dashboard.html')
+    return redirect('index')
 
 
 def change_user_info(request):

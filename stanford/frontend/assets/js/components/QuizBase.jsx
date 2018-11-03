@@ -20,10 +20,10 @@ export class QuizBase extends React.Component {
                                                    answers={this.props.currentQuestion.answers}
                                                    id={this.props.currentQuestion.id}
                                                    answerQuestion={this.props.answerQuestion}
+                                                   media={this.props.currentQuestion.media}
 												   currentTime={this.props.currentTime}
 												   timeStarted={this.props.timeStarted}
-												   maxTime={this.props.maxTime}
-												   />}
+												   maxTime={this.props.maxTime}/>}
 			{this.props.complete && <QuizComplete getResults={this.props.getResults}
                                                   categoryId={this.props.categoryId}
                                                   num_attempted={this.props.num_attempted}
@@ -45,8 +45,5 @@ QuizBase.propTypes = {
     getCurrentQuestion: PropTypes.func,
     getCategoryData: PropTypes.func,
     answerQuestion: PropTypes.func,
-    getResults: PropTypes.func,
-	currentTime: PropTypes.number,
-	timeStarted: PropTypes.number,
-	maxTime: PropTypes.number,
+    getResults: PropTypes.func
 };

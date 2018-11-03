@@ -8,6 +8,7 @@ import UserDashboardApi from "./containers/UserDashboardApi";
 import Quiz from "./containers/Quiz";
 import Settings from "./containers/SettingsContainer";
 import {startTime} from "./actions/Actions";
+import Instructor from "./containers/InstructorContainer"
 
 export class App extends React.Component {
     componentDidMount(){
@@ -20,10 +21,11 @@ export class App extends React.Component {
                         <div>
                         <NavBar pathname={history.location.pathname}/>
                             <div className="content-area">
-                                <Route exact={true} path="/" component={MainDashboardApi}/>
-                                <Route path="/profile" component={UserDashboardApi}/>
-                                <Route path="/settings" component={Settings}/>
-                                <Route path="/quiz/:quizId" component={Quiz}/>
+                                <Route exact={true} path="/dashboard" component={MainDashboardApi}/>
+                                <Route path="/dashboard/profile" component={UserDashboardApi}/>
+                                <Route path="/dashboard/settings" component={Settings}/>
+                                <Route path="/dashboard/instructor" component={Instructor}/>
+                                <Route path="/dashboard/quiz/:quizId" component={Quiz}/>
                             </div>
                         </div>
                     </Router>

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { UserDashboard } from '../components/UserDashboard'
+import { Instructor } from '../components/Instructor'
 import { refreshStudent } from '../actions/LoadUserActions'
 import { refreshData } from '../actions/DataActions'
 import { getQuestionUserData } from '../actions/Actions'
@@ -16,6 +16,6 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-let UserDashboardApi = connect(mapStateToProps, mapDispatchToProps)(UserDashboard);
+let InstructorContainer = connect(mapStateToProps, mapDispatchToProps)(Instructor);
 
-export default UserDashboardApi;
+export default InstructorContainer;
