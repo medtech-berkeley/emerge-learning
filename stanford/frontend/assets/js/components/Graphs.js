@@ -17,10 +17,10 @@ export class Graphs extends React.Component {
         return (graphElements);
       } else {
         return ([
-          {name: 'Circulation', Accuracy: 0},
-          {name: 'Airway', Accuracy: 0},
-          {name: 'Basic Procedures', Accuracy: 0},
-          {name: 'EMS Knowledge', Accuracy: 0},
+          {name: '', Accuracy: 0},
+          {name: '', Accuracy: 0},
+          {name: '', Accuracy: 0},
+          {name: '', Accuracy: 0},
         ]);
       }
     }
