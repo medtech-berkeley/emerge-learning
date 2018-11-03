@@ -19,7 +19,7 @@ export class CategoryCard extends React.Component {
 			                    	{this.props.is_challenge && 
 			                    	<img src="https://i.imgur.com/NWR88o8.png" className="icon img-fluid" alt=""/>}
 			                    </h4>
-			                    <p className="card-text">{this.props.sponsor}</p>
+			                    <p className="card-text section-text">{this.props.sponsor}</p>
 			                    <div className="row">
 			                    	<Link 
 			                    		to={"quiz/" + this.props.name} 
