@@ -44,7 +44,7 @@ class Tag(models.Model):
         return self.text
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, primary_key=True)
+    name = models.CharField(max_length=100)
     start = models.DateTimeField()
     end = models.DateTimeField()
     sponsor = models.CharField(max_length=50)

@@ -22,9 +22,9 @@ export class CategoryCard extends React.Component {
 			                    <p className="card-text section-text">{this.props.sponsor}</p>
 			                    <div className="row">
 			                    	<Link 
-			                    		to={"quiz/" + this.props.name} 
+			                    		to={"quiz/" + this.props.id} 
 			                    		className="btn btn-outline-success" 
-			                    		onClick={() => this.props.selectCategory(this.props.name)}>
+			                    		onClick={() => this.props.selectCategory(this.props.id)}>
 			                    		{this.props.is_challenge && <div>Start Challenge</div>}{!this.props.is_challenge && <div>Start Practice</div>}
 			                    	</Link>
 			                   		<a href="#" className="btn btn-outline-primary">Info</a>

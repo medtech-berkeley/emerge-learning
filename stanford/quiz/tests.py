@@ -172,48 +172,52 @@ class QuizTestCase(TestCase):
         return client, student
 
     def test_get_question_basic(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         self.assertEqual(response.status_code, 200)
         question = response.json()
-        self.assertEqual(question['category'], 'cat1')
+        self.assertEqual(question['category'], self.categories[0].id)
         self.assertEqual(len(question['answers']), 4)
 
     def test_get_question_multiple_categories(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         self.assertEqual(response.status_code, 200)
         question = response.json()
-        self.assertEqual(question['category'], 'cat1')
+        self.assertEqual(question['category'], self.categories[0].id)
 
-        response2 = self.client.get("/quiz/question", {'category': 'cat2'})
+        response2 = self.client.get("/quiz/question", {'category': self.categories[1].id})
         self.assertEqual(response2.status_code, 200)
         question2 = response2.json()
-        self.assertEqual(question2['category'], 'cat2')
+        self.assertEqual(question2['category'], self.categories[1].id)
         self.assertNotEqual(question, question2)
 
-        response3 = self.client.get("/quiz/question", {'category': 'cat3'})
+        response3 = self.client.get("/quiz/question", {'category': self.categories[2].id})
         self.assertEqual(response3.status_code, 200)
         question3 = response3.json()
-        self.assertEqual(question3['category'], 'cat3')
+        self.assertEqual(question3['category'], self.categories[2].id)
         self.assertNotEqual(question, question3)
         self.assertNotEqual(question2, question3)
     
     def test_get_question_all_complete(self):
-        questions = []
         for i in range(3):
-            response = self.client.get("/quiz/question", {'category': 'cat1'})
+            response = self.client.get("/quiz/question", {'category': self.categories[0].id})
             self.assertEqual(response.status_code, 200)
             question = response.json()
-            self.assertEqual(question['category'], 'cat1')
+            self.assertEqual(question['category'], self.categories[0].id)
             self.assertEqual(len(question['answers']), 4)
-            questions.append(question)
 
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+            question = Question.objects.get(id=question['id'])
+            answer = question.answers.filter(is_correct=True).first()
+
+            answer_response = self.client.post("/quiz/answer", {'question': question.id, 'answer': answer.id})
+            self.assertEqual(answer_response.status_code, 200)
+
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         # self.assertEqual(response.status_code, 204)
         question = response.json()
         self.assertEqual(question['completed'], True)
 
     def test_answer_basic(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
@@ -225,7 +229,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], True)
 
     def test_answer_multiple_attempts(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=False).first()
@@ -242,7 +246,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['accepted'], False)
 
     def test_answer_sequential_questions(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
@@ -253,7 +257,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['accepted'], True)
         self.assertEqual(answer_json['correct'], True)
 
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
@@ -264,7 +268,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['accepted'], True)
         self.assertEqual(answer_json['correct'], True)
 
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=False).first()
@@ -276,7 +280,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], False)
 
     def test_answer_multiple_categories(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
@@ -287,7 +291,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['accepted'], True)
         self.assertEqual(answer_json['correct'], True)
 
-        response = self.client.get("/quiz/question", {'category': 'cat2'})
+        response = self.client.get("/quiz/question", {'category': self.categories[1].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
@@ -299,12 +303,12 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], True)
 
         # test multiple open at same time
-        response = self.client.get("/quiz/question", {'category': 'cat2'})
+        response = self.client.get("/quiz/question", {'category': self.categories[1].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
 
-        response2 = self.client.get("/quiz/question", {'category': 'cat3'})
+        response2 = self.client.get("/quiz/question", {'category': self.categories[2].id})
         question_id2 = response2.json()['id']
         question2 = Question.objects.get(id=question_id2)
         answer2 = question2.answers.filter(is_correct=True).first()
@@ -322,7 +326,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], True)
 
     def test_answer_late(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         category_data = CategoryUserData.objects.get(category=question.category, student=self.student)
@@ -337,9 +341,9 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['accepted'], False)  # rejected due to lateness despite being correct
 
     def test_answer_forgotten(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})  # user never submits an answer
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})  # user never submits an answer
 
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
@@ -351,7 +355,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], True)
 
     def test_stats_student(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
@@ -359,7 +363,7 @@ class QuizTestCase(TestCase):
         answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
         answer_json = answer_response.json()
 
-        response = self.client.get("/quiz/question", {'category': 'cat2'})
+        response = self.client.get("/quiz/question", {'category': self.categories[1].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=False).first()
@@ -368,12 +372,12 @@ class QuizTestCase(TestCase):
         answer_json = answer_response.json()
 
         # test multiple open at same time
-        response = self.client.get("/quiz/question", {'category': 'cat2'})
+        response = self.client.get("/quiz/question", {'category': self.categories[1].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
 
-        response2 = self.client.get("/quiz/question", {'category': 'cat3'})
+        response2 = self.client.get("/quiz/question", {'category': self.categories[2].id})
         question_id2 = response2.json()['id']
         question2 = Question.objects.get(id=question_id2)
         answer2 = question2.answers.filter(is_correct=True).first()
@@ -387,7 +391,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(3, get_stats_student(self.student)['num_correct'])
 
     def test_stats_question_total_single_user(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
@@ -408,7 +412,7 @@ class QuizTestCase(TestCase):
             clients.append(client)
 
         for i, client in enumerate(clients):
-            response = client.get("/quiz/question", {'category': 'cat1'})
+            response = client.get("/quiz/question", {'category': self.categories[0].id})
             question_id = response.json()['id']
             question = Question.objects.get(id=question_id)
             answer = question.answers.filter(is_correct=True).first()
@@ -434,7 +438,7 @@ class QuizTestCase(TestCase):
             students.append(student)
 
         for i, client in enumerate(clients):
-            response = client.get("/quiz/question", {'category': 'cat1'})
+            response = client.get("/quiz/question", {'category': self.categories[0].id})
             question_id = response.json()['id']
             question = Question.objects.get(id=question_id)
             if i % 2 == 0:
@@ -452,7 +456,7 @@ class QuizTestCase(TestCase):
 
     # TODO: add tests for multiple questions
     def test_stats_question_total_null(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
 
@@ -462,19 +466,19 @@ class QuizTestCase(TestCase):
         self.assertEqual(0, stats['num_attempted'])
 
     def test_stats_category_single_user(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
         self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=False).first()
         self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
@@ -496,19 +500,19 @@ class QuizTestCase(TestCase):
             clients.append(client)
 
         for i, client in enumerate(clients):
-            response = client.get("/quiz/question", {'category': 'cat1'})
+            response = client.get("/quiz/question", {'category': self.categories[0].id})
             question = Question.objects.get(id=response.json()['id'])
             answer = question.answers.filter(is_correct=True).first()
             client.post("/quiz/answer", {'question': question.id, 'answer': answer.id})
 
-            response = client.get("/quiz/question", {'category': 'cat1'})
+            response = client.get("/quiz/question", {'category': self.categories[0].id})
             question = Question.objects.get(id=response.json()['id'])
             answer = question.answers.filter(is_correct=False).first()
             client.post("/quiz/answer", {'question': question.id, 'answer': answer.id})
 
             # every other student gets another correct
             if i % 2 == 0:
-                response = client.get("/quiz/question", {'category': 'cat1'})
+                response = client.get("/quiz/question", {'category': self.categories[0].id})
                 question = Question.objects.get(id=response.json()['id'])
                 answer = question.answers.filter(is_correct=True).first()
                 client.post("/quiz/answer", {'question': question.id, 'answer': answer.id})
@@ -519,7 +523,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(NUM_STUDENTS, stats['num_incorrect'])
 
     def test_stats_category_null(self):
-        response = self.client.get("/quiz/question", {'category': 'cat1'})
+        response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         question = Question.objects.get(id=response.json()['id'])
 
         stats = get_stats_category(category=question.category)
@@ -536,13 +540,13 @@ class QuizTestCase(TestCase):
     def test_get_completed_answers(self):
         num_questions = self.categories[0].questions.count()
         for _ in range(num_questions):
-            response = self.client.get("/quiz/question", {'category': 'cat1'})
+            response = self.client.get("/quiz/question", {'category': self.categories[0].id})
             question_id = response.json()['id']
             question = Question.objects.get(id=question_id)
             answer = question.answers.filter(is_correct=True).first()
             self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
-        response = self.client.get("/quiz/results", {'category': 'cat1'})
+        response = self.client.get("/quiz/results", {'category': self.categories[0].id})
         self.assertIn(response.status_code, range(200,300))
         json = response.json()
         self.assertTrue(json['accepted'])
@@ -560,39 +564,43 @@ class QuizTestCase(TestCase):
 
     def test_get_completed_answers_fail(self):
         # start a category
-        self.client.get("/quiz/question", {'category': 'cat1'})
+        self.client.get("/quiz/question", {'category': self.categories[0].id})
         # try to get answers
-        response = self.client.get("/quiz/results", {'category': 'cat1'})
+        response = self.client.get("/quiz/results", {'category': self.categories[0].id})
         self.assertFalse(200 <= response.status_code < 300, msg="Should not be able to get answers for a category "
                                                                 "that is not completed")
 
     def test_get_stats_student(self):
-        response = self.client.get("/quiz/question", {'category': 'cat4'})
+        response = self.client.get("/quiz/question", {'category': self.categories[3].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
 
         self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
-        response = self.client.get("/quiz/question", {'category': 'cat4'})
+        response = self.client.get("/quiz/question", {'category': self.categories[3].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=False).first()
 
         self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
-        # test multiple open at same time
-        response = self.client.get("/quiz/question", {'category': 'cat5'})
+        response = self.client.get("/quiz/question", {'category': self.categories[4].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
 
-        response2 = self.client.get("/quiz/question", {'category': 'cat5'})
-        question_id2 = response2.json()['id']
-        question2 = Question.objects.get(id=question_id2)
-        answer2 = question2.answers.filter(is_correct=True).first()
+        self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
-        self.client.post("/quiz/answer", {'question': question_id2, 'answer': answer2.id})
+        answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+        answer_json = answer_response.json()
+
+        response = self.client.get("/quiz/question", {'category': self.categories[4].id})
+        question_id = response.json()['id']
+        question = Question.objects.get(id=question_id)
+        answer = question.answers.filter(is_correct=True).first()
+
+        self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
         answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
         answer_json = answer_response.json()

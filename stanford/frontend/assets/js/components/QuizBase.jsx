@@ -6,18 +6,20 @@ import { QuizComplete } from "./QuizComplete"
 
 export class QuizBase extends React.Component {
 	componentDidMount() {
+		this.quizID = this.props.match.params.quizId;
 		console.log("QuizBase did mount.");
-		console.log(this.props.categoryId);
-		this.props.getCurrentQuestion(this.props.categoryId);
-		this.props.getCategoryData(this.props.categoryId);
+		console.log(this.quizID);
+		this.props.getCurrentQuestion(this.quizID);
+		this.props.getCategoryData(this.quizID);
 	}
 
 	render() {
 		return (
 			<div>
-			{!this.props.complete && <QuizQuestion categoryId={this.props.categoryId}
+			{!this.props.complete && <QuizQuestion categoryId={this.quizID}
                                                    text={this.props.currentQuestion.text}
-                                                   answers={this.props.currentQuestion.answers}
+												   answers={this.props.currentQuestion.answers}
+												   name={this.props.currentQuestion.name}
                                                    id={this.props.currentQuestion.id}
                                                    answerQuestion={this.props.answerQuestion}
                                                    media={this.props.currentQuestion.media}
@@ -25,7 +27,8 @@ export class QuizBase extends React.Component {
 												   timeStarted={this.props.timeStarted}
 												   maxTime={this.props.maxTime}/>}
 			{this.props.complete && <QuizComplete getResults={this.props.getResults}
-                                                  categoryId={this.props.categoryId}
+												  name={this.props.currentQuestion.name}
+                                                  categoryId={this.quizID}
                                                   num_attempted={this.props.num_attempted}
                                                   num_correct={this.props.num_correct}
                                                   results={ this.props.results }/>}
