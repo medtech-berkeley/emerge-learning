@@ -95,7 +95,9 @@ class StudentStatsViewSet(ViewSet):
 
         student = Student.objects.get(pk=pk)
         stats = get_stats_student(student, date)
-
+        stats['location'] = student.location
+        stats['image'] = student.image
+        
         serializer = StudentStatsSerializer(instance=stats)
         return Response(serializer.data)
 
