@@ -33,6 +33,9 @@ export class NavBar extends React.Component {
             <li className={this.getClassListNavItem('/settings/')}>
               <a className="nav-link" href="/settings">Settings</a>
             </li>
+            <li className={this.getClassListNavItem('/instructor/')}>
+              <a className="nav-link" href="/instructor">Instructor</a>
+            </li>            
               </ul>
             <form action="/logout" className="form-inline my-2 my-lg-0">
               <button type="submit" className="btn logout-btn btn-outline-success">Log Out</button>

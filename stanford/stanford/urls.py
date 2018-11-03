@@ -1,5 +1,4 @@
 """stanford URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
 Examples:
@@ -18,7 +17,7 @@ from django.urls import path, include, re_path
 from frontend.views import index, change_user_info
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet, StudentStatsViewSet
-from quiz.views import get_question, submit_answer, get_category_results, get_stats, submit_demographics_form
+from quiz.views import get_question, submit_answer, get_category_results, get_stats, submit_demographics_form, upload_questions, upload_categories
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import signup, logins, logout_view
@@ -48,6 +47,8 @@ urlpatterns = [
     path('login/', logins, name='login'),
     path('logout/', logout_view, name='logout'),
     path('stats/', get_stats, name='stats'),
+    path('instructor/uploadquestions/', upload_questions),
+    path('instructor/uploadcategories/', upload_categories),
     re_path(r'^.*/$', index)
 ]
 
