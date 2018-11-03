@@ -23,7 +23,7 @@ def create_questions_answers_from_csv(filename, category):
 		for row in reader:
 			if rownum != 0:
 				question = Question.objects.create(text=row[0], category=category, 
-					                               created=datetime.now(), max_time=timedelta(days=1, hours=10))
+					                               created=datetime.now())
 				row = row[1:]
 				for answer in row:
 					if answer[:3] == '#c:':

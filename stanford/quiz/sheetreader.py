@@ -11,6 +11,8 @@ from .models import Category, Question, Answer, Tag
 from django.core.files import File
 import csv
 import datetime
+import pytz
+
 # try:
 #     import argparse
 #     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
@@ -43,8 +45,8 @@ def LoadCategoryFromCSV(file):
             #row structure: |Name|Start|End|Sponsor|is_challenge|tags|image|difficulty
             row = [x for x in row if x != '']
             name = row[0]
-            start = datetime.datetime.strptime(row[1], "%Y/%m/%d")
-            end = datetime.datetime.strptime(row[2], "%Y/%m/%d")
+            start = pytz.utc.localize(timezone.datetime.strptime(row[1], "%Y/%m/%d"))
+            end = pytz.utc.localize(timezone.datetime.strptime(row[2], "%Y/%m/%d"))
             sponsor = row[3]
             is_challenge = row[4] == "TRUE"
             image = row[-2]

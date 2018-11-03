@@ -1,4 +1,4 @@
-import { UPDATE_USERS, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED } from "../actions/Actions";
+import { UPDATE_USERS, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_DATA } from "../actions/Actions";
 import { UPDATE_USER } from "../actions/LoadUserActions";
 
 const initialState = {
@@ -51,6 +51,7 @@ const initialState = {
 	},
 	ui: {
 		categoryId: -1,
+        maxTime: "1 10:00:00"
 		currentQuestion: {
         "id": -1,
         "category": "Default",
@@ -77,51 +78,43 @@ const initialState = {
                 "is_correct": false
             }
         ],
-        "created": "2018-04-25T09:21:22.618444Z",
-        "max_time": "1 10:00:00"
+        "created": "2018-04-25T09:21:22.618444Z"
     },
 		complete: false,
 	}
 }
 
 export function stanfordApp(state = initialState, action) {
+	let newState = JSON.parse(JSON.stringify(state));
     switch (action.type) {
     	case (UPDATE_USERS):
-    		let newStateUpdateUsers = Object.assign({}, state);
-	    	newStateUpdateUsers.api.users = action.users;
-	    	return newStateUpdateUsers;
+	    	newState.api.users = action.users;
+	    	break;
     	case (UPDATE_CATEGORIES):
-			let newStateUpdateCategories = Object.assign({}, state);
-	    	newStateUpdateCategories.api.categories = action.categories;
-	    	return newStateUpdateCategories;
+			newState.api.categories = action.categories;
+			break;
     	case (UPDATE_QUESTION_USER_DATA):
-    		let newStateUpdateQUD = Object.assign({}, state);
-	    	newStateUpdateQUD.api.questionUserData = action.questionUserData;
-	    	return newStateUpdateQUD;
+	    	newState.api.questionUserData = action.questionUserData;
+	    	break;
 	    case (SELECT_CATEGORY):
-	    	let newStateSelectCategory = Object.assign({}, state);
-	    	newStateSelectCategory.ui.categoryId = action.categoryId;
-	    	return newStateSelectCategory;	
+	    	newState.ui.categoryId = action.categoryId;
+	    	break;
     	case (UPDATE_CURRENT_QUESTION):
-    		let newStateCurrentQuestion = Object.assign({}, state);
-	    	newStateCurrentQuestion.ui.currentQuestion = action.currentQuestion;
-	    	return newStateCurrentQuestion;
+	    	newState.ui.currentQuestion = action.currentQuestion;
+	    	break;
     	case (UPDATE_SUBMIT_ERROR):
-    		let newStateUpdateSubmitError = Object.assign({}, state);
-	    	newStateUpdateSubmitError.api.questionUserData = action.questionUserData;
-	    	return newStateUpdateSubmitError;
+	    	newState.api.questionUserData = action.questionUserData;
+	    	break;
     	case (UPDATE_CATEGORY_COMPLETED):
-            console.log("update category completed")
-    		let newStateUpdateCC = Object.assign({}, state);
-	    	newStateUpdateCC.ui.complete = true;
-	    	return newStateUpdateCC;
+	    	newState.ui.complete = true;
+	    	break;
         case (UPDATE_USER):
-			let newStateUpdateUser = Object.assign({}, state);
-	    	newStateUpdateUser.api.user = action.user;
-	    	console.log("update jobs");
-	    	console.log(action);
-			return newStateUpdateUser;
-		default:
-			return state;
-    }
+	    	newState.api.user = action.user;
+			break;
+		case (UPDATE_CATEGORY_DATA):
+			newState.api.user = action.user;
+			break;
+	}
+	
+	return newState;
 }

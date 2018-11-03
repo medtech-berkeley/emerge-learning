@@ -51,6 +51,7 @@ class Category(models.Model):
     is_challenge = models.BooleanField()
     image = models.ImageField(upload_to="category_images", default='default.jpg')
     tags = models.ManyToManyField(Tag, related_name="categories")
+    max_time = models.DurationField(default=datetime.timedelta(minutes=10))
 
     NOVICE = 'Novice'
     INTERMEDIATE = 'Intermediate'
@@ -75,7 +76,6 @@ class Question(models.Model):
     text = models.CharField(max_length=300)
     category = models.ForeignKey(Category, related_name="questions", on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
-    max_time = models.DurationField(default=datetime.timedelta(minutes=1))
     media = models.ForeignKey('QuestionMedia', related_name="media", null=True, on_delete=models.DO_NOTHING)
 
 
@@ -123,6 +123,22 @@ class QuestionUserData(models.Model):
 
     class Meta:
         unique_together = ('question', 'student')
+
+class CategoryUserData(models.Model):
+    """
+    Stores student-specific metadata for each category. Time it took to complete, etc.
+    """
+
+    student = models.ForeignKey(Student, related_name="category_data", on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name="category_data", on_delete=models.CASCADE)
+    time_started = models.DateTimeField(default=timezone.now)
+    time_completed = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return "Category " + str(self.category.name) + " Data - " + self.student.user.username
+
+    class Meta:
+        unique_together = ('category', 'student')
 
 
 class GVK_EMRI_Demographics(models.Model):

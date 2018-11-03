@@ -11,7 +11,7 @@ from django.utils import timezone
 from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
 from django.core.files.base import File
 #from .sheetreader import Sheet
-from .models import Question, Category, QuestionUserData, Answer, Student, Tag
+from .models import Question, Category, CategoryUserData, QuestionUserData, Answer, Student, Tag
 from .utils import get_stats_student, get_stats_question_total, get_stats_category
 
 @skip
@@ -69,19 +69,19 @@ class QuizTestCase(TestCase):
         cat1 = Category.objects.create(name="cat1", start=timezone.now(),
                                        end=timezone.now(), sponsor="none", is_challenge=False)
 
-        c1_q1 = Question.objects.create(text="c1_q1", category=cat1, max_time=datetime.timedelta(minutes=1))
+        c1_q1 = Question.objects.create(text="c1_q1", category=cat1)
         Answer.objects.create(text="a1", question=c1_q1, is_correct=True)
         Answer.objects.create(text="a2", question=c1_q1, is_correct=False)
         Answer.objects.create(text="a3", question=c1_q1, is_correct=False)
         Answer.objects.create(text="a4", question=c1_q1, is_correct=False)
 
-        c1_q2 = Question.objects.create(text="c1_q2", category=cat1, max_time=datetime.timedelta(minutes=1))
+        c1_q2 = Question.objects.create(text="c1_q2", category=cat1)
         Answer.objects.create(text="a1", question=c1_q2, is_correct=False)
         Answer.objects.create(text="a2", question=c1_q2, is_correct=False)
         Answer.objects.create(text="a3", question=c1_q2, is_correct=True)
         Answer.objects.create(text="a4", question=c1_q2, is_correct=False)
 
-        c1_q3 = Question.objects.create(text="c1_q3", category=cat1, max_time=datetime.timedelta(minutes=1))
+        c1_q3 = Question.objects.create(text="c1_q3", category=cat1)
         Answer.objects.create(text="a1", question=c1_q3, is_correct=False)
         Answer.objects.create(text="a2", question=c1_q3, is_correct=False)
         Answer.objects.create(text="a3", question=c1_q3, is_correct=False)
@@ -90,17 +90,17 @@ class QuizTestCase(TestCase):
         cat2 = Category.objects.create(name="cat2", start=timezone.now(),
                                        end=timezone.now(), sponsor="none", is_challenge=False)
 
-        c2_q1 = Question.objects.create(text="c2_q1", category=cat2, max_time=datetime.timedelta(minutes=1))
+        c2_q1 = Question.objects.create(text="c2_q1", category=cat2)
         Answer.objects.create(text="a1", question=c2_q1, is_correct=True)
         Answer.objects.create(text="a2", question=c2_q1, is_correct=False)
         Answer.objects.create(text="a3", question=c2_q1, is_correct=True)
         Answer.objects.create(text="a4", question=c2_q1, is_correct=False)
 
-        c2_q2 = Question.objects.create(text="c2_q2", category=cat2, max_time=datetime.timedelta(minutes=1))
+        c2_q2 = Question.objects.create(text="c2_q2", category=cat2)
         Answer.objects.create(text="a1", question=c2_q2, is_correct=True)
         Answer.objects.create(text="a2", question=c2_q2, is_correct=False)
 
-        c2_q3 = Question.objects.create(text="c2_q3", category=cat2, max_time=datetime.timedelta(minutes=1))
+        c2_q3 = Question.objects.create(text="c2_q3", category=cat2)
         Answer.objects.create(text="a1", question=c2_q3, is_correct=False)
         Answer.objects.create(text="a2", question=c2_q3, is_correct=False)
         Answer.objects.create(text="a3", question=c2_q3, is_correct=False)
@@ -109,13 +109,13 @@ class QuizTestCase(TestCase):
         cat3 = Category.objects.create(name="cat3", start=timezone.now(),
                                        end=timezone.now(), sponsor="none", is_challenge=False)
 
-        c3_q1 = Question.objects.create(text="c3_q1", category=cat3, max_time=datetime.timedelta(minutes=1))
+        c3_q1 = Question.objects.create(text="c3_q1", category=cat3)
         Answer.objects.create(text="a1", question=c3_q1, is_correct=True)
         Answer.objects.create(text="a2", question=c3_q1, is_correct=False)
         Answer.objects.create(text="a3", question=c3_q1, is_correct=False)
         Answer.objects.create(text="a4", question=c3_q1, is_correct=False)
 
-        c3_q2 = Question.objects.create(text="c3_q2", category=cat3, max_time=datetime.timedelta(minutes=1))
+        c3_q2 = Question.objects.create(text="c3_q2", category=cat3)
         Answer.objects.create(text="a3", question=c3_q2, is_correct=True)
         Answer.objects.create(text="a4", question=c3_q2, is_correct=False)
 
@@ -125,13 +125,13 @@ class QuizTestCase(TestCase):
         cat4.difficulty = Category.INTERMEDIATE
         cat4.save()
 
-        c4_q1 = Question.objects.create(text="c4_q1", category=cat4, max_time=datetime.timedelta(minutes=1))
+        c4_q1 = Question.objects.create(text="c4_q1", category=cat4)
         Answer.objects.create(text="a1", question=c4_q1, is_correct=True)
         Answer.objects.create(text="a2", question=c4_q1, is_correct=False)
         Answer.objects.create(text="a3", question=c4_q1, is_correct=True)
         Answer.objects.create(text="a4", question=c4_q1, is_correct=False)
 
-        c4_q2 = Question.objects.create(text="c4_q2", category=cat4, max_time=datetime.timedelta(minutes=1))
+        c4_q2 = Question.objects.create(text="c4_q2", category=cat4)
         Answer.objects.create(text="a1", question=c4_q2, is_correct=True)
         Answer.objects.create(text="a2", question=c4_q2, is_correct=False)
         Answer.objects.create(text="a3", question=c4_q2, is_correct=True)
@@ -144,14 +144,14 @@ class QuizTestCase(TestCase):
         cat5.difficulty = Category.ADVANCED
         cat5.save()
 
-        c5_q1 = Question.objects.create(text="c5_q1", category=cat5, max_time=datetime.timedelta(minutes=1))
+        c5_q1 = Question.objects.create(text="c5_q1", category=cat5)
         Answer.objects.create(text="a1", question=c5_q1, is_correct=True)
         Answer.objects.create(text="a2", question=c5_q1, is_correct=False)
         Answer.objects.create(text="a3", question=c5_q1, is_correct=True)
         Answer.objects.create(text="a4", question=c5_q1, is_correct=False)
 
 
-        c5_q2 = Question.objects.create(text="c5_q2", category=cat5, max_time=datetime.timedelta(minutes=1))
+        c5_q2 = Question.objects.create(text="c5_q2", category=cat5)
         Answer.objects.create(text="a1", question=c5_q2, is_correct=True)
         Answer.objects.create(text="a2", question=c5_q2, is_correct=False)
         Answer.objects.create(text="a3", question=c5_q2, is_correct=True)
@@ -196,7 +196,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(question3['category'], 'cat3')
         self.assertNotEqual(question, question3)
         self.assertNotEqual(question2, question3)
-
+    
     def test_get_question_all_complete(self):
         questions = []
         for i in range(3):
@@ -322,13 +322,12 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], True)
 
     def test_answer_late(self):
-        # ptvsd.break_into_debugger()
         response = self.client.get("/quiz/question", {'category': 'cat1'})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
-        user_data = QuestionUserData.objects.get(question = question, student=self.student)
-        user_data.time_started = timezone.datetime(1, 1, 1, 0, 0, tzinfo=pytz.utc)
-        user_data.save()
+        category_data = CategoryUserData.objects.get(category=question.category, student=self.student)
+        category_data.time_started = timezone.datetime(1, 1, 1, 0, 0, tzinfo=pytz.utc)
+        category_data.save()
 
         answer = question.answers.filter(is_correct=True).first()
 
@@ -610,3 +609,4 @@ class QuizTestCase(TestCase):
     #TODO: Test case where tags=None or difficulties=None
     def test_get_stats_student_nullcase(self):
         pass
+   

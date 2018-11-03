@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Question, QuestionUserData, Category, Answer, Student, QuestionMedia
+from .models import Question, QuestionUserData, Category, CategoryUserData, Answer, Student, QuestionMedia
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -24,7 +24,13 @@ class CategorySerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='text', allow_null=True)
     class Meta:
         model = Category
-        fields = ('name', 'start', 'end', 'sponsor', 'is_challenge', 'image', 'tags')
+        fields = ('name', 'start', 'end', 'sponsor', 'is_challenge', 'max_time', 'image', 'tags')
+
+
+class CategoryUserDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CategoryUserData
+        fields = ('category', 'student', 'time_started', 'time_completed')
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -56,7 +62,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'category', 'text', 'answers', 'created', 'media', 'max_time')
+        fields = ('id', 'category', 'text', 'answers', 'created', 'media')
 
 
 class StudentStatsSerializer(serializers.Serializer):

@@ -8,8 +8,9 @@ from quiz.utils import get_student_category_stats
 
 from .utils import get_unanswered_questions
 from .models import Question, QuestionUserData, Category, Student
-from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, StudentSerializer, UserSerializer, StudentStatsSerializer
-from .models import Student, Category, Question, Answer, QuestionUserData, GVK_EMRI_Demographics
+from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer
+from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, CategoryUserDataSerializer
+from .models import Student, Category, Question, Answer, QuestionUserData, CategoryUserData, GVK_EMRI_Demographics
 from django.contrib.auth.models import User
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
@@ -47,6 +48,17 @@ class AnswerViewSet(ModelViewSet):
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class CategoryUserDataViewSet(ModelViewSet):
+    queryset = CategoryUserData.objects.all()
+    serializer_class = CategoryUserDataSerializer
+
+    def retrieve(self, request, pk=None):
+        student = self.request.user.student
+        category_data = get_object_or_404(CategoryUserData, student=student, category=pk)
+        serializer = CategoryUserDataSerializer(instance=category_data)
+        return Response(serializer.data)
 
 
 class QuestionUserDataViewSet(ModelViewSet):
@@ -102,16 +114,26 @@ def get_question(request):
             except (Category.DoesNotExist, KeyError):
                 return JsonResponse({'accepted': False, 'reason': 'Missing or invalid category in request'}, status=400)
 
+            if not student.category_data.filter(category=category).exists():
+                CategoryUserData.objects.create(student=student, category=category)
+
+            category_data = student.category_data.filter(category=category).first()
+
             # check for questions user has already started, exclude from final set
             question_set = get_unanswered_questions(student, category)
 
             stats = get_student_category_stats(category, student)
             if len(question_set) == 0:
+                if category_data.time_completed is None:
+                    category_data.time_completed = timezone.now()
+                    category_data.save()
+
                 response = {'accepted': True,
                             'completed': True,
                             'num_attempted': stats['num_attempted'],
                             'num_correct': stats['num_correct']}
                 return JsonResponse(data=response)
+
 
             question = question_set[0]
             # create QuestionUserData as user has started to answer question
@@ -167,19 +189,25 @@ def submit_answer(request):
                 return JsonResponse({'accepted': False, 'reason': 'Answer not for specified question'}, status=400)
 
             user_data = student.question_data.filter(question=question)
+            category_data = student.category_data.filter(category=question.category)
 
             if not user_data.exists():
                 return JsonResponse({'accepted': False, 'reason': 'Question not started yet'}, status=404)
 
-            user_data = user_data.first()
+            if not category_data.exists():
+                return JsonResponse({'accepted': False, 'reason': 'Category not started yet'}, status=404)
 
-            if user_data.answer is None and timezone.now() < user_data.time_started + question.max_time:
+            user_data = user_data.first()
+            category_data = category_data.first()
+
+            end_time = category_data.time_started + question.category.max_time
+            if user_data.answer is None and timezone.now() < end_time:
                 user_data.answer = answer
                 user_data.time_completed = timezone.now()
                 user_data.save()
 
                 return JsonResponse({'accepted': True, 'correct': answer.is_correct})
-            elif timezone.now() >= user_data.time_started + question.max_time:
+            elif timezone.now() >= end_time:
                 return JsonResponse({'accepted': False, 'reason': 'Ran out of time'})
             else:
                 return JsonResponse({'accepted': False, 'reason': 'Already answered'})

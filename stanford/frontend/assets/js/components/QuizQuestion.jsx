@@ -13,21 +13,42 @@ export class QuizQuestion extends React.Component {
 				case this.IMAGE:
 					return <img src={this.props.media.media_file} className="question-media" />;
 				case this.VIDEO:
-					return  <video controls className="question-media">
-					<source src={this.props.media.media_file} type="video/mp4" />
-					</video>; 
+					return (
+						<video controls className="question-media">
+							<source src={this.props.media.media_file} type="video/mp4" />
+						</video>
+					); 
 			}
 		}
-
 		return null;
 	}
+
+	getSecondsLeft() {
+		return this.props.maxTime - (this.props.currentTime - this.props.timeStarted);
+	}
+
+	minutes() {
+		return Math.floor(this.getSecondsLeft() / 60.0);
+	}
+
+	seconds() {
+		return this.getSecondsLeft() % 60;
+	}
+
+	showTimer() {
+		return (
+			<p>CLOCK ICON HERE: {this.minutes()}:{this.seconds()}</p>
+		);
+	}
+
 	render() {
 		return (
 			<Container>
+				{ this.showTimer() }
 				<Card className="question">
 				  <CardBody>
-                    {/* TODO: add support for listing question no */}
-                    <h4 className="card-title">{this.props.categoryId}</h4>
+					{/* TODO: add support for listing question no */}
+					<h4 className="card-title">{this.props.categoryId}</h4>
 					<Row>
 						<div className="media-box">
 							{this.getMediaField()}
@@ -64,5 +85,8 @@ QuizQuestion.propTypes = {
 	media: PropTypes.object,
   category: PropTypes.number,
 	correct_answers: PropTypes.array,
-    selected: PropTypes.number,
+  selected: PropTypes.number,
+  currentTime: PropTypes.number,
+  maxTime: PropTypes.number,
+  timeStarted: PropTypes.number
 };

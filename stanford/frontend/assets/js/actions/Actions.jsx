@@ -8,7 +8,9 @@ export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const UPDATE_SUBMIT_ERROR = 'DISPLAY_SUBMIT_ERROR';
 export const UPDATE_CATEGORY_COMPLETED = 'DISPLAY_CATEGORY_COMPLETED';
 export const UPDATE_CATEGORY_RESULTS = 'UPDATE_CATEGORY_RESULTS';
+export const UPDATE_CATEGORY_DATA = 'UPDATE_CATEGORY_DATA';
 export const UPDATE_LEADERBOARD = 'UPDATE_LEADERBOARD';
+export const UPDATE_TIMER = 'UPDATE_TIMER';
 
 export function getUsers() {
 	return dispatch => fetch("/api/users", window.getHeader)
@@ -23,6 +25,20 @@ export function updateUsers(users) {
 		users
 	}
 }
+
+export function startTime() {
+	return dispatch => {
+		setInterval(() => dispatch(updateTimer(Math.floor((new Date).getTime()/1000))), 500);
+	}
+}
+
+export function updateTimer(time) {
+	return {
+		type: UPDATE_TIMER,
+		time
+	}
+}
+
 
 export function getCategories() {
 	return dispatch => fetch("/api/categories", window.getHeader)
@@ -54,8 +70,17 @@ export function updateQuestionUserData(questionUserData) {
 
 export function selectCategory(categoryId) {
 	return {
-		type: SELECT_CATEGORY, 
+		type: SELECT_CATEGORY,
 		categoryId
+	}
+}
+
+export function updateCategoryData(maxTime, timeStarted, timeCompleted) {
+	return {
+		type: UPDATE_CATEGORY_DATA,
+		maxTime,
+		timeStarted,
+		timeCompleted
 	}
 }
 
@@ -70,6 +95,23 @@ export function getCurrentQuestion(categoryId) {
 				console.log("dispatch update current question.");
 				dispatch(updateCurrentQuestion(question))
 			}
+		}));
+}
+
+export function getCategoryData(categoryId) {
+	return dispatch => fetch("/api/categoryuserdata/" + categoryId, window.getHeader)
+		.then(r => r.json().then(categoryUserData => {
+			fetch("/api/categories/" + categoryId, window.getHeader)
+			.then(r => r.json().then(category => {
+				var time = category.max_time.split(':');
+				let maxTime = (+time[0]) * 60 * 60 + (+time[1]) * 60 + (+time[2]);
+				let timeStarted = Math.floor(Date.parse(categoryUserData.time_started) / 1000);
+				let timeCompleted;
+				if (categoryUserData.time_completed) {
+					timeCompleted = Math.floor(Date.parse(categoryUserData.time_completed) / 1000);
+				}
+				dispatch(updateCategoryData(maxTime, timeStarted, timeCompleted));
+			}));
 		}));
 }
 

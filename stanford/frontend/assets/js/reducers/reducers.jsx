@@ -1,5 +1,5 @@
-import { UPDATE_USERS, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_RESULTS } from "../actions/Actions"
-import { UPDATE_LEADERBOARD } from "../actions/Actions"
+import { UPDATE_CATEGORY_DATA, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_RESULTS } from "../actions/Actions"
+import { UPDATE_LEADERBOARD, UPDATE_TIMER } from "../actions/Actions"
 import { UPDATE_STUDENT, UPDATE_STUDENTS } from "../actions/LoadUserActions"
 import { UPDATE_DATA } from "../actions/DataActions"
 
@@ -32,7 +32,6 @@ const initialState = {
         students: [{
         "user": {
             "username": "PLACEHOLDER",
-            "password": "pbkdf2_sha256$100000$g741LHEjcvCh$ISomNy9RhVXJsL25Rwy8SF6MX6wRweM+XKvEClZd/TA=",
             "email": "arjunsv@berkeley.edu"
         },
         "name": "PLACE HOLDER",
@@ -104,6 +103,10 @@ const initialState = {
         }
     },
     ui: {
+	currentTime: 67,
+	categoryId: -1,
+	timeStarted: Math.floor((new Date).getTime()/1000),
+        maxTime: 300,
         categoryId: -1,
         currentQuestion: {
         "id": -1,
@@ -131,8 +134,7 @@ const initialState = {
                 "is_correct": false
             }
         ],
-        "created": "2018-04-25T09:21:22.618444Z",
-        "max_time": "1 10:00:00"
+        created: "2018-04-25T09:21:22.618444Z"
     },
         complete: false,
         num_correct: 0,
@@ -142,55 +144,52 @@ const initialState = {
 };
 
 export function stanfordApp(state = initialState, action) {
+    let newState = JSON.parse(JSON.stringify(state));
     switch (action.type) {
-        case (UPDATE_STUDENTS):
-            let newStateUpdateStudents = Object.assign({}, state);
-            newStateUpdateStudents.api.students = action.students;
-            return newStateUpdateStudents;
-        case (UPDATE_CATEGORIES):
-            let newStateUpdateCategories = Object.assign({}, state);
-            newStateUpdateCategories.api.categories = action.categories;
-            return newStateUpdateCategories;
-        case (UPDATE_QUESTION_USER_DATA):
-            let newStateUpdateQUD = Object.assign({}, state);
-            newStateUpdateQUD.api.questionUserData = action.questionUserData;
-            return newStateUpdateQUD;
-        case (SELECT_CATEGORY):
-            let newStateSelectCategory = Object.assign({}, state);
-            newStateSelectCategory.ui.categoryId = action.categoryId;
-            return newStateSelectCategory;  
-        case (UPDATE_CURRENT_QUESTION):
-            let newStateCurrentQuestion = Object.assign({}, state);
-            newStateCurrentQuestion.ui.currentQuestion = action.currentQuestion;
-            return newStateCurrentQuestion;
-        case (UPDATE_SUBMIT_ERROR):
-            let newStateUpdateSubmitError = Object.assign({}, state);
-            newStateUpdateSubmitError.api.questionUserData = action.questionUserData;
-            return newStateUpdateSubmitError;
-        case (UPDATE_CATEGORY_COMPLETED):
-            let newStateUpdateCC = Object.assign({}, state);
-            newStateUpdateCC.ui.complete = true;
-            newStateUpdateCC.ui.num_attempted = action.num_attempted;
-            newStateUpdateCC.ui.num_correct = action.num_correct;
-            return newStateUpdateCC;
+	case (UPDATE_TIMER):
+		newState.ui.currentTime = action.time;
+		break;
+    	case (UPDATE_STUDENTS):
+	    	newState.api.students = action.students;
+	    	break;
+    	case (UPDATE_CATEGORIES):
+	    	newState.api.categories = action.categories;
+	    	break;
+    	case (UPDATE_QUESTION_USER_DATA):
+	    	newState.api.questionUserData = action.questionUserData;
+	    	break;
+	case (SELECT_CATEGORY):
+	    	newState.ui.categoryId = action.categoryId;
+	    	break;
+    	case (UPDATE_CURRENT_QUESTION):
+	    	newState.ui.currentQuestion = action.currentQuestion;
+	    	break;
+    	case (UPDATE_SUBMIT_ERROR):
+	    	newState.api.questionUserData = action.questionUserData;
+	    	break;
+    	case (UPDATE_CATEGORY_COMPLETED):
+	    	newState.ui.complete = true;
+	    	newState.ui.num_attempted = action.num_attempted;
+	    	newState.ui.num_correct = action.num_correct;
+	    	break;
         case UPDATE_STUDENT:
-            let newStateUpdateUser = Object.assign({}, state);
-            newStateUpdateUser.api.user = action.user;
-            return newStateUpdateUser;
-        case (UPDATE_DATA):
-            let newStateUpdateData = Object.assign({}, state);
-            newStateUpdateData.api.data = action.data;
-            return newStateUpdateData;
+	    	newState.api.user = action.user;
+		break;
+	case (UPDATE_DATA):
+		newState.api.data = action.data;
+		break;
         case (UPDATE_CATEGORY_RESULTS):
-            let newState = Object.assign({}, state);
             newState.ui.results = action.results;
-            return newState;
+            break;
         case (UPDATE_LEADERBOARD):
-            console.log('in reducer update leaderboard');
-            let newStateLeaderboard = Object.assign({}, state);
-            newStateLeaderboard.api.leaderboardResult = action.leaderboardResult;
-            return newStateLeaderboard;
-    default:
-            return state;
-    }
+        	newState.api.leaderboardResult = action.leaderboardResult;
+		break;
+	case (UPDATE_CATEGORY_DATA):
+		newState.ui.maxTime = action.maxTime;
+		newState.ui.timeCompleted = action.timeCompleted;
+		newState.ui.timeStarted = action.timeStarted;
+		break;
+	}
+
+	return newState;
 }

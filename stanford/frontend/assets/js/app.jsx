@@ -7,9 +7,14 @@ import {Router, Route, Switch} from "react-router-dom";
 import UserDashboardApi from "./containers/UserDashboardApi";
 import Quiz from "./containers/Quiz";
 import Settings from "./containers/SettingsContainer";
+import {startTime} from "./actions/Actions";
 import Instructor from "./containers/InstructorContainer"
 
 export class App extends React.Component {
+    componentDidMount(){
+      window.store.dispatch(startTime())
+    }
+
     render() {
         return (<div>
                     <Router history={history}>
