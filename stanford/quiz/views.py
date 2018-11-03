@@ -119,25 +119,29 @@ def get_question(request):
 
             category_data = student.category_data.filter(category=category).first()
 
-            # check for questions user has already started, exclude from final set
-            question_set = get_unanswered_questions(student, category)
+            started_question = QuestionUserData.objects.filter(question__category=category.id, student=student, answer=None)
 
-            stats = get_student_category_stats(category, student)
-            if len(question_set) == 0:
-                if category_data.time_completed is None:
-                    category_data.time_completed = timezone.now()
-                    category_data.save()
+            if started_question.exists():
+                question = started_question.first().question
+            else:
+                # check for questions user has already started, exclude from final set
+                question_set = get_unanswered_questions(student, category)
 
-                response = {'accepted': True,
-                            'completed': True,
-                            'num_attempted': stats['num_attempted'],
-                            'num_correct': stats['num_correct']}
-                return JsonResponse(data=response)
+                stats = get_student_category_stats(category, student)
+                if len(question_set) == 0:
+                    if category_data.time_completed is None:
+                        category_data.time_completed = timezone.now()
+                        category_data.save()
 
+                    response = {'accepted': True,
+                                'completed': True,
+                                'num_attempted': stats['num_attempted'],
+                                'num_correct': stats['num_correct']}
+                    return JsonResponse(data=response)
 
-            question = question_set[0]
-            # create QuestionUserData as user has started to answer question
-            question_data = QuestionUserData.objects.create(student=student, question=question)
+                question = question_set[0]
+                # create QuestionUserData as user has started to answer question
+                question_data = QuestionUserData.objects.create(student=student, question=question)
 
             # strip out correctness indicators from answers
             question_json = QuestionSerializer(instance=question).data

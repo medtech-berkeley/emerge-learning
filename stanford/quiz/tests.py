@@ -198,14 +198,18 @@ class QuizTestCase(TestCase):
         self.assertNotEqual(question2, question3)
     
     def test_get_question_all_complete(self):
-        questions = []
         for i in range(3):
             response = self.client.get("/quiz/question", {'category': self.categories[0].id})
             self.assertEqual(response.status_code, 200)
             question = response.json()
             self.assertEqual(question['category'], self.categories[0].id)
             self.assertEqual(len(question['answers']), 4)
-            questions.append(question)
+
+            question = Question.objects.get(id=question['id'])
+            answer = question.answers.filter(is_correct=True).first()
+
+            answer_response = self.client.post("/quiz/answer", {'question': question.id, 'answer': answer.id})
+            self.assertEqual(answer_response.status_code, 200)
 
         response = self.client.get("/quiz/question", {'category': self.categories[0].id})
         # self.assertEqual(response.status_code, 204)
@@ -581,18 +585,22 @@ class QuizTestCase(TestCase):
 
         self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
-        # test multiple open at same time
         response = self.client.get("/quiz/question", {'category': self.categories[4].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
 
-        response2 = self.client.get("/quiz/question", {'category': self.categories[4].id})
-        question_id2 = response2.json()['id']
-        question2 = Question.objects.get(id=question_id2)
-        answer2 = question2.answers.filter(is_correct=True).first()
+        self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
-        self.client.post("/quiz/answer", {'question': question_id2, 'answer': answer2.id})
+        answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
+        answer_json = answer_response.json()
+
+        response = self.client.get("/quiz/question", {'category': self.categories[4].id})
+        question_id = response.json()['id']
+        question = Question.objects.get(id=question_id)
+        answer = question.answers.filter(is_correct=True).first()
+
+        self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
 
         answer_response = self.client.post("/quiz/answer", {'question': question_id, 'answer': answer.id})
         answer_json = answer_response.json()
