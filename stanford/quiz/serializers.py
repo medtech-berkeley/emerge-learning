@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Question, QuestionUserData, Category, Answer, Student
+from .models import Question, QuestionUserData, Category, Answer, Student, QuestionMedia
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -18,7 +18,6 @@ class StudentSerializer(serializers.ModelSerializer):
 class QuestionUserDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionUserData
-        fields = ('name', 'question', 'answer', 'time_started', 'time_completed')
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -35,12 +34,18 @@ class AnswerSerializer(serializers.ModelSerializer):
         fields = ('id', 'text', 'is_correct')
 
 
+class QuestionMediaSerialzier(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionMedia
+        fields = ('media_file', 'media_type')
+
 class QuestionSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
+    media = QuestionMediaSerialzier()
 
     class Meta:
         model = Question
-        fields = ('id', 'category', 'text', 'answers', 'created', 'max_time')
+        fields = ('id', 'category', 'text', 'answers', 'created', 'media')
 
 
 class StudentStatsSerializer(serializers.Serializer):

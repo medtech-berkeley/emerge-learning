@@ -18,6 +18,7 @@ export class QuizBase extends React.Component {
                                                    text={this.props.currentQuestion.text}
                                                    answers={this.props.currentQuestion.answers}
                                                    id={this.props.currentQuestion.id}
+                                                   media={this.props.currentQuestion.media}
                                                    answerQuestion={this.props.answerQuestion}/>}
 			{this.props.complete && <QuizComplete getResults={this.props.getResults}
                                                   categoryId={this.props.categoryId}
