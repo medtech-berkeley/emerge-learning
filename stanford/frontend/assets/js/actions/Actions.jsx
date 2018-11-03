@@ -75,9 +75,10 @@ export function selectCategory(categoryId) {
 	}
 }
 
-export function updateCategoryData(maxTime, timeStarted, timeCompleted) {
+export function updateCategoryData(name, maxTime, timeStarted, timeCompleted) {
 	return {
 		type: UPDATE_CATEGORY_DATA,
+		name,
 		maxTime,
 		timeStarted,
 		timeCompleted
@@ -110,7 +111,7 @@ export function getCategoryData(categoryId) {
 				if (categoryUserData.time_completed) {
 					timeCompleted = Math.floor(Date.parse(categoryUserData.time_completed) / 1000);
 				}
-				dispatch(updateCategoryData(maxTime, timeStarted, timeCompleted));
+				dispatch(updateCategoryData(category.name, maxTime, timeStarted, timeCompleted));
 			}));
 		}));
 }
