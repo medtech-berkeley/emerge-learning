@@ -34,6 +34,9 @@ export class Graphs extends React.Component {
         }));
 
         const sortedQuestions = questionUserArr.map((singleQuestion) => {
+          if (!singleQuestion.answer) {
+           return [false, Date.parse(singleQuestion["time_completed"])] 
+          }
           return [singleQuestion["answer"]["is_correct"], Date.parse(singleQuestion["time_completed"])];
         })
         var questionBucket = 
@@ -51,6 +54,7 @@ export class Graphs extends React.Component {
             "day":0
             }
           }
+
         for (var i=0; i < sortedQuestions.length; i++) {
           var dateQ = sortedQuestions[i][1];
           if (sortedQuestions[i][0]) {
