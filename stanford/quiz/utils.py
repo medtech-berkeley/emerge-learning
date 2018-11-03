@@ -1,4 +1,4 @@
-from .models import Student, Question, Category, Answer, QuestionUserData
+from .models import Student, Question, Category, Answer, QuestionUserData, Tag
 from django.utils import timezone
 
 
@@ -38,10 +38,12 @@ def get_performance_stats(student, date=None):
 
 def get_subject_stats(student, date=None, query_set=QuestionUserData.objects):
     subject_stats = {}
-    subjects = ['Circulation', 'Airway', 'Basic Procedures', 'EMS Knowledge']
 
-    for subject in subjects:
-        subject_stats[subject.replace(" ", "").lower()] = get_subject_stat(student, query_set, subject, date)
+    subjects = [(tag.text, int(get_subject_stat(student, query_set, tag.text, date)['percent_correct'])) for tag in Tag.objects.all()]
+    subjects = sorted(subjects, key=lambda x: -x[1])
+
+    for subject, accuracy in subjects[:4]:
+        subject_stats[subject] = accuracy
 
     return subject_stats
 
