@@ -110,7 +110,7 @@ def get_question(request):
         student = request.user.student
         if student:
             try:
-                category = Category.objects.get(name=request.GET['category'])
+                category = Category.objects.get(id=request.GET['category'])
             except (Category.DoesNotExist, KeyError):
                 return JsonResponse({'accepted': False, 'reason': 'Missing or invalid category in request'}, status=400)
 
@@ -223,7 +223,7 @@ def get_category_results(request):
     student = request.user.student
     if student:
         try:
-            category = Category.objects.get(name=request.GET['category'])
+            category = Category.objects.get(id=request.GET['category'])
         except (Category.DoesNotExist, KeyError):
             return JsonResponse({'accepted': False, 'reason': 'Missing or invalid category in request'}, status=400)
 
@@ -310,7 +310,7 @@ def submit_demographics_form(request):
     else:
         return HttpResponse(status=403)
 
-
+@login_required
 def upload_questions(request):
     if request.method == 'POST':
         question_file = ContentFile(request.FILES['file'].read().decode('utf-8'))
@@ -319,6 +319,7 @@ def upload_questions(request):
     else:
         return redirect('dashboard')
 
+@login_required
 def upload_categories(request):
     if request.method == 'POST':
         category_file = ContentFile(request.FILES['file'].read().decode('utf-8'))
