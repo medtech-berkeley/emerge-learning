@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Question, QuestionUserData, Category, Answer, Student
+from .models import Question, QuestionUserData, Category, Answer, Student, QuestionMedia
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -26,6 +26,7 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ('name', 'start', 'end', 'sponsor', 'is_challenge', 'image', 'tags')
 
+
 class AnswerSerializer(serializers.ModelSerializer):
     # TODO: Get rid of is_correct in serializer
     class Meta:
@@ -44,12 +45,18 @@ class QuestionUserDataSerializer(serializers.ModelSerializer):
         model = QuestionUserData
         fields = ('student', 'question', 'answer', 'time_started', 'time_completed')
 
+class QuestionMediaSerialzier(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionMedia
+        fields = ('media_file', 'media_type')
+
 class QuestionSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
+    media = QuestionMediaSerialzier()
 
     class Meta:
         model = Question
-        fields = ('id', 'category', 'text', 'answers', 'created', 'max_time')
+        fields = ('id', 'category', 'text', 'answers', 'created', 'media', 'max_time')
 
 
 class StudentStatsSerializer(serializers.Serializer):

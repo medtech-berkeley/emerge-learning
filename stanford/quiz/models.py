@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from os import path
 
 from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_CHOICES, \
                              ORG_CHOICES, DEVICE_CHOICES, INTERNET_CHOICES
@@ -17,7 +18,7 @@ class Student(models.Model):
 
     completed_survey = models.BooleanField(default=False)
     image = models.ImageField(upload_to='profile_images', default="/static/accounts/default_profile.jpg", blank=True)
-    birth_year = models.IntegerField(choices=YEAR_CHOICES, default=datetime.datetime.now().year)
+    birth_year = models.IntegerField(choices=YEAR_CHOICES, default=timezone.now().year)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='U')
     job = models.CharField(max_length=4, choices=JOB_CHOICES, default='OTH')
     education_level = models.CharField(max_length=3, default="LPS")
@@ -71,17 +72,34 @@ class Category(models.Model):
 
 
 class Question(models.Model):
-    text = models.CharField(max_length=300  )
+    text = models.CharField(max_length=300)
     category = models.ForeignKey(Category, related_name="questions", on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
     max_time = models.DurationField(default=datetime.timedelta(minutes=1))
+    media = models.ForeignKey('QuestionMedia', related_name="media", null=True, on_delete=models.DO_NOTHING)
+
 
     def __str__(self):
         return self.category.name + " - Question " + str(self.id)
 
 
+class QuestionMedia(models.Model):
+    IMAGE = 'IMG'
+    VIDEO = 'VID'
+    MEDIA_CHOICES = (
+        (IMAGE, 'Image'),
+        (VIDEO, 'Video')
+    )
+
+    media_file = models.FileField(upload_to="questions/")
+    media_type = models.CharField(max_length=3, choices=MEDIA_CHOICES)
+
+    def __str__(self):
+        return f"{self.media_type} - {path.basename(self.media_file.name)}"
+
+
 class Answer(models.Model):
-    text = models.CharField(max_length=500)
+    text = models.CharField(max_length=300)
     is_correct = models.BooleanField()
     question = models.ForeignKey(Question, related_name="answers", on_delete=models.CASCADE)
 
@@ -93,6 +111,7 @@ class QuestionUserData(models.Model):
     """
     Stores student-specific metadata for each question. Time it took to complete, what the student answered, etc
     """
+
     student = models.ForeignKey(Student, related_name="question_data", on_delete=models.CASCADE)
     question = models.ForeignKey(Question, related_name="question_data", on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, null=True, related_name="question_data", on_delete=models.CASCADE)
