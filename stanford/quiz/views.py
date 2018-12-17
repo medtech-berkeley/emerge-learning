@@ -97,7 +97,7 @@ class StudentStatsViewSet(ViewSet):
         stats = get_stats_student(student, date)
         stats['location'] = student.location
         stats['image'] = student.image
-        
+
         serializer = StudentStatsSerializer(instance=stats)
         return Response(serializer.data)
 
@@ -319,20 +319,18 @@ def submit_demographics_form(request):
     else:
         return HttpResponse(status=403)
 
+
+# TODO: add better error reporting, statuses
 @login_required
 def upload_questions(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and 'file' in request.FILES:
         question_file = ContentFile(request.FILES['file'].read().decode('utf-8'))
         LoadFromCSV(question_file)
-        return redirect('dashboard')
-    else:
-        return redirect('dashboard')
+    return redirect('dashboard')
 
 @login_required
 def upload_categories(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and 'file' in request.FILES:
         category_file = ContentFile(request.FILES['file'].read().decode('utf-8'))
         LoadCategoryFromCSV(category_file)
-        return redirect('dashboard')
-    else:
-        return redirect('dashboard')
+    return redirect('dashboard')
