@@ -33,7 +33,8 @@ export class QuizBase extends React.Component {
 													categoryId={this.quizID}
 													num_attempted={this.props.num_attempted}
 													num_correct={this.props.num_correct}
-													results={ this.props.results }/>}
+													results={ this.props.results }
+													submitFeedback={ this.props.submitFeedback}/>}
 			</div>
 		);
 	}
@@ -51,5 +52,6 @@ QuizBase.propTypes = {
     getCurrentQuestion: PropTypes.func,
     getCategoryData: PropTypes.func,
     answerQuestion: PropTypes.func,
-    getResults: PropTypes.func
+    getResults: PropTypes.func,
+    submitFeedback: PropTypes.func
 };

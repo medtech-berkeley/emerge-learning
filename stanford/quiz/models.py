@@ -78,7 +78,6 @@ class Question(models.Model):
     created = models.DateTimeField(default=timezone.now)
     media = models.ForeignKey('QuestionMedia', related_name="media", null=True, on_delete=models.DO_NOTHING)
 
-
     def __str__(self):
         return self.category.name + " - Question " + str(self.id)
 
@@ -117,6 +116,7 @@ class QuestionUserData(models.Model):
     answer = models.ForeignKey(Answer, null=True, related_name="question_data", on_delete=models.CASCADE)
     time_started = models.DateTimeField(default=timezone.now)
     time_completed = models.DateTimeField(null=True)
+    feedback = models.CharField(max_length=500, null=True)
 
     def __str__(self):
         return "Question " + str(self.question.id) + " Data - " + self.student.user.username
