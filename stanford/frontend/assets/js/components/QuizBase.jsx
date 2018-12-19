@@ -16,25 +16,28 @@ export class QuizBase extends React.Component {
 	render() {
 		return (
 			<div>
-			{!this.props.complete && <QuizQuestion categoryId={this.quizID}
-													text={this.props.currentQuestion.text}
-													answers={this.props.currentQuestion.answers}
-													name={this.props.categoryName}
-													id={this.props.currentQuestion.id}
-													answerQuestion={this.props.answerQuestion}
-													media={this.props.currentQuestion.media}
-													currentTime={this.props.currentTime}
-													timeStarted={this.props.timeStarted}
-													maxTime={this.props.maxTime}
-													endQuiz={() => this.props.getCurrentQuestion(this.quizID)}
-													/>}
-			{this.props.complete && <QuizComplete getResults={this.props.getResults}
-													name={this.props.categoryName}
-													categoryId={this.quizID}
-													num_attempted={this.props.num_attempted}
-													num_correct={this.props.num_correct}
-													results={ this.props.results }
-													submitFeedback={ this.props.submitFeedback}/>}
+			{!this.props.complete ? <QuizQuestion categoryId={this.quizID}
+									text={this.props.currentQuestion.text}
+									answers={this.props.currentQuestion.answers}
+									name={this.props.categoryName}
+									id={this.props.currentQuestion.id}
+									answerQuestion={this.props.answerQuestion}
+									media={this.props.currentQuestion.media}
+									currentTime={this.props.currentTime}
+									timeStarted={this.props.timeStarted}
+									maxTime={this.props.maxTime}
+									endQuiz={() => this.props.getCurrentQuestion(this.quizID)}
+									/>
+									:
+									<QuizComplete getResults={this.props.getResults}
+									name={this.props.categoryName}
+									categoryId={this.quizID}
+									num_attempted={this.props.num_attempted}
+									num_correct={this.props.num_correct}
+									results={ this.props.results }
+									submitFeedback={ this.props.submitFeedback}/>
+
+			}
 			</div>
 		);
 	}
