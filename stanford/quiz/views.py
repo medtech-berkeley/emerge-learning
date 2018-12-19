@@ -334,3 +334,14 @@ def upload_categories(request):
         category_file = ContentFile(request.FILES['file'].read().decode('utf-8'))
         LoadCategoryFromCSV(category_file)
     return redirect('dashboard')
+
+@login_required
+def submit_feedback(request):
+    if request.method == 'POST':
+        feedback = request.POST.get('feedback', False)
+        question_text = request.POST.get('question', False)
+        question = QuestionUserData.objects.get(student=request.user.student, question__text=question_text)
+        question.feedback = feedback
+        question.save()
+        return JsonResponse({'accepted': True})
+    return JsonResponse({'accepted': False})

@@ -2,6 +2,7 @@ import React from "react";
 import {Card, CardBody, CardHeader, Collapse, Container, Badge} from "reactstrap";
 import PropTypes from "prop-types";
 import {QuizQuestion} from "./QuizQuestion";
+import {QuestionFeedback} from "./QuestionFeedback";
 
 export class QuizResults extends React.Component {
     constructor(props) {
@@ -32,6 +33,7 @@ export class QuizResults extends React.Component {
                             <strong>Question { i + 1 }: </strong> { result.text }
                         </p>
                         { result.answers.map((answer) => this.displayAnswer(result, answer)) }
+                        <QuestionFeedback question={result.text} submitFeedback={this.props.submitFeedback}/>
                         <hr></hr>
                     </div>
                     );

@@ -140,22 +140,6 @@ export function answerQuestion(questionId, answerId, categoryId) {
 		}));
 }
 
-
-export function uploadQuestionCSV(file) {
-    let headers = Object.assign({}, window.postFormHeader);
-    let data = new FormData();
-    data.append("file", file);
-    headers.body = data;
-	return dispatch => fetch("/instructor/uploadquestions", headers)
-		.then(r => r.json.then(upload => {
-			if (upload.accepted) {
-				console.log("uploaded")
-			} else {
-				console.log("upload failed")
-			}
-		}));
-}
-
 export function updateSubmitError(reason) {
 	return {
 		type: UPDATE_SUBMIT_ERROR,
@@ -199,4 +183,20 @@ export function getLeaderboard() {
 	.then(r => r.json().then(json => {
 		dispatch(updateLeaderboard(json))
 	}));
+}
+
+export function submitFeedback(feedback, question) {
+    let headers = Object.assign({}, window.postFormHeader);
+    let data = new FormData();
+    data.append("feedback", feedback);
+    data.append("question", question);
+	headers.body = data;
+	return dispatch => fetch("/quiz/feedback", headers)
+		.then(r => r.json().then(submit => {
+			if (submit.accepted) {
+				console.log("Feedback submitted")
+			} else {
+				console.log("Feedback submission failed")
+			}
+		}));
 }

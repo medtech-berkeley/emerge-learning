@@ -3,7 +3,7 @@ from django.urls import path, include, re_path
 from frontend.views import index, change_user_info, dashboard
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet, StudentStatsViewSet, CategoryUserDataViewSet
-from quiz.views import get_question, submit_answer, get_category_results, get_stats, submit_demographics_form, upload_questions, upload_categories
+from quiz.views import get_question, submit_answer, get_category_results, get_stats, submit_demographics_form, upload_questions, upload_categories, submit_feedback
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import signup, logins, logout_view
@@ -26,6 +26,7 @@ urlpatterns = [
     path('', index, name='index'),
     path('profile/update', change_user_info),
     path('profile/demosurvey', submit_demographics_form),
+    path('quiz/feedback', submit_feedback),
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('quiz/results', get_category_results),

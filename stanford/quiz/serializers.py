@@ -49,20 +49,20 @@ class QuestionUserDataSerializer(serializers.ModelSerializer):
     answer = SecureAnswerSerializer()
     class Meta:
         model = QuestionUserData
-        fields = ('student', 'question', 'answer', 'time_started', 'time_completed')
+        fields = ('student', 'question', 'answer', 'time_started', 'time_completed', 'feedback')
 
-class QuestionMediaSerialzier(serializers.ModelSerializer):
+class QuestionMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionMedia
         fields = ('media_file', 'media_type')
 
 class QuestionSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
-    media = QuestionMediaSerialzier()
+    media = QuestionMediaSerializer()
 
     class Meta:
         model = Question
-        fields = ('id', 'category', 'text', 'answers', 'created', 'media')
+        fields = ('id', 'category', 'text', 'answers', 'created', 'media',)
 
 
 class StudentStatsSerializer(serializers.Serializer):

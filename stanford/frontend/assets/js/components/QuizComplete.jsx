@@ -50,7 +50,7 @@ export class QuizComplete extends React.Component {
 					  </div>
                       </h4>
 					  <Container>
-						  <QuizResults results={ this.props.results }/>
+						  <QuizResults results={ this.props.results } submitFeedback={this.props.submitFeedback}/>
 					  </Container>
 				  </div>
 				</div>
