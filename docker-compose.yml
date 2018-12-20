@@ -1,12 +1,5 @@
 version: '3.4'
 services:
-  nginx:
-    image: nginx:latest
-    volumes:
-      - media_files:/media_files
-      - static:/static
-    depends_on:
-      - interfaceserver
   interfaceserver:
     build: .
     image: builder.pernixsoft.ml:5000/stanford-quiz:${ID:-latest}
@@ -19,11 +12,6 @@ services:
       - docker/docker.env
     depends_on:
       - database
-    volumes:
-      - media_files:/media
-      - static:/static
   database:
     image: postgres:9.5
-volumes:
-   media_files:
-   static:
+

@@ -1,1 +1,1 @@
-{"status":"done","chunks":{"main":[{"name":"main.js","path":"/stanford/frontend/assets/bundles/main.js"}]}}
+{"status":"done","publicPath":"http://localhost:3000/assets/bundles/","chunks":{"main":[{"name":"main.js","publicPath":"http://localhost:3000/assets/bundles/main.js","path":"/stanford/frontend/assets/bundles/main.js"},{"name":"0.a8905eb3a0d08e8bddd0.hot-update.js","publicPath":"http://localhost:3000/assets/bundles/0.a8905eb3a0d08e8bddd0.hot-update.js","path":"/stanford/frontend/assets/bundles/0.a8905eb3a0d08e8bddd0.hot-update.js"}]}}

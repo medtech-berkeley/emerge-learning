@@ -3,5 +3,4 @@ services:
   interfaceserver:
     command: sleep inf
     volumes:
-      - static:/static
       - ./reports:/stanford/reports
