@@ -11,6 +11,7 @@ export const UPDATE_CATEGORY_RESULTS = 'UPDATE_CATEGORY_RESULTS';
 export const UPDATE_CATEGORY_DATA = 'UPDATE_CATEGORY_DATA';
 export const UPDATE_LEADERBOARD = 'UPDATE_LEADERBOARD';
 export const UPDATE_TIMER = 'UPDATE_TIMER';
+export const UPDATE_FEEDBACK_SUMMARY = 'UPDATE_FEEDBACK_SUMMARY'
 
 export function getUsers() {
 	return dispatch => fetch("/api/users", window.getHeader)
@@ -199,4 +200,18 @@ export function submitFeedback(feedback, question) {
 				console.log("Feedback submission failed")
 			}
 		}));
+}
+
+export function getFeedbackSummary() {
+	return dispatch => fetch("/api/feedback", window.getHeader)
+	.then(r => r.json().then(json => {
+		dispatch(updateFeedbackSummary(json))
+	}));
+}
+
+export function updateFeedbackSummary(feedback) {
+	return {
+		type: UPDATE_FEEDBACK_SUMMARY,
+		feedback
+	}
 }

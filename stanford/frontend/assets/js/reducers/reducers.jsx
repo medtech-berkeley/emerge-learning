@@ -1,4 +1,4 @@
-import { UPDATE_CATEGORY_DATA, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_RESULTS } from "../actions/Actions"
+import { UPDATE_CATEGORY_DATA, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_RESULTS, UPDATE_FEEDBACK_SUMMARY } from "../actions/Actions"
 import { UPDATE_LEADERBOARD, UPDATE_TIMER } from "../actions/Actions"
 import { UPDATE_STUDENT, UPDATE_STUDENTS } from "../actions/LoadUserActions"
 import { UPDATE_DATA } from "../actions/DataActions"
@@ -104,6 +104,8 @@ export function stanfordApp(state = initialState, action) {
 		newState.ui.timeCompleted = action.timeCompleted;
 		newState.ui.timeStarted = action.timeStarted;
 		break;
+    case (UPDATE_FEEDBACK_SUMMARY):
+        newState.api.feedback = action.feedback;
 	}
 
 	return newState;

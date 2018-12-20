@@ -61,7 +61,7 @@ export class Instructor extends React.Component {
                     </Row>  
                 <br/>
                 </Container>
-                <FeedbackSummary/>
+                <FeedbackSummary getFeedbackSummary={this.props.getFeedbackSummary} feedback={this.props.feedback}/>
             </div>
         )
     }

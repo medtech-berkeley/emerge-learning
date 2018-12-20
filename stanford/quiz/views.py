@@ -106,7 +106,7 @@ class FeedbackViewSet(ViewSet):
     serializer_class = FeedbackSerializer
 
     def list(self, request):
-        feedback = QuestionUserData.objects.exclude(feedback__isnull=True).values("question").annotate(count=Count("question"))
+        feedback = QuestionUserData.objects.exclude(feedback__isnull=True).annotate(count=Count("question"))
         print(feedback)
         serializer = FeedbackSerializer(instance=feedback, many=True)
         # print(serializer.data)

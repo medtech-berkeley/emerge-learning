@@ -76,5 +76,5 @@ class StudentStatsSerializer(serializers.Serializer):
     performance = serializers.DictField()
 
 class FeedbackSerializer(serializers.Serializer):
-    question = serializers.IntegerField()
+    question = QuestionSerializer()
     count = serializers.IntegerField()
