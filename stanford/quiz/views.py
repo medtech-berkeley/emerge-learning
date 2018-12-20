@@ -4,12 +4,13 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.shortcuts import redirect
+from django.db.models import Count
 from quiz.utils import get_student_category_stats
 
 from .utils import get_unanswered_questions
 from .models import Question, QuestionUserData, Category, Student
 from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer
-from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, CategoryUserDataSerializer
+from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, CategoryUserDataSerializer, FeedbackSerializer
 from .models import Student, Category, Question, Answer, QuestionUserData, CategoryUserData, GVK_EMRI_Demographics
 from django.contrib.auth.models import User
 from rest_framework.viewsets import ModelViewSet, ViewSet
@@ -99,6 +100,16 @@ class StudentStatsViewSet(ViewSet):
         stats['image'] = student.image
 
         serializer = StudentStatsSerializer(instance=stats)
+        return Response(serializer.data)
+
+class FeedbackViewSet(ViewSet):
+    serializer_class = FeedbackSerializer
+
+    def list(self, request):
+        feedback = QuestionUserData.objects.exclude(feedback__isnull=True).values("question").annotate(count=Count("question"))
+        print(feedback)
+        serializer = FeedbackSerializer(instance=feedback, many=True)
+        # print(serializer.data)
         return Response(serializer.data)
 
 @login_required

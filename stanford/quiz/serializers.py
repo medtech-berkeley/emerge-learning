@@ -74,3 +74,7 @@ class StudentStatsSerializer(serializers.Serializer):
     num_incorrect = serializers.IntegerField(read_only=True)
     subjects = serializers.DictField()
     performance = serializers.DictField()
+
+class FeedbackSerializer(serializers.Serializer):
+    question = serializers.IntegerField()
+    count = serializers.IntegerField()
