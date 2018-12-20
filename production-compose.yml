@@ -1,6 +1,9 @@
 version: '3.4'
 services:
   nginx:
+    image: nginx:latest
+    depends_on:
+      - interfaceserver
     container_name: stanford-nginx
     ports:
       - "443:443"
@@ -11,15 +14,22 @@ services:
       - /docker-volumes/etc/letsencrypt/live/${STANFORD_HOST}/privkey.pem:/etc/letsencrypt/live/${STANFORD_HOST}/privkey.pem
       - /docker-volumes/data/letsencrypt:/usr/share/nginx/html
       - nginx_logs:/logs
+      - media_files:/media_files
+      - static:/static
     command: /bin/bash -c "envsubst '$$STANFORD_HOST' < /nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
     environment:
       - STANFORD_HOST
   interfaceserver:
     environment:
       - DJANGO_SSL=TRUE
+    volumes:
+      - media_files:/media
+      - static:/static
   database:
     volumes:
       - db_data:/var/lib/postgresql/data
 volumes:
   db_data:
   nginx_logs:
+  media_files:
+  static:
