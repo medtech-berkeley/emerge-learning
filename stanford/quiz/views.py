@@ -236,8 +236,17 @@ def get_category_results(request):
         except (Category.DoesNotExist, KeyError):
             return JsonResponse({'accepted': False, 'reason': 'Missing or invalid category in request'}, status=400)
 
+        category_data = student.category_data.filter(category=category)
+
+        if not category_data.exists():
+            return JsonResponse({'accepted': False, 'reason': 'Category not started yet'}, status=404)
+
+        category_data = category_data.first()
+
+        end_time = category_data.time_started + category.max_time
+
         question_set = get_unanswered_questions(student, category)
-        if len(question_set) > 0:
+        if len(question_set) > 0 and timezone.now() <= end_time:
             return JsonResponse({'accepted': False, 'reason': 'Category has not yet been completed'}, status=400)
 
         result = []
