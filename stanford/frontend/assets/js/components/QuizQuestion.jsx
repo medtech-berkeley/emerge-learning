@@ -42,8 +42,8 @@ export class QuizQuestion extends React.Component {
 		}
 
 		return (
-			<div style={{"display": "inline-block", "float":"right"}}>
-			<i className="fa fa-clock-o" style={{"paddingRight": "8px"}} aria-hidden="true"></i>
+			<div>
+			<i className="fa fa-clock-o" style={{"padding-right": "5px"}} aria-hidden="true"></i>
 			Time Remaining: {this.minutes()}:{this.seconds()}</div>
 		);
 	}

@@ -11,7 +11,7 @@ export class QuizComplete extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.getResults(this.props.categoryId)
+		this.props.getResults(this.props.categoryId);
 
 		this.config = {
 		  angle: 100,

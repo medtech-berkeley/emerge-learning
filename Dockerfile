@@ -2,11 +2,11 @@ FROM node:8-alpine as react-pkg
 RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh dumb-init
 USER node
-COPY --chown=node:node stanford/webpack.config.js stanford/.babelrc /stanford/
+COPY --chown=node:node stanford/webpack.config.js stanford/webpack.prod.config.js stanford/.babelrc /stanford/
 COPY --chown=node:node stanford/package.json stanford/package-lock.json /stanford/
 RUN cd /stanford && npm install
 COPY --chown=node:node stanford/frontend/assets /stanford/frontend/assets
-RUN cd /stanford && npm run build
+RUN cd /stanford && npm run build-production
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 
