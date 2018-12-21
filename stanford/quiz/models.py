@@ -105,6 +105,10 @@ class Answer(models.Model):
     def __str__(self):
         return "Question " + str(self.question.id) + " - Answer"
 
+class Feedback(models.Model):
+    text = models.CharField(max_length=500, null=True)
+    time = models.DateTimeField(null=True)
+    student = models.CharField(max_length=50, null=True)
 
 class QuestionUserData(models.Model):
     """
@@ -116,7 +120,7 @@ class QuestionUserData(models.Model):
     answer = models.ForeignKey(Answer, null=True, related_name="question_data", on_delete=models.CASCADE)
     time_started = models.DateTimeField(default=timezone.now)
     time_completed = models.DateTimeField(null=True)
-    feedback = models.CharField(max_length=500, null=True)
+    feedback = models.ForeignKey(Feedback, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return "Question " + str(self.question.id) + " Data - " + self.student.user.username

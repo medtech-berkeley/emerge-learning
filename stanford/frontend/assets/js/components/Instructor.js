@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Button, Container, Row } from 'reactstrap';
+import { FeedbackSummary } from "./FeedbackSummary";
 
 // CSRF TOKEN STUFF
 
@@ -60,6 +61,8 @@ export class Instructor extends React.Component {
                     </Row>  
                 <br/>
                 </Container>
+                <br/>
+                <FeedbackSummary getFeedbackSummary={this.props.getFeedbackSummary} feedback={this.props.feedback}/>
             </div>
         )
     }

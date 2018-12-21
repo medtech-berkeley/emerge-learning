@@ -1,8 +1,8 @@
-import React from "react"
+import React from "react";
 import {Card, CardBody, CardHeader, CardFooter, Container, Row, Col} from "reactstrap";
-import PropTypes from "prop-types"
-import { QuizQuestion } from "./QuizQuestion"
-import { QuizComplete } from "./QuizComplete"
+import PropTypes from "prop-types";
+import { QuizQuestion } from "./QuizQuestion";
+import { QuizComplete } from "./QuizComplete";
 
 export class QuizBase extends React.Component {
 	componentDidMount() {

@@ -1,15 +1,17 @@
 import pytz
+import datetime
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.shortcuts import redirect
+from django.db.models import Count
 from quiz.utils import get_student_category_stats
 
 from .utils import get_unanswered_questions
-from .models import Question, QuestionUserData, Category, Student
+from .models import Question, QuestionUserData, Category, Student, Feedback
 from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer
-from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, CategoryUserDataSerializer
+from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, CategoryUserDataSerializer, QuestionFeedbackSerializer
 from .models import Student, Category, Question, Answer, QuestionUserData, CategoryUserData, GVK_EMRI_Demographics
 from django.contrib.auth.models import User
 from rest_framework.viewsets import ModelViewSet, ViewSet
@@ -99,6 +101,21 @@ class StudentStatsViewSet(ViewSet):
         stats['image'] = student.image
 
         serializer = StudentStatsSerializer(instance=stats)
+        return Response(serializer.data)
+
+class QuestionFeedbackViewSet(ViewSet):
+    serializer_class = QuestionFeedbackSerializer
+
+    def list(self, request):
+        feedback = QuestionUserData.objects.exclude(feedback__isnull=True).values('question__text', 'question__id').annotate(count=Count("question")).order_by('-count')
+        for q in feedback:
+            q['question__feedback'] = []
+            for i in QuestionUserData.objects.filter(question__id=q['question__id']):
+                q['question__feedback'].append({'text': i.feedback.text, 'time': i.feedback.time, 'student': i.student.name})
+
+        print(feedback)
+        serializer = QuestionFeedbackSerializer(instance=feedback, many=True)
+        print(serializer.data)
         return Response(serializer.data)
 
 @login_required
@@ -347,9 +364,11 @@ def upload_categories(request):
 @login_required
 def submit_feedback(request):
     if request.method == 'POST':
-        feedback = request.POST.get('feedback', False)
+        text = request.POST.get('feedback', False)
         question_text = request.POST.get('question', False)
         question = QuestionUserData.objects.get(student=request.user.student, question__text=question_text)
+        feedback = Feedback(text=text, time=timezone.now())
+        feedback.save()
         question.feedback = feedback
         question.save()
         return JsonResponse({'accepted': True})
