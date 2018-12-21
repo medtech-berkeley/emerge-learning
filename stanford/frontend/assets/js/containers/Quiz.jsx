@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { QuizBase } from '../components/QuizBase'
-import { getCurrentQuestion, answerQuestion, getResults, getCategoryData, submitFeedback }from '../actions/Actions'
+import { getCurrentQuestion, answerQuestion, getResults, getCategoryData, submitFeedback } from '../actions/Actions'
 
 const mapStateToProps = state => {
 	return {...state.ui};
