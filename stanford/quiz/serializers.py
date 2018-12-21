@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Question, QuestionUserData, Category, CategoryUserData, Answer, Student, QuestionMedia
+from .models import Question, QuestionUserData, Category, CategoryUserData, Answer, Student, QuestionMedia, Feedback
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -44,9 +44,15 @@ class SecureAnswerSerializer(serializers.ModelSerializer):
         model = Answer
         fields = ('is_correct',)
 
+class FeedbackSerializer(serializers.Serializer):
+    class Meta:
+        model = Feedback
+        fields = ('id', 'text', 'time', 'student')
+
 class QuestionUserDataSerializer(serializers.ModelSerializer):
     student = SmallStudentSerializer()
     answer = SecureAnswerSerializer()
+    feedback = FeedbackSerializer()
     class Meta:
         model = QuestionUserData
         fields = ('student', 'question', 'answer', 'time_started', 'time_completed', 'feedback')
@@ -75,6 +81,9 @@ class StudentStatsSerializer(serializers.Serializer):
     subjects = serializers.DictField()
     performance = serializers.DictField()
 
-class FeedbackSerializer(serializers.Serializer):
-    question = QuestionSerializer()
+
+class QuestionFeedbackSerializer(serializers.Serializer):
+    question__text = serializers.CharField()
+    question__id = serializers.IntegerField()
     count = serializers.IntegerField()
+    question__feedback = serializers.ListField()
