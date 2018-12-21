@@ -16,7 +16,6 @@ export class Leaderboard extends React.Component {
             <th>Name</th>
             <th>Score</th>
             <th>Location</th>
-            <th>Status</th>
           </tr>
       </thead>
       <tbody>
@@ -35,7 +34,6 @@ export class Leaderboard extends React.Component {
                     {student.num_correct}
                   </td>
                   <td>{student.location}</td>
-                  <td>Student</td>
                </tr>
                )
              }

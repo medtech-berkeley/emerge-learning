@@ -9,8 +9,28 @@ body {
 .login-body {
     background-image: url("/static/dashboard/signup.jpeg");
     background-repeat: no-repeat;
-    background-size: cover;
+    background-position: center;
+
 }
+
+.login-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+}
+
+html {
+    height: 100%;
+}
+
+.navbar .container { min-height: 273px; }
+
+.navbar {
+    min-height:58px;
+    position:static;
+}
+
 
 .login-card {
     border-radius: 6px;
@@ -189,7 +209,7 @@ th {
 }
 
 .content-area {
-	padding-top: 75px;
+	padding-top: 45px;
 }
 
 .categoriesBox {
@@ -198,8 +218,6 @@ th {
 }
 
 .UserInfo {
-    transform: translateX(-15px);
-    margin-right: 40px;
 }
 
 .UserInfo img {
@@ -209,7 +227,6 @@ th {
 
 .Badges {
     width: 100%;
-    transform: translateX(-15px);
     margin-right: 40px;
 }
 
@@ -228,10 +245,6 @@ th {
 .category-img {
     transform: translate(15%, 20%);
     margin-right: 12px;
-}
-
-#dashboard {
-	transform: translateY(-2.5%);	
 }
 
 .icon {
@@ -293,7 +306,6 @@ th {
 }
 
 .UserDashboard {
-    transform: translateY(-25px);
 }
 
 .question-media {

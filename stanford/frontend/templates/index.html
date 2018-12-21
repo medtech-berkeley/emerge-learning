@@ -15,19 +15,12 @@
   </head>
   <body>
     	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		  <a class="navbar-brand" href="/">	</a>
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-		    <span class="navbar-toggler-icon"></span>
-		  </button>
-
-		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 		    <ul class="navbar-nav mr-auto">
-		    </ul>
-		    <form action="/login" class="form-inline my-2 my-lg-0" style="transform:translateX(-10px);">
-		      <button type="submit" class="btn btn-outline-primary">Log In</button>
-		    </form>
-		  </div>
-		</nav>
+				</ul>
+		    <form action="/login" class="navbar-right form-inline my-2 my-lg-0">
+		      <button type="submit" class="btn btn-outline-primary login-button">Log In</button>
+				</form>
+		    </nav>
         <div class="landing-content">
             <h1 class="landing-header">Practice. Learn. Save Lives.</h1>
             <form class="signup" method="POST" action="{% url 'signup' %}">
