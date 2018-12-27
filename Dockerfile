@@ -2,7 +2,7 @@ FROM node:8-alpine as react-pkg
 RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh dumb-init
 USER node
-COPY --chown=node:node stanford/webpack.config.js stanford/webpack.prod.config.js stanford/.babelrc /stanford/
+COPY --chown=node:node stanford/jest-setup.js stanford/jest.config.js stanford/webpack.config.js stanford/webpack.prod.config.js stanford/.babelrc /stanford/
 COPY --chown=node:node stanford/package.json stanford/package-lock.json /stanford/
 RUN cd /stanford && npm install
 COPY --chown=node:node stanford/frontend/assets /stanford/frontend/assets

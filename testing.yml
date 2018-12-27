@@ -1,6 +1,14 @@
 version: '3.4'
 services:
+  reactserver:
+    build:
+      context: .
+      target: react-pkg
+    working_dir: /stanford
+    volumes:
+      - ./reports:/stanford/reports
   interfaceserver:
-    command: sleep inf
+    depends_on:
+      - reactserver
     volumes:
       - ./reports:/stanford/reports
