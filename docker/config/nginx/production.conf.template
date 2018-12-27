@@ -11,6 +11,7 @@ upstream stanford_server {
 server {
     server_name ${STANFORD_HOST};
     listen 80;
+    client_max_body_size 4G;
 
     location /client/ {
         proxy_pass http://stanford_server;
@@ -60,6 +61,8 @@ server {
     gzip_proxied    expired no-cache no-store private auth;
     gzip_types      text/plain application/xml application/json;
    
+    client_max_body_size 4G;
+    
     access_log /logs/nginx-access.log;
     error_log /logs/nginx-error.log;
  
