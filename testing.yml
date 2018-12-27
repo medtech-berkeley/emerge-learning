@@ -4,11 +4,11 @@ services:
     build:
       context: .
       target: react-pkg
-    working_dir: /ohqueue
+    working_dir: /stanford
     volumes:
-      - ./reports:/ohqueue/reports
+      - ./reports:/stanford/reports
   interfaceserver:
     depends_on:
       - reactserver
     volumes:
-      - ./reports:/ohqueue/reports
+      - ./reports:/stanford/reports
