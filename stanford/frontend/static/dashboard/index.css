@@ -292,7 +292,7 @@ th {
     margin-bottom: 10px;
 }
 
-.card-answer:hover {
+html.nontouch .card-answer:hover, .card-answer.selected  {
     border-color: green;
 }
 

@@ -7,6 +7,15 @@ import {stanfordApp} from "./reducers/reducers";
 import {createStore, applyMiddleware} from 'redux';
 import Cookies from "js-cookie";
 
+if (module.hot) {
+    module.hot.accept();
+}
+
+var touchsupport = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)
+if (!touchsupport){ // browser doesn't support touch
+    document.documentElement.className += " non-touch"
+}
+
 window.getHeader = {
     method: 'get',
     credentials: "same-origin",

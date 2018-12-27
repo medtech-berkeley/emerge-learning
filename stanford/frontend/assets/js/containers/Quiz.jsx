@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { QuizBase } from '../components/QuizBase'
-import { getCurrentQuestion, answerQuestion, getResults, getCategoryData, submitFeedback } from '../actions/Actions'
+import { getCurrentQuestion, answerQuestion, getResults, getCategoryData, submitFeedback, selectAnswer } from '../actions/Actions'
 
 const mapStateToProps = state => {
 	return {...state.ui};
@@ -12,7 +12,8 @@ const mapDispatchToProps = dispatch => {
     	answerQuestion: (questionId, answerId, categoryId) => dispatch(answerQuestion(questionId, answerId, categoryId)),
 		getResults: (categoryId) => dispatch(getResults(categoryId)),
 		getCategoryData: (categoryId) => dispatch(getCategoryData(categoryId)),
-		submitFeedback: (feedback, question) => dispatch(submitFeedback(feedback, question))
+		submitFeedback: (feedback, question) => dispatch(submitFeedback(feedback, question)),
+		selectAnswer: (answerId) => dispatch(selectAnswer(answerId)),
     };
 };
 

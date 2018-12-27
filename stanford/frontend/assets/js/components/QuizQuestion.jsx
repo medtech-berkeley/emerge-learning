@@ -1,5 +1,5 @@
 import React from "react"
-import {Card, CardBody, CardHeader, CardFooter, Container, Row, Col} from "reactstrap";
+import {Card, CardBody, CardHeader, CardFooter, Container, Row, Col, Button} from "reactstrap";
 import PropTypes from "prop-types"
 
 export class QuizQuestion extends React.Component {
@@ -34,6 +34,10 @@ export class QuizQuestion extends React.Component {
 	seconds() {
 		let seconds = this.getSecondsLeft() % 60;
 		return seconds >= 10 ? seconds : "0" + seconds;
+	}
+
+	isAnswerSelected() {
+		return this.props.selectedAnswer !== null;
 	}
 
 	showTimer() {
@@ -72,13 +76,21 @@ export class QuizQuestion extends React.Component {
 					{
 						this.props.answers.map((answer, i) =>(
 						<Col md={6} sm={12} key={i}>
-							<div className="card card-answer">
-								<div className="card-body" onClick={() => this.props.answerQuestion(this.props.id, answer.id, this.props.categoryId)}>
+							<div className={"card card-answer" + (answer.id === this.props.selectedAnswer ? " selected" : "")}>
+								<div className="card-body" onClick={() => this.props.selectAnswer(answer.id)}>
 									<p className="card-text">{answer.text}</p>
 								</div>
 							</div>
 						</Col>))
 					}
+					</Row>
+					<Row>
+						<Col sm={12} className="text-center">
+							<Button color={this.isAnswerSelected() ? "primary" : "secondary"} size="lg" 
+											disabled={!this.isAnswerSelected()}
+											onClick={() => this.props.answerQuestion(this.props.id, this.props.selectedAnswer, this.props.categoryId)}
+							>{this.isAnswerSelected() ? "Next Question" : "Select an Answer"}</Button>
+						</Col>
 					</Row>
 				  </CardBody>
 			  </Card>
@@ -95,9 +107,10 @@ QuizQuestion.propTypes = {
 	media: PropTypes.object,
   category: PropTypes.number,
 	correct_answers: PropTypes.array,
-  selected: PropTypes.number,
+  selectedAnswer: PropTypes.number,
   currentTime: PropTypes.number,
   maxTime: PropTypes.number,
 	timeStarted: PropTypes.number,
-	endQuiz: PropTypes.func
+	endQuiz: PropTypes.func,
+	selectAnswer: PropTypes.func
 };
