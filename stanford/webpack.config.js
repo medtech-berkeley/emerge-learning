@@ -10,6 +10,7 @@ module.exports = {
       'webpack/hot/only-dev-server',
       './frontend/assets/js/index'
   ],
+  mode: 'development',
   output: {
       path: path.resolve('./frontend/assets/bundles/'),
       filename: "[name].js",
@@ -23,7 +24,7 @@ module.exports = {
   ],
 
   module: {
-    loaders: [
+    rules: [
       // we pass the output from babel loader to react-hot loader
       { 
         test: /\.jsx?$/,

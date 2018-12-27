@@ -1,6 +1,14 @@
 version: '3.4'
 services:
-  interfaceserver:
-    command: sleep inf
+  reactserver:
+    build:
+      context: .
+      target: react-pkg
+    working_dir: /ohqueue
     volumes:
-      - ./reports:/stanford/reports
+      - ./reports:/ohqueue/reports
+  interfaceserver:
+    depends_on:
+      - reactserver
+    volumes:
+      - ./reports:/ohqueue/reports

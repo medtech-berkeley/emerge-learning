@@ -8,6 +8,7 @@ module.exports = {
   entry: [
       './frontend/assets/js/index'
   ],
+  mode: 'production',
   output: {
       path: path.resolve('./frontend/assets/bundles/'),
       filename: "[name].js",
@@ -18,7 +19,7 @@ module.exports = {
   ],
 
   module: {
-    loaders: [
+    rules: [
       // we pass the output from babel loader to react-hot loader
       { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['babel-loader'], },
       {

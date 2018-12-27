@@ -11,14 +11,20 @@ pipeline {
         sh 'mkdir -p reports && chmod 777 reports'
       }
     }
-    stage('Run tests') {
+    stage('Run Django Tests') {
       steps {
         sh 'docker-compose -p $ID -f docker-compose.yml -f testing.yml run -T interfaceserver sh test.sh'
+      }
+    }
+    stage('Run React Tests') {
+      steps {
+        sh 'docker-compose -f docker-compose.yml -f testing.yml -p $ID run reactserver npm run test || true'
       }
     }
     stage('Collect and Publish Reports') {
       steps {
         junit 'reports/junit.xml'
+        junit 'reports/js-xunit.xml'
         cobertura(autoUpdateHealth: true, failNoReports: true, failUnstable: true, coberturaReportFile: 'reports/coverage.xml')
       }
     }
