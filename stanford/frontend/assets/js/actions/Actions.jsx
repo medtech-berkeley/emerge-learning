@@ -11,7 +11,8 @@ export const UPDATE_CATEGORY_RESULTS = 'UPDATE_CATEGORY_RESULTS';
 export const UPDATE_CATEGORY_DATA = 'UPDATE_CATEGORY_DATA';
 export const UPDATE_LEADERBOARD = 'UPDATE_LEADERBOARD';
 export const UPDATE_TIMER = 'UPDATE_TIMER';
-export const UPDATE_FEEDBACK_SUMMARY = 'UPDATE_FEEDBACK_SUMMARY'
+export const UPDATE_FEEDBACK_SUMMARY = 'UPDATE_FEEDBACK_SUMMARY';
+export const SELECT_ANSWER = 'SELECT_ANSWER';
 
 export function getUsers() {
 	return dispatch => fetch("/api/users", window.getHeader)
@@ -89,12 +90,12 @@ export function updateCategoryData(name, maxTime, timeStarted, timeCompleted) {
 export function getCurrentQuestion(categoryId) {
 	return dispatch => fetch("/quiz/question?category="+categoryId, window.getHeader)
 		.then(r => r.json().then(question => {
-			console.log(question);
+			console.debug(question);
 			if (question.completed) {
-				console.log("category completed.");
+				console.debug("category completed.");
 				dispatch(updateCategoryCompleted(categoryId, question.num_attempted, question.num_correct))
 			} else {
-				console.log("dispatch update current question.");
+				console.debug("dispatch update current question.");
 				dispatch(updateCurrentQuestion(question))
 			}
 		}));
@@ -124,6 +125,13 @@ export function updateCurrentQuestion(currentQuestion) {
     }
 }
 
+export function selectAnswer(answerId) {
+	return {
+		type: SELECT_ANSWER,
+		answerId
+	}
+}
+
 export function answerQuestion(questionId, answerId, categoryId) {
     let headers = Object.assign({}, window.postFormHeader);
     let data = new FormData();
@@ -134,7 +142,7 @@ export function answerQuestion(questionId, answerId, categoryId) {
 		.then(r => r.json().then(answer => {
 			if (answer.accepted) {
 				dispatch(getCurrentQuestion(categoryId))
-				console.log("answer accepted")
+				console.debug("answer accepted")
 			} else {
 				dispatch(updateSubmitError(answer.reason));
 			}
@@ -195,9 +203,9 @@ export function submitFeedback(feedback, question) {
 	return dispatch => fetch("/quiz/feedback", headers)
 		.then(r => r.json().then(submit => {
 			if (submit.accepted) {
-				console.log("Feedback submitted")
+				console.debug("Feedback submitted")
 			} else {
-				console.log("Feedback submission failed")
+				console.debug("Feedback submission failed")
 			}
 		}));
 }
