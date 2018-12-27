@@ -85,9 +85,11 @@ class Question(models.Model):
 class QuestionMedia(models.Model):
     IMAGE = 'IMG'
     VIDEO = 'VID'
+    AUDIO = 'AUD'
     MEDIA_CHOICES = (
         (IMAGE, 'Image'),
-        (VIDEO, 'Video')
+        (VIDEO, 'Video'),
+        (AUDIO, 'Audio')
     )
 
     media_file = models.FileField(upload_to="questions/")

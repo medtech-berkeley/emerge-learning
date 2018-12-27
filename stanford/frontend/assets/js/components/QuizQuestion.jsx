@@ -5,6 +5,7 @@ import PropTypes from "prop-types"
 export class QuizQuestion extends React.Component {
 	IMAGE = "IMG";
 	VIDEO = "VID";
+	AUDIO = "AUD";
 
 
 	getMediaField() {
@@ -18,6 +19,12 @@ export class QuizQuestion extends React.Component {
 							<source src={this.props.media.media_file} type="video/mp4" />
 						</video>
 					); 
+				case this.AUDIO:
+					return (
+						<audio controls className="question-media">
+							<source src={this.props.media.media_file} type="audio/mpeg" />
+						</audio>
+					);
 			}
 		}
 		return null;
