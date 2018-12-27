@@ -73,7 +73,7 @@ class Category(models.Model):
 
 
 class Question(models.Model):
-    text = models.CharField(max_length=300)
+    text = models.TextField()
     category = models.ForeignKey(Category, related_name="questions", on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
     media = models.ForeignKey('QuestionMedia', related_name="media", null=True, on_delete=models.DO_NOTHING)
