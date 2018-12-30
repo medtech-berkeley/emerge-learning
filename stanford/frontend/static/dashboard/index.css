@@ -218,6 +218,7 @@ th {
 }
 
 .UserInfo {
+    margin-right: 3rem;
 }
 
 .UserInfo img {
@@ -397,6 +398,11 @@ html.nontouch .card-answer:hover, .card-answer.selected  {
 
 #confetti {
     transform:translateX(50%);
+}
+
+#nextButton {
+    margin-top: 1.2rem;
+    margin-bottom: 0.5rem;
 }
 
 @media (max-width: 1100px) {

@@ -93,7 +93,7 @@ export class QuizQuestion extends React.Component {
 					</Row>
 					<Row>
 						<Col sm={12} className="text-center">
-							<Button color={this.isAnswerSelected() ? "primary" : "secondary"} size="lg" 
+							<Button id="nextButton" color={this.isAnswerSelected() ? "success" : "secondary"} size="lg" 
 											disabled={!this.isAnswerSelected()}
 											onClick={() => this.props.answerQuestion(this.props.id, this.props.selectedAnswer, this.props.categoryId)}
 							>{this.isAnswerSelected() ? "Next Question" : "Select an Answer"}</Button>
