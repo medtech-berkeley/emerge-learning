@@ -417,3 +417,10 @@ html.nontouch .card-answer:hover, .card-answer.selected  {
         width: 80%;
     }
 }
+
+
+@media (max-width: 600px) {
+    .UserInfo {
+        margin: auto;
+    }
+}

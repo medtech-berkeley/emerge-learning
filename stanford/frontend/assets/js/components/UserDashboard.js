@@ -26,7 +26,7 @@ export class UserDashboard extends React.Component {
 			<div className="UserDashboard">
 		    <Container>
 				<Row>
-					<Col xs="3">
+					<Col sm="12" md="3">
 						<Row>
 							<UserInfo user={this.props.user}/>
 						</Row>
@@ -35,7 +35,7 @@ export class UserDashboard extends React.Component {
 							<Badges/>
 						</Row>						
 					</Col>
-					<Col xs="9">
+					<Col s="12" md="9">
 						<Row>
 							<PointsHeader/>
 						</Row>

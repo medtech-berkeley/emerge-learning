@@ -50,7 +50,7 @@ class Category(models.Model):
     sponsor = models.CharField(max_length=50)
     is_challenge = models.BooleanField()
     image = models.ImageField(upload_to="category_images", default='default.jpg')
-    tags = models.ManyToManyField(Tag, related_name="categories")
+    tags = models.ManyToManyField(Tag, blank=True, related_name="categories")
     max_time = models.DurationField(default=datetime.timedelta(minutes=10))
 
     NOVICE = 'Novice'
@@ -76,7 +76,7 @@ class Question(models.Model):
     text = models.TextField()
     category = models.ForeignKey(Category, related_name="questions", on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
-    media = models.ForeignKey('QuestionMedia', related_name="media", null=True, on_delete=models.DO_NOTHING)
+    media = models.ForeignKey('QuestionMedia', related_name="media", blank=True, null=True, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return self.category.name + " - Question " + str(self.id)
@@ -119,10 +119,10 @@ class QuestionUserData(models.Model):
 
     student = models.ForeignKey(Student, related_name="question_data", on_delete=models.CASCADE)
     question = models.ForeignKey(Question, related_name="question_data", on_delete=models.CASCADE)
-    answer = models.ForeignKey(Answer, null=True, related_name="question_data", on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, blank=True, null=True, related_name="question_data", on_delete=models.CASCADE)
     time_started = models.DateTimeField(default=timezone.now)
-    time_completed = models.DateTimeField(null=True)
-    feedback = models.ForeignKey(Feedback, on_delete=models.CASCADE, null=True)
+    time_completed = models.DateTimeField(blank=True, null=True)
+    feedback = models.ForeignKey(Feedback, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return "Question " + str(self.question.id) + " Data - " + self.student.user.username
@@ -138,7 +138,7 @@ class CategoryUserData(models.Model):
     student = models.ForeignKey(Student, related_name="category_data", on_delete=models.CASCADE)
     category = models.ForeignKey(Category, related_name="category_data", on_delete=models.CASCADE)
     time_started = models.DateTimeField(default=timezone.now)
-    time_completed = models.DateTimeField(null=True)
+    time_completed = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return "Category " + str(self.category.name) + " Data - " + self.student.user.username
