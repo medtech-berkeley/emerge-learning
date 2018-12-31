@@ -50,7 +50,7 @@ class Category(models.Model):
     sponsor = models.CharField(max_length=50)
     is_challenge = models.BooleanField()
     image = models.ImageField(upload_to="category_images", default='default.jpg')
-    tags = models.ManyToManyField(Tag, related_name="categories")
+    tags = models.ManyToManyField(Tag, blank=True, related_name="categories")
     max_time = models.DurationField(default=datetime.timedelta(minutes=10))
 
     NOVICE = 'Novice'
