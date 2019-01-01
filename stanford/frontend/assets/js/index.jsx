@@ -33,9 +33,9 @@ window.getNoCacheHeader = {
     headers: {
         "X-CSRFToken": Cookies.get("csrftoken"),
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'cache-control': 'no-cache'
     },
-    cache: "no-cache",
 };
 
 window.postFormHeader = {
