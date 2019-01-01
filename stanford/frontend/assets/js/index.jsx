@@ -27,6 +27,17 @@ window.getHeader = {
     cache: "reload",
 };
 
+window.getNoCacheHeader = {
+    method: 'get',
+    credentials: "same-origin",
+    headers: {
+        "X-CSRFToken": Cookies.get("csrftoken"),
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    },
+    cache: "no-cache",
+};
+
 window.postFormHeader = {
     method: 'post',
     credentials: "same-origin",

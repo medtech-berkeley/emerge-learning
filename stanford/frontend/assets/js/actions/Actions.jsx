@@ -15,7 +15,7 @@ export const UPDATE_FEEDBACK_SUMMARY = 'UPDATE_FEEDBACK_SUMMARY';
 export const SELECT_ANSWER = 'SELECT_ANSWER';
 
 export function getUsers() {
-	return dispatch => fetch("/api/users", window.getHeader)
+	return dispatch => fetch("/api/users", window.getNoCacheHeader)
 	.then(r => r.json().then(users => {
 		dispatch(updateUsers(users))
 	}));
@@ -43,7 +43,7 @@ export function updateTimer(time) {
 
 
 export function getCategories() {
-	return dispatch => fetch("/api/categories", window.getHeader)
+	return dispatch => fetch("/api/categories", window.getNoCacheHeader)
 		.then(r => r.json().then(categories => {
 			dispatch(updateCategories(categories))
 		}));
@@ -57,7 +57,7 @@ export function updateCategories(categories) {
 }
 
 export function getQuestionUserData() {
-	return dispatch => fetch("/api/questionuserdata", window.getHeader)
+	return dispatch => fetch("/api/questionuserdata", window.getNoCacheHeader)
 	.then(r => r.json().then(questionUserData => {
 		dispatch(updateQuestionUserData(questionUserData))
 	}));
@@ -88,7 +88,7 @@ export function updateCategoryData(name, maxTime, timeStarted, timeCompleted) {
 }
 
 export function getCurrentQuestion(categoryId) {
-	return dispatch => fetch("/quiz/question?category="+categoryId, window.getHeader)
+	return dispatch => fetch("/quiz/question?category="+categoryId, window.getNoCacheHeader)
 		.then(r => r.json().then(question => {
 			console.debug(question);
 			if (question.completed) {
@@ -102,9 +102,9 @@ export function getCurrentQuestion(categoryId) {
 }
 
 export function getCategoryData(categoryId) {
-	return dispatch => fetch("/api/categoryuserdata/" + categoryId, window.getHeader)
+	return dispatch => fetch("/api/categoryuserdata/" + categoryId, window.getNoCacheHeader)
 		.then(r => r.json().then(categoryUserData => {
-			fetch("/api/categories/" + categoryId, window.getHeader)
+			fetch("/api/categories/" + categoryId, window.getNoCacheHeader)
 			.then(r => r.json().then(category => {
 				var time = category.max_time.split(':');
 				let maxTime = (+time[0]) * 60 * 60 + (+time[1]) * 60 + (+time[2]);
@@ -166,7 +166,7 @@ export function updateCategoryCompleted(categoryId, num_attempted, num_correct) 
 }
 
 export function getResults(categoryId) {
-	return dispatch => fetch("/quiz/results?category=" + categoryId, window.getHeader)
+	return dispatch => fetch("/quiz/results?category=" + categoryId, window.getNoCacheHeader)
 	.then(r => r.json().then(json => {
 	    // TODO: add check for accepted
 		dispatch(updateCategoryResults(json.results))
@@ -188,7 +188,7 @@ export function updateLeaderboard(leaderboardResult) {
 }
 
 export function getLeaderboard() {
-	return dispatch => fetch("/api/studentstats", window.getHeader)
+	return dispatch => fetch("/api/studentstats", window.getNoCacheHeader)
 	.then(r => r.json().then(json => {
 		dispatch(updateLeaderboard(json))
 	}));
@@ -211,7 +211,7 @@ export function submitFeedback(feedback, question) {
 }
 
 export function getFeedbackSummary() {
-	return dispatch => fetch("/api/feedback", window.getHeader)
+	return dispatch => fetch("/api/feedback", window.getNoCacheHeader)
 	.then(r => r.json().then(json => {
 		dispatch(updateFeedbackSummary(json))
 	}));
