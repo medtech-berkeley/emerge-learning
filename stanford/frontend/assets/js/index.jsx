@@ -22,29 +22,19 @@ window.getHeader = {
     headers: {
         "X-CSRFToken": Cookies.get("csrftoken"),
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "cache-control": "reload"
     },
-    cache: "reload",
 };
 
-window.getNoCacheHeader = {
-    method: 'get',
-    credentials: "same-origin",
-    headers: {
-        "X-CSRFToken": Cookies.get("csrftoken"),
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        'cache-control': 'no-cache'
-    },
-};
 
 window.postFormHeader = {
     method: 'post',
     credentials: "same-origin",
     headers: {
         "X-CSRFToken": Cookies.get("csrftoken"),
+        "cache-control": "reload"
     },
-    cache: "reload",
 };
 
 window.postHeader = {
@@ -53,9 +43,9 @@ window.postHeader = {
     headers: {
         "X-CSRFToken": Cookies.get("csrftoken"),
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "cache-control": "reload"
     },
-    cache: "reload",
 };
 
 window.putHeader = {
@@ -64,9 +54,9 @@ window.putHeader = {
     headers: {
         "X-CSRFToken": Cookies.get("csrftoken"),
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "cache-control": "reload"
     },
-    cache: "reload"
 };
 
 window.deleteHeader = {
@@ -75,9 +65,9 @@ window.deleteHeader = {
     headers: {
         "X-CSRFToken": Cookies.get("csrftoken"),
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "cache-control": "reload"
     },
-    cache: "reload"
 };
 
 window.store = createStore(stanfordApp, applyMiddleware(ReduxThunk));
