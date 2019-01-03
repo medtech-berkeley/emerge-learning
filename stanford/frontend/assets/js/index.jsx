@@ -23,7 +23,7 @@ window.getHeader = {
         "X-CSRFToken": Cookies.get("csrftoken"),
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "cache-control": "reload"
+        "cache-control": "no-cache"
     },
 };
 
@@ -33,7 +33,7 @@ window.postFormHeader = {
     credentials: "same-origin",
     headers: {
         "X-CSRFToken": Cookies.get("csrftoken"),
-        "cache-control": "reload"
+        "cache-control": "no-cache"
     },
 };
 
@@ -44,7 +44,7 @@ window.postHeader = {
         "X-CSRFToken": Cookies.get("csrftoken"),
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "cache-control": "reload"
+        "cache-control": "no-cache"
     },
 };
 
@@ -55,7 +55,7 @@ window.putHeader = {
         "X-CSRFToken": Cookies.get("csrftoken"),
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "cache-control": "reload"
+        "cache-control": "no-cache"
     },
 };
 
@@ -66,7 +66,7 @@ window.deleteHeader = {
         "X-CSRFToken": Cookies.get("csrftoken"),
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "cache-control": "reload"
+        "cache-control": "no-cache"
     },
 };
 
