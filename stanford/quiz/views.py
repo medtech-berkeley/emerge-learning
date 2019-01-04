@@ -118,8 +118,12 @@ class QuestionFeedbackViewSet(ViewSet):
         print(serializer.data)
         return Response(serializer.data)
 
+    def retrieve(self, request, pk=None):
+        return list(self, request)
+
 @login_required
 def get_question(request):
+
     """
     Return random question from category that user hasn't done yet, create QuestionUserData model info
     :param request: GET request with category ID
