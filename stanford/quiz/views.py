@@ -154,13 +154,16 @@ def get_question(request):
 
                 stats = get_student_category_stats(category, student)
                 if len(question_set) == 0 or out_of_time:
+                    for q in question_set:
+                        question_data = QuestionUserData.objects.create(student=student, question=question)
+
                     if category_data.time_completed is None:
                         category_data.time_completed = timezone.now()
                         category_data.save()
 
                     response = {'accepted': True,
                                 'completed': True,
-                                'out_of_time': True,
+                                'out_of_time': out_of_time,
                                 'num_attempted': stats['num_attempted'],
                                 'num_correct': stats['num_correct']}
                     return JsonResponse(data=response)
