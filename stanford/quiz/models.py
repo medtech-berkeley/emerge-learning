@@ -101,7 +101,7 @@ class QuestionMedia(models.Model):
 
 
 class Answer(models.Model):
-    text = models.CharField(max_length=300)
+    text = models.TextField()
     is_correct = models.BooleanField()
     question = models.ForeignKey(Question, related_name="answers", on_delete=models.CASCADE)
 

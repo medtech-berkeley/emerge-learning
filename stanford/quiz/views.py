@@ -24,10 +24,10 @@ from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
 from django.contrib.auth.decorators import user_passes_test
 
 def is_instructor(user):
-    return user.is_authenticated() and (user.student.profile_type in ['ADMN', 'INST'] or user.is_superuser)
+    return user.is_authenticated and (user.student.profile_type in ['ADMN', 'INST'] or user.is_superuser)
 
 def is_admin(user):
-    return user.is_authenticated() and (user.student.profile_type in 'ADMN' or user.is_superuser)
+    return user.is_authenticated and (user.student.profile_type in 'ADMN' or user.is_superuser)
 
 class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):

@@ -2,6 +2,7 @@ import datetime
 from math import ceil
 
 import pytz
+import random
 from unittest import skip
 from secrets import token_hex
 
@@ -13,6 +14,8 @@ from django.core.files.base import File
 #from .sheetreader import Sheet
 from .models import Question, Category, CategoryUserData, QuestionUserData, Answer, Student, Tag
 from .utils import get_stats_student, get_stats_question_total, get_stats_category
+from .serializers import QuestionSerializer, AnswerSerializer, CategorySerializer, FeedbackSerializer
+from .serializers import QuestionUserDataSerializer, CategoryUserDataSerializer
 
 class TestSheetReading(TestCase):
     def setUp(self):
@@ -25,9 +28,9 @@ class TestSheetReading(TestCase):
     def test_all(self):
         LoadCategoryFromCSV(self.test_sheet2)
         self.assertEqual(len(Category.objects.all()), 12)
-        print("12 categories found")
+        # print("12 categories found")
         self.assertEqual(len(Tag.objects.all()), 33)
-        print("33 tags found")
+        # print("33 tags found")
         Category.objects.create(name="cat1", start=timezone.now(),
                                                end=timezone.now(), sponsor="none", is_challenge=False).save()
         LoadFromCSV(self.test_sheet)
@@ -38,11 +41,134 @@ class TestSheetReading(TestCase):
         #     for an in ans:
         #         print(an.text, " CORRECT" if an.is_correct else " WRONG")
         self.assertEqual(len(Question.objects.all()), 3)
-        print("3 questions found")
+        # print("3 questions found")
 
-class APITests(TestCase):
+
+class TestUtils(TestCase):
+    @classmethod
+    def _create_catergories(cls, n):
+        return [cls._create_category() for _ in range(n)]
+ 
+    @classmethod
+    def _create_questions(cls, categories, n, n_answers=4):
+        return [cls._create_question(categories[i % len(categories)], n_answers) for i in range(n)]
+
+    @classmethod
+    def _create_questions_and_category(cls, n_questions, n_categories):
+        categories = cls._create_catergories(n_categories)
+        questions = cls._create_questions(categories, n_questions)
+        return questions, categories
+
+    @staticmethod
+    def _create_category():
+        return Category.objects.create (
+            name=token_hex(16),
+            start=timezone.datetime(2000, 1, 1, tzinfo=timezone.get_default_timezone()),
+            end=timezone.datetime(2038, 1, 1, tzinfo=timezone.get_default_timezone()),
+            sponsor='MTAB',
+            is_challenge=False,
+            difficulty=Category.NOVICE
+        )
+
+    @staticmethod
+    def _create_question(category, n_answers):
+        question = Question.objects.create(
+            text=token_hex(32),
+            category=category
+        )
+
+        for i in range(n_answers):
+            Answer.objects.create(
+                text=token_hex(16),
+                is_correct=(i == 2),
+                question=question
+            )
+
+        return question
+
+    @staticmethod
+    def _create_question_userdata(question, student):
+        return QuestionUserData.objects.create(
+            student=student,
+            question=question
+        )
+
+    @staticmethod
+    def _create_category_userdata(category, student):
+        return CategoryUserData.objects.create(
+            student=student,
+            category=category
+        )
+
+    @staticmethod
+    def _create_client_and_student(username, password):
+        client = Client()
+        user = User.objects.create_user(username=username, password=password)
+        client.login(username=username, password=password)
+        return client, user.student
+
+
+class APITests(TestUtils):
     def setUp(self):
-        
+        self.client, self.student = self._create_client_and_student("sean", "nah")
+        self.student.profile_type = 'ADMN'
+        self.student.save()
+        random.seed(42)
+
+    def test_question_null(self):
+        response = self.client.get('/api/questions/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
+
+    def test_question_single(self):
+        q, _ = self._create_questions_and_category(1, 1)
+        response = self.client.get(f'/api/questions/{q[0].id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), QuestionSerializer(instance=q[0]).data)
+
+    def test_question_single_list(self):
+        q, _ = self._create_questions_and_category(1, 1)
+        response = self.client.get('/api/questions/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [QuestionSerializer(instance=q[0]).data])
+
+    def test_question_many(self):
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get(f'/api/questions/{q[13].id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), QuestionSerializer(instance=q[13]).data)
+
+    def test_question_many_list(self):
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get(f'/api/questions/')
+
+        self.assertEqual(response.status_code, 200)
+        response_questions = sorted(response.json(), key=lambda d: d['id'])
+        control_questions = sorted(QuestionSerializer(instance=q, many=True).data, key=lambda d: d['id'])
+        self.assertEqual(response_questions, control_questions)
+
+    def test_question_permissions(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get(f'/api/questions/{q[0].id}/')
+
+        self.assertEqual(response.status_code, 403)
+    
+    def test_question_permissions_list(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get(f'/api/questions/')
+
+        self.assertEqual(response.status_code, 403)
+
 
 class QuizTestCase(TestCase):
     def setUp(self):
