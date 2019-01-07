@@ -1,6 +1,8 @@
 from rest_framework import serializers
-from .models import Question, QuestionUserData, Category, CategoryUserData, Answer, Student, QuestionMedia, Feedback
 from django.contrib.auth.models import User
+
+from .utils import get_stats_student
+from .models import Question, QuestionUserData, Category, CategoryUserData, Answer, Student, QuestionMedia, Feedback
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

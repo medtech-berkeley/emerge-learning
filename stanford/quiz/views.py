@@ -92,8 +92,15 @@ class QuestionUserDataViewSet(ModelViewSet):
 class StudentStatsViewSet(ViewSet):
     serializer_class = StudentStatsSerializer
 
+    def get_queryset(self):
+        user = self.request.user
+        if is_instructor(user):
+            return Student.objects.all()
+        else:
+            return Student.objects.filter(id=user.student.id)
+
     def get_date(self):
-        date = request.GET.get('date', None)
+        date = self.request.GET.get('date', None)
         if date is not None:
             date = timezone.datetime.strptime(date, '%Y-%m-%d').astimezone(pytz.utc)
         return date
@@ -102,7 +109,7 @@ class StudentStatsViewSet(ViewSet):
         date = self.get_date()
 
         students_stats = []
-        for student in Student.objects.all():
+        for student in self.get_queryset():
             students_stats.append(StudentStatsSerializer.student_to_stat(student, date))
 
         serializer = StudentStatsSerializer(instance=students_stats, many=True)
@@ -113,9 +120,8 @@ class StudentStatsViewSet(ViewSet):
             pk = request.user.student.pk
 
         date = self.get_date()
-        
-        student = get_object_or_404(Student, pk=pk)
-        StudentStatsSerializer.student_to_stat(student, date)
+        student = get_object_or_404(self.get_queryset(), pk=pk)
+        stat = StudentStatsSerializer.student_to_stat(student, date)
 
         serializer = StudentStatsSerializer(instance=stat)
         return Response(serializer.data)
