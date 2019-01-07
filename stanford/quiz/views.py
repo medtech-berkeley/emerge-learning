@@ -37,21 +37,22 @@ class IsInstructor(permissions.BasePermission):
     def has_permission(self, request, view):
         return is_instructor(request.user)
 
-# TODO: set up permissions for viewsets
 
 class StudentViewSet(ModelViewSet):
     model = Student
     serializer_class = StudentSerializer
-    queryset = Student.objects.all()
-    permission_classes = [IsInstructor]
+
+    def get_queryset(self):
+        user = self.request.user
+        if is_instructor(user):
+            return Student.objects.all()
+        else:
+            return Student.objects.filter(id=user.student.id)
 
     def retrieve(self, request, pk=None):
         if pk == 'self':
             pk = request.user.student.pk
-            
-        student_object = get_object_or_404(Student, pk=pk)
-        serializer = StudentSerializer(instance=student_object)
-        return Response(serializer.data)
+        return super().retrieve(request, pk)
 
 
 class QuestionViewSet(ModelViewSet):
@@ -80,8 +81,11 @@ class CategoryUserDataViewSet(ModelViewSet):
 
 
 class QuestionUserDataViewSet(ModelViewSet):
-    queryset = QuestionUserData.objects.all()
     serializer_class = QuestionUserDataSerializer
+
+    def get_queryset(self):
+        return QuestionUserData.objects.filter(student=self.request.user.student)
+
 
 
 class StudentStatsViewSet(ViewSet):
