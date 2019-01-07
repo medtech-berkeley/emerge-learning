@@ -5,7 +5,7 @@ from quiz.models import Student
 import requests
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
-
+from django.views.decorators.cache import never_cache
 
 def signup(request):
     if request.method == 'POST':
@@ -49,7 +49,7 @@ def logins(request):
     else:
         return render(request, 'accounts/login.html')
 
-
+@never_cache
 def logout_view(request):
     logout(request)
     return redirect('dashboard')
