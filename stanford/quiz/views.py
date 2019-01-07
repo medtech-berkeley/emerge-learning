@@ -49,10 +49,11 @@ class StudentViewSet(ModelViewSet):
         else:
             return Student.objects.filter(id=user.student.id)
 
-    def retrieve(self, request, pk=None):
-        if pk == 'self':
-            pk = request.user.student.pk
-        return super().retrieve(request, pk)
+    def get_object(self):
+        if self.kwargs['pk'] == 'self':
+            self.kwargs['pk'] = self.request.user.student.pk
+
+        return super().get_object()
 
 
 class QuestionViewSet(ModelViewSet):

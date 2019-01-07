@@ -541,6 +541,14 @@ class CUDTest(APITest):
 
 
 class StudentTest(APITest):
+    def test_student_self(self):
+        s = [self.student]
+        request = self.factory.get(f'/api/students/self/')
+        response = self.client.get(f'/api/students/self/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), self.jsonify(StudentSerializer(instance=s[0], context={"request": request}).data))
+
     def test_student_single(self):
         s = [self.student]
         request = self.factory.get(f'/api/students/{s[0].id}')
