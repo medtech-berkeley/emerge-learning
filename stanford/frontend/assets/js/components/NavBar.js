@@ -1,6 +1,8 @@
 import React from "react";
 import {Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Button, Container} from "reactstrap";
 import {Link} from "react-router-dom";
+import Cookies from "js-cookie";
+
 // TODO: add Link
 
 export class NavBar extends React.Component {
@@ -37,7 +39,8 @@ export class NavBar extends React.Component {
             </li>            
               </ul>
           </div>
-          <form action="/logout" className="navbar-right form-inline my-2 my-lg-0">
+          <form method="post" action="/logout/" className="navbar-right form-inline my-2 my-lg-0">
+              <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get("csrftoken")} />
               <button type="submit" className="btn logout-btn btn-outline-success">Log Out</button>
           </form>
         </nav>
