@@ -1,25 +1,41 @@
 import pytz
 import datetime
+
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.shortcuts import redirect
 from django.db.models import Count
-from quiz.utils import get_student_category_stats
-
-from .utils import get_unanswered_questions
-from .models import Question, QuestionUserData, Category, Student, Feedback
-from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer
-from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, CategoryUserDataSerializer, QuestionFeedbackSerializer
-from .models import Student, Category, Question, Answer, QuestionUserData, CategoryUserData, GVK_EMRI_Demographics
+from django.core.files.base import File, ContentFile
 from django.contrib.auth.models import User
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
-from .utils import get_stats_student
-from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
-from django.core.files.base import File, ContentFile
+from rest_framework import permissions, generics, mixins
 
+from .utils import get_unanswered_questions, get_student_category_stats
+from .utils import get_stats_student
+from .models import Question, QuestionUserData, Category, Student, Feedback
+from .models import Student, Category, Question, Answer, QuestionUserData, CategoryUserData, GVK_EMRI_Demographics
+from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer
+from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, CategoryUserDataSerializer, QuestionFeedbackSerializer
+from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
+
+from django.contrib.auth.decorators import user_passes_test
+
+def is_instructor(user):
+    return user.is_authenticated() and (user.student.profile_type in ['ADMN', 'INST'] or user.is_superuser)
+
+def is_admin(user):
+    return user.is_authenticated() and (user.student.profile_type in 'ADMN' or user.is_superuser)
+
+class IsAdmin(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return is_admin(request.user)
+
+class IsInstructor(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return is_instructor(request.user)
 
 # TODO: set up permissions for viewsets
 
@@ -27,6 +43,7 @@ class StudentViewSet(ModelViewSet):
     model = Student
     serializer_class = StudentSerializer
     queryset = Student.objects.all()
+    permission_classes = [IsInstructor]
 
     def retrieve(self, request, pk=None):
         if pk == 'self':
@@ -40,11 +57,13 @@ class StudentViewSet(ModelViewSet):
 class QuestionViewSet(ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = [IsInstructor]
 
 
 class AnswerViewSet(ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
+    permission_classes = [IsInstructor]
 
 
 class CategoryViewSet(ModelViewSet):
@@ -53,14 +72,11 @@ class CategoryViewSet(ModelViewSet):
 
 
 class CategoryUserDataViewSet(ModelViewSet):
-    queryset = CategoryUserData.objects.all()
     serializer_class = CategoryUserDataSerializer
+    lookup_field="category"
 
-    def retrieve(self, request, pk=None):
-        student = self.request.user.student
-        category_data = get_object_or_404(CategoryUserData, student=student, category=pk)
-        serializer = CategoryUserDataSerializer(instance=category_data)
-        return Response(serializer.data)
+    def get_queryset(self):
+        return CategoryUserData.objects.filter(student=self.request.user.student)
 
 
 class QuestionUserDataViewSet(ModelViewSet):
@@ -71,18 +87,18 @@ class QuestionUserDataViewSet(ModelViewSet):
 class StudentStatsViewSet(ViewSet):
     serializer_class = StudentStatsSerializer
 
-    def list(self, request):
+    def get_date(self):
         date = request.GET.get('date', None)
         if date is not None:
             date = timezone.datetime.strptime(date, '%Y-%m-%d').astimezone(pytz.utc)
+        return date
+
+    def list(self, request):
+        date = self.get_date()
 
         students_stats = []
-        students = Student.objects.all()
-        for student in students:
-            stats = get_stats_student(student, date)
-            stats['location'] = student.location
-            stats['image'] = student.image
-            students_stats.append(stats)
+        for student in Student.objects.all():
+            students_stats.append(StudentStatsSerializer.student_to_stat(student, date))
 
         serializer = StudentStatsSerializer(instance=students_stats, many=True)
         return Response(serializer.data)
@@ -91,20 +107,17 @@ class StudentStatsViewSet(ViewSet):
         if pk == 'self':
             pk = request.user.student.pk
 
-        date = request.GET.get('date', None)
-        if date is not None:
-            date = timezone.datetime.strptime(date, '%Y-%m-%d').astimezone(pytz.utc)
+        date = self.get_date()
+        
+        student = get_object_or_404(Student, pk=pk)
+        StudentStatsSerializer.student_to_stat(student, date)
 
-        student = Student.objects.get(pk=pk)
-        stats = get_stats_student(student, date)
-        stats['location'] = student.location
-        stats['image'] = student.image
-
-        serializer = StudentStatsSerializer(instance=stats)
+        serializer = StudentStatsSerializer(instance=stat)
         return Response(serializer.data)
 
 class QuestionFeedbackViewSet(ViewSet):
     serializer_class = QuestionFeedbackSerializer
+    permission_classes = [IsInstructor]
 
     def list(self, request):
         feedback = QuestionUserData.objects.exclude(feedback__isnull=True).values('question__text', 'question__id').annotate(count=Count("question")).order_by('-count')
@@ -347,14 +360,14 @@ def submit_demographics_form(request):
 
 
 # TODO: add better error reporting, statuses
-@login_required
+@user_passes_test(is_admin)
 def upload_questions(request):
     if request.method == 'POST' and 'file' in request.FILES:
         question_file = ContentFile(request.FILES['file'].read().decode('utf-8'))
         LoadFromCSV(question_file)
     return redirect('dashboard')
 
-@login_required
+@user_passes_test(is_admin)
 def upload_categories(request):
     if request.method == 'POST' and 'file' in request.FILES:
         category_file = ContentFile(request.FILES['file'].read().decode('utf-8'))

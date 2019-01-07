@@ -1,5 +1,11 @@
 import datetime
 
+PROFILE_CHOICES = [
+    ('STUD', 'Student'),
+    ('ADMN', 'Admin'),
+    ('INST', 'Instructor')
+]
+
 DEVICE_CHOICES = [
     ('COMP', 'Computer'),
     ('PHON', 'Smart Phone'),
