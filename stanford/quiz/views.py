@@ -110,7 +110,7 @@ class QuestionFeedbackViewSet(ViewSet):
         feedback = QuestionUserData.objects.exclude(feedback__isnull=True).values('question__text', 'question__id').annotate(count=Count("question")).order_by('-count')
         for q in feedback:
             q['question__feedback'] = []
-            for i in QuestionUserData.objects.filter(question__id=q['question__id']):
+            for i in QuestionUserData.objects.filter(question__id=q['question__id'], feedback__isnull=False):
                 q['question__feedback'].append({'text': i.feedback.text, 'time': i.feedback.time, 'student': i.student.name})
 
         print(feedback)
