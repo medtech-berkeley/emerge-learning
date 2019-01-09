@@ -188,7 +188,7 @@ export function updateLeaderboard(leaderboardResult) {
 }
 
 export function getLeaderboard() {
-	return dispatch => fetch("/api/studentstats", window.getHeader)
+	return dispatch => fetch("/api/leaderboard", window.getHeader)
 	.then(r => r.json().then(json => {
 		dispatch(updateLeaderboard(json))
 	}));

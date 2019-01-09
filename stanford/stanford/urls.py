@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from frontend.views import index, change_user_info, dashboard
 from rest_framework import routers
-from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet, StudentStatsViewSet, CategoryUserDataViewSet, QuestionFeedbackViewSet
+from quiz.views import QuestionViewSet, AnswerViewSet, CategoryViewSet, QuestionUserDataViewSet, StudentViewSet, StudentStatsViewSet, CategoryUserDataViewSet, QuestionFeedbackViewSet, LeaderboardStatViewSet
 from quiz.views import get_question, submit_answer, get_category_results, get_stats, submit_demographics_form, upload_questions, upload_categories, submit_feedback
 from django.conf import settings
 from django.conf.urls.static import static
@@ -19,6 +19,7 @@ router.register(r'categories', CategoryViewSet, 'Category')
 router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData')
 router.register(r'categoryuserdata', CategoryUserDataViewSet, 'CategoryUserData')
 router.register(r'students', StudentViewSet, 'Student')
+router.register(r'leaderboard', LeaderboardStatViewSet, 'Student')
 router.register(r'studentstats', StudentStatsViewSet, 'StudentStats')
 router.register(r'feedback', QuestionFeedbackViewSet, 'QuestionFeedback')
 
