@@ -14,6 +14,7 @@ def get_stats_student(student, date=None, query_set=QuestionUserData.objects):
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['questions_answered'] - stats['num_correct']
     stats['performance'] = get_performance_stats(student, date)
+    stats['score'] = stats['num_correct']
     return stats
 
 def get_performance_stats(student, date=None):

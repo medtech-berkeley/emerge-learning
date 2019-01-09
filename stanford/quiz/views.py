@@ -17,7 +17,7 @@ from .utils import get_unanswered_questions, get_student_category_stats
 from .utils import get_stats_student
 from .models import Question, QuestionUserData, Category, Student, Feedback
 from .models import Student, Category, Question, Answer, QuestionUserData, CategoryUserData, GVK_EMRI_Demographics
-from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer
+from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, LeaderboardStatSerializer
 from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, CategoryUserDataSerializer, QuestionFeedbackSerializer
 from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
 
@@ -88,7 +88,6 @@ class QuestionUserDataViewSet(ModelViewSet):
         return QuestionUserData.objects.filter(student=self.request.user.student)
 
 
-
 class StudentStatsViewSet(ViewSet):
     serializer_class = StudentStatsSerializer
 
@@ -112,7 +111,7 @@ class StudentStatsViewSet(ViewSet):
         for student in self.get_queryset():
             students_stats.append(StudentStatsSerializer.student_to_stat(student, date))
 
-        serializer = StudentStatsSerializer(instance=students_stats, many=True)
+        serializer = self.serializer_class(instance=students_stats, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
@@ -123,8 +122,16 @@ class StudentStatsViewSet(ViewSet):
         student = get_object_or_404(self.get_queryset(), pk=pk)
         stat = StudentStatsSerializer.student_to_stat(student, date)
 
-        serializer = StudentStatsSerializer(instance=stat)
+        serializer = self.serializer_class(instance=stat)
         return Response(serializer.data)
+
+
+class LeaderboardStatViewSet(StudentStatsViewSet):
+    serializer_class = LeaderboardStatSerializer
+
+    def get_queryset(self):
+        return Student.objects.all()
+
 
 class QuestionFeedbackViewSet(ViewSet):
     serializer_class = QuestionFeedbackSerializer

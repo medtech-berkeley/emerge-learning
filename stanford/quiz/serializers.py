@@ -90,6 +90,13 @@ class StudentStatsSerializer(serializers.Serializer):
         return stats
 
 
+class LeaderboardStatSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    location = serializers.CharField()
+    image = serializers.ImageField()
+    score = serializers.IntegerField(read_only=True)
+    
+
 
 class QuestionFeedbackSerializer(serializers.Serializer):
     question__text = serializers.CharField()
