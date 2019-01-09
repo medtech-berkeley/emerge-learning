@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from os import path
 
 from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_CHOICES, \
-                             ORG_CHOICES, DEVICE_CHOICES, INTERNET_CHOICES
+                             ORG_CHOICES, DEVICE_CHOICES, INTERNET_CHOICES, PROFILE_CHOICES
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -27,6 +27,7 @@ class Student(models.Model):
     years_of_experience = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     organization = models.CharField(max_length=3, choices=ORG_CHOICES, default='OTH')
 
+    profile_type = models.CharField(max_length=10, choices=PROFILE_CHOICES, default="STUD")
 
     def __str__(self):
         return self.user.username
@@ -100,7 +101,7 @@ class QuestionMedia(models.Model):
 
 
 class Answer(models.Model):
-    text = models.CharField(max_length=300)
+    text = models.TextField()
     is_correct = models.BooleanField()
     question = models.ForeignKey(Question, related_name="answers", on_delete=models.CASCADE)
 

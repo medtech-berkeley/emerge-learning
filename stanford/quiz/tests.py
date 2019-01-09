@@ -1,55 +1,35 @@
 import datetime
-from math import ceil
-
 import pytz
+import random
+import json
+
+from math import ceil
 from unittest import skip
 from secrets import token_hex
 
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 from django.utils import timezone
-from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
 from django.core.files.base import File
-#from .sheetreader import Sheet
+
+from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
 from .models import Question, Category, CategoryUserData, QuestionUserData, Answer, Student, Tag
 from .utils import get_stats_student, get_stats_question_total, get_stats_category
-
-@skip
-class SheetsTestCase(TestCase):
-    """ Tests that sheetreader.py creates correct Question and Answer models """
-    @classmethod
-    def setUpClass(self):
-        self.test_sheet = Sheet('1_RkDeLX5G-AphCnvX5bFPmGDn6dScItfB7r_PnKdOpY')
-        self.test_sheet.sheet_to_models()
-
-    def test_print(self):
-        print(self.test_sheet)
-
-    def test_questions(self):
-        for question, row in zip(Question.objects.all(), self.test_sheet.rows):
-            csv_question_text = row[4]
-            self.assertEqual(question.text, csv_question_text)
-            self.assertEqual(question.answers.count(), 6)
-
-    def test_answers(self):
-        for answer, row in zip(Answer.objects.all(), self.test_sheet.rows):
-            csv_answer_text = row[1]
-            self.assertIn(answer.text, 'ABCDEF')
+from .serializers import QuestionSerializer, AnswerSerializer, CategorySerializer, FeedbackSerializer
+from .serializers import QuestionUserDataSerializer, CategoryUserDataSerializer, StudentSerializer
+from .serializers import StudentStatsSerializer
 
 class TestSheetReading(TestCase):
     def setUp(self):
         self.test_sheet = File(open("quiz/Test.csv"))
         self.test_sheet2 = File(open("quiz/Test - Categories.csv"))
 
-    def test_print(self):
-        print(self.test_sheet)
-
     def test_all(self):
         LoadCategoryFromCSV(self.test_sheet2)
         self.assertEqual(len(Category.objects.all()), 12)
-        print("12 categories found")
+        # print("12 categories found")
         self.assertEqual(len(Tag.objects.all()), 33)
-        print("33 tags found")
+        # print("33 tags found")
         Category.objects.create(name="cat1", start=timezone.now(),
                                                end=timezone.now(), sponsor="none", is_challenge=False).save()
         LoadFromCSV(self.test_sheet)
@@ -60,8 +40,603 @@ class TestSheetReading(TestCase):
         #     for an in ans:
         #         print(an.text, " CORRECT" if an.is_correct else " WRONG")
         self.assertEqual(len(Question.objects.all()), 3)
-        print("3 questions found")
+        # print("3 questions found")
 
+
+class TestUtils(TestCase):
+    @classmethod
+    def _create_categories(cls, n):
+        return [cls._create_category() for _ in range(n)]
+ 
+    @classmethod
+    def _create_questions(cls, categories, n, n_answers=4):
+        return [cls._create_question(categories[i % len(categories)], n_answers) for i in range(n)]
+
+    @classmethod
+    def _create_questions_and_category(cls, n_questions, n_categories, n_answers=4):
+        categories = cls._create_categories(n_categories)
+        questions = cls._create_questions(categories, n_questions, n_answers)
+        return questions, categories
+
+    @staticmethod
+    def _create_category():
+        return Category.objects.create (
+            name=token_hex(16),
+            start=timezone.datetime(2000, 1, 1, tzinfo=timezone.get_default_timezone()),
+            end=timezone.datetime(2038, 1, 1, tzinfo=timezone.get_default_timezone()),
+            sponsor='MTAB',
+            is_challenge=False,
+            difficulty=Category.NOVICE
+        )
+
+    @staticmethod
+    def _create_question(category, n_answers):
+        question = Question.objects.create(
+            text=token_hex(32),
+            category=category
+        )
+
+        for i in range(n_answers):
+            Answer.objects.create(
+                text=token_hex(16),
+                is_correct=(i == 2),
+                question=question
+            )
+
+        return question
+
+    @staticmethod
+    def _create_question_userdata(question, student):
+        return QuestionUserData.objects.create(
+            student=student,
+            question=question
+        )
+
+    @staticmethod
+    def _create_category_userdata(category, student):
+        return CategoryUserData.objects.create(
+            student=student,
+            category=category
+        )
+
+    @staticmethod
+    def _create_client_and_student(username, password):
+        client = Client()
+        user = User.objects.create_user(username=username, password=password)
+        client.login(username=username, password=password)
+        return client, user.student
+    
+    @staticmethod
+    def jsonify(json_dict):
+        return json.loads(json.dumps(json_dict))
+
+
+class APITest(TestUtils):
+    def setUp(self):
+        self.client, self.student = self._create_client_and_student("sean", "nah")
+        self.student.profile_type = 'ADMN'
+        self.student.save()
+        self.factory = RequestFactory()
+        random.seed(42)
+
+class QuestionTest(APITest):
+    def test_question_null(self):
+        response = self.client.get('/api/questions/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
+
+    def test_question_single(self):
+        q, _ = self._create_questions_and_category(1, 1)
+        response = self.client.get(f'/api/questions/{q[0].id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), QuestionSerializer(instance=q[0]).data)
+
+    def test_question_single_list(self):
+        q, _ = self._create_questions_and_category(1, 1)
+        response = self.client.get('/api/questions/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [QuestionSerializer(instance=q[0]).data])
+
+    def test_question_many(self):
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get(f'/api/questions/{q[13].id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), QuestionSerializer(instance=q[13]).data)
+
+    def test_question_many_list(self):
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get(f'/api/questions/')
+
+        self.assertEqual(response.status_code, 200)
+        response_questions = sorted(response.json(), key=lambda d: d['id'])
+        control_questions = sorted(QuestionSerializer(instance=q, many=True).data, key=lambda d: d['id'])
+        self.assertEqual(response_questions, control_questions)
+
+    def test_question_permissions(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get(f'/api/questions/{q[0].id}/')
+
+        self.assertEqual(response.status_code, 403)
+    
+    def test_question_permissions_list(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get(f'/api/questions/')
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_question_permissions(self):
+        self.student.profile_type = 'INST'
+        self.student.save()
+
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get(f'/api/questions/{q[0].id}/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_question_permissions_list(self):
+        self.student.profile_type = 'INST'
+        self.student.save()
+
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get(f'/api/questions/')
+
+        self.assertEqual(response.status_code, 200)
+
+
+class CategoryTest(APITest):
+    def test_category_null(self):
+        response = self.client.get('/api/categories/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
+
+    def test_category_single(self):
+        q = self._create_categories(1)
+        request = self.factory.get(f'/api/categories/{q[0].id}/')
+        response = self.client.get(f'/api/categories/{q[0].id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), CategorySerializer(instance=q[0], context={"request": request}).data)
+
+    def test_category_single_list(self):
+        q = self._create_categories(1)
+        request = self.factory.get('/api/categories/')
+        response = self.client.get('/api/categories/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [CategorySerializer(instance=q[0], context={"request": request}).data])
+
+    def test_category_many(self):
+        q = self._create_categories(50)
+        request = self.factory.get(f'/api/categories/{q[13].id}/')
+        response = self.client.get(f'/api/categories/{q[13].id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), CategorySerializer(instance=q[13], context={"request": request}).data)
+
+    def test_category_many_list(self):
+        q = self._create_categories(50)
+        request = self.factory.get('/api/categories/')
+        response = self.client.get('/api/categories/')
+
+        self.assertEqual(response.status_code, 200)
+        response_questions = sorted(response.json(), key=lambda d: d['id'])
+        control_questions = sorted(CategorySerializer(instance=q, many=True, context={"request": request}).data, key=lambda d: d['id'])
+        self.assertEqual(response_questions, control_questions)
+
+    def test_category_permissions(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        q = self._create_categories(50)
+        response = self.client.get(f'/api/categories/{q[0].id}/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_category_permissions_list(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        q = self._create_categories(50)
+        response = self.client.get('/api/categories/')
+
+        self.assertEqual(response.status_code, 200)
+
+
+class AnswerTest(APITest):
+    def test_answer_null(self):
+        response = self.client.get('/api/answers/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
+
+    def test_answer_single(self):
+        q, _= self._create_questions_and_category(1, 1, 1)
+        a = q[0].answers.first()
+        request = self.factory.get(f'/api/answers/{a.id}/')
+        response = self.client.get(f'/api/answers/{a.id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), AnswerSerializer(instance=a, context={"request": request}).data)
+
+    def test_answer_single_list(self):
+        q, _= self._create_questions_and_category(1, 1, 1)
+        a = q[0].answers.first()
+        request = self.factory.get('/api/answers/')
+        response = self.client.get('/api/answers/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [AnswerSerializer(instance=a, context={"request": request}).data])
+
+    def test_answer_many(self):
+        q, _ = self._create_questions_and_category(50, 4)
+        a = q[13].answers.all()[3]
+        request = self.factory.get(f'/api/answers/{a.id}/')
+        response = self.client.get(f'/api/answers/{a.id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), AnswerSerializer(instance=a, context={"request": request}).data)
+
+    def test_answer_many_list(self):
+        q, _ = self._create_questions_and_category(50, 4)
+        request = self.factory.get('/api/answers/')
+        response = self.client.get('/api/answers/')
+
+        self.assertEqual(response.status_code, 200)
+        response_questions = sorted(response.json(), key=lambda d: d['id'])
+        control_questions = sorted(AnswerSerializer(instance=Answer.objects.all(), many=True, context={"request": request}).data, key=lambda d: d['id'])
+        self.assertEqual(response_questions, control_questions)
+
+    def test_answer_permissions(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get(f'/api/answers/{q[13].answers.all()[2].id}/')
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_answer_permissions_list(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get('/api/answers/')
+
+        self.assertEqual(response.status_code, 403)
+
+
+class QUDTest(APITest):
+    def test_qud_null(self):
+        response = self.client.get('/api/questionuserdata/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
+
+    def test_qud_single(self):
+        q, _= self._create_questions_and_category(1, 1, 1)
+        a = self._create_question_userdata(q[0], self.student)
+        request = self.factory.get(f'/api/questionuserdata/{a.id}/')
+        response = self.client.get(f'/api/questionuserdata/{a.id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), QuestionUserDataSerializer(instance=a, context={"request": request}).data)
+
+    def test_qud_single_list(self):
+        q, _= self._create_questions_and_category(1, 1, 1)
+        a = self._create_question_userdata(q[0], self.student)
+        request = self.factory.get('/api/questionuserdata/')
+        response = self.client.get('/api/questionuserdata/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [QuestionUserDataSerializer(instance=a, context={"request": request}).data])
+
+    def test_qud_many_single_user(self):
+        q, _ = self._create_questions_and_category(50, 4)
+        for i, question in enumerate(q):
+            qud = self._create_question_userdata(question, self.student)
+            if i == 13: a = qud
+
+        request = self.factory.get(f'/api/questionuserdata/{a.id}/')
+        response = self.client.get(f'/api/questionuserdata/{a.id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), QuestionUserDataSerializer(instance=a, context={"request": request}).data)
+
+    def test_qud_many_single_user_list(self):
+        q, _ = self._create_questions_and_category(50, 4)
+        for i, question in enumerate(q):
+            qud = self._create_question_userdata(question, self.student)
+        request = self.factory.get('/api/questionuserdata/')
+        response = self.client.get('/api/questionuserdata/')
+
+        self.assertEqual(response.status_code, 200)
+        response_questions = sorted(response.json(), key=lambda d: d['question'])
+        control_questions = sorted(QuestionUserDataSerializer(instance=QuestionUserData.objects.filter(student=self.student), many=True, context={"request": request}).data, key=lambda d: d['question'])
+        self.assertEqual(response_questions, control_questions)
+
+    def test_qud_many_many_user(self):
+        q, _ = self._create_questions_and_category(50, 4)
+        students = [self.student]
+        for i in range(10):
+            students.append(User.objects.create_user(f"sean{i}", "none").student)
+
+        for student in students:
+            for i, question in enumerate(q):
+                qud = self._create_question_userdata(question, student)
+                if i == 13 and student == self.student: a = qud
+
+        request = self.factory.get(f'/api/questionuserdata/{a.id}/')
+        response = self.client.get(f'/api/questionuserdata/{a.id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), QuestionUserDataSerializer(instance=a, context={"request": request}).data)
+
+    def test_qud_many_many_user_list(self):
+        q, _ = self._create_questions_and_category(50, 4)
+        students = [self.student]
+        for i in range(10):
+            students.append(User.objects.create_user(f"sean{i}", "none").student)
+
+        for student in students:
+            for i, question in enumerate(q):
+                qud = self._create_question_userdata(question, student)
+
+        request = self.factory.get('/api/questionuserdata/')
+        response = self.client.get('/api/questionuserdata/')
+
+        self.assertEqual(response.status_code, 200)
+        response_questions = sorted(response.json(), key=lambda d: d['question'])
+        control_questions = sorted(QuestionUserDataSerializer(instance=QuestionUserData.objects.filter(student=self.student), many=True, context={"request": request}).data, key=lambda d: d['question'])
+        self.assertEqual(response_questions, control_questions)
+
+    def test_qud_many_user_permissions(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+        q, _ = self._create_questions_and_category(50, 4)
+        students = [self.student]
+        for i in range(10):
+            students.append(User.objects.create_user(f"sean{i}", "none").student)
+
+        for student in students:
+            for i, question in enumerate(q):
+                qud = self._create_question_userdata(question, student)
+                if i == 13 and student != self.student: a = qud
+
+        request = self.factory.get(f'/api/questionuserdata/{a.id}/')
+        response = self.client.get(f'/api/questionuserdata/{a.id}/')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_qud_permissions(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        q, _ = self._create_questions_and_category(50, 4)
+        qud = self._create_question_userdata(q[13], self.student)
+        response = self.client.get(f'/api/questionuserdata/{qud.id}/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_qud_permissions_list(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        q, _ = self._create_questions_and_category(50, 4)
+        response = self.client.get('/api/questionuserdata/')
+
+        self.assertEqual(response.status_code, 200)
+
+class CUDTest(APITest):
+    def test_cud_null(self):
+        response = self.client.get('/api/categoryuserdata/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
+
+    def test_cud_single(self):
+        _, c = self._create_questions_and_category(1, 1, 1)
+        a = self._create_category_userdata(c[0], self.student)
+        request = self.factory.get(f'/api/categoryuserdata/{a.category.id}/')
+        response = self.client.get(f'/api/categoryuserdata/{a.category.id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), CategoryUserDataSerializer(instance=a, context={"request": request}).data)
+
+    def test_cud_single_list(self):
+        _, c = self._create_questions_and_category(1, 1, 1)
+        a = self._create_category_userdata(c[0], self.student)
+        request = self.factory.get('/api/categoryuserdata/')
+        response = self.client.get('/api/categoryuserdata/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [CategoryUserDataSerializer(instance=a, context={"request": request}).data])
+
+    def test_cud_many_single_user(self):
+        _, c = self._create_questions_and_category(1, 50)
+        for i, category in enumerate(c):
+            cud = self._create_category_userdata(category, self.student)
+            if i == 13: a = cud
+
+        request = self.factory.get(f'/api/categoryuserdata/{a.category.id}/')
+        response = self.client.get(f'/api/categoryuserdata/{a.category.id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), CategoryUserDataSerializer(instance=a, context={"request": request}).data)
+
+    def test_cud_many_single_user_list(self):
+        _, c = self._create_questions_and_category(1, 50)
+        for i, category in enumerate(c):
+            cud = self._create_category_userdata(category, self.student)
+        request = self.factory.get('/api/categoryuserdata/')
+        response = self.client.get('/api/categoryuserdata/')
+
+        self.assertEqual(response.status_code, 200)
+        response_questions = sorted(response.json(), key=lambda d: d['category'])
+        control_questions = sorted(CategoryUserDataSerializer(instance=CategoryUserData.objects.filter(student=self.student), many=True, context={"request": request}).data, key=lambda d: d['category'])
+        self.assertEqual(response_questions, control_questions)
+
+    def test_cud_many_many_user(self):
+        _, c = self._create_questions_and_category(1, 50)
+        students = [self.student]
+        for i in range(10):
+            students.append(User.objects.create_user(f"sean{i}", "none").student)
+
+        for student in students:
+            for i, category in enumerate(c):
+                cud = self._create_category_userdata(category, student)
+                if i == 13 and student == self.student: a = cud
+
+        request = self.factory.get(f'/api/categoryuserdata/{a.category.id}/')
+        response = self.client.get(f'/api/categoryuserdata/{a.category.id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), CategoryUserDataSerializer(instance=a, context={"request": request}).data)
+
+    def test_cud_many_many_user_list(self):
+        _, c = self._create_questions_and_category(1, 50)
+        students = [self.student]
+        for i in range(10):
+            students.append(User.objects.create_user(f"sean{i}", "none").student)
+
+        for student in students:
+            for i, category in enumerate(c):
+                cud = self._create_category_userdata(category, student)
+
+        request = self.factory.get('/api/categoryuserdata/')
+        response = self.client.get('/api/categoryuserdata/')
+
+        self.assertEqual(response.status_code, 200)
+        response_questions = sorted(response.json(), key=lambda d: d['category'])
+        control_questions = sorted(CategoryUserDataSerializer(instance=CategoryUserData.objects.filter(student=self.student), many=True, context={"request": request}).data, key=lambda d: d['category'])
+        self.assertEqual(response_questions, control_questions)
+
+    def test_cud_permissions(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        _, c = self._create_questions_and_category(1, 50)
+        cud = self._create_category_userdata(c[13], self.student)
+        response = self.client.get(f'/api/categoryuserdata/{cud.category.id}/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_cud_permissions_list(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        _, c = self._create_questions_and_category(1, 50)
+        response = self.client.get('/api/categoryuserdata/')
+
+        self.assertEqual(response.status_code, 200)
+
+
+class StudentTest(APITest):
+    def test_student_self(self):
+        s = [self.student]
+        request = self.factory.get(f'/api/students/self/')
+        response = self.client.get(f'/api/students/self/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), self.jsonify(StudentSerializer(instance=s[0], context={"request": request}).data))
+
+    def test_student_single(self):
+        s = [self.student]
+        request = self.factory.get(f'/api/students/{s[0].id}')
+        response = self.client.get(f'/api/students/{s[0].id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), self.jsonify(StudentSerializer(instance=s[0], context={"request": request}).data))
+
+    def test_student_single_list(self):
+        s = [self.student]
+        request = self.factory.get('/api/students/')
+        response = self.client.get('/api/students/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), self.jsonify([StudentSerializer(instance=s[0], context={"request": request}).data]))
+
+    def test_student_many(self):
+        s = [self.student] + [User.objects.create_user(f"sean{i}", "nah").student for i in range(50)]
+        request = self.factory.get(f'/api/students/{s[13].id}/')
+        response = self.client.get(f'/api/students/{s[13].id}/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), self.jsonify(StudentSerializer(instance=s[13], context={"request": request}).data))
+
+    def test_student_many_list(self):
+        s = [self.student] + [User.objects.create_user(f"sean{i}", "nah").student for i in range(50)]
+        request = self.factory.get(f'/api/students/')
+        response = self.client.get(f'/api/students/')
+
+        self.assertEqual(response.status_code, 200)
+        response_questions = sorted(response.json(), key=lambda d: d['user']['username'])
+        control_questions = sorted(map(self.jsonify, StudentSerializer(instance=s, context={"request": request}, many=True).data), key=lambda d:  d['user']['username'])
+        self.assertEqual(response_questions, control_questions)
+
+    def test_student_permissions(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        s = [self.student] + [User.objects.create_user(f"sean{i}", "nah").student for i in range(50)]
+        response = self.client.get(f'/api/students/{s[3].id}/')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_student_permissions_list(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        s = [self.student] + [User.objects.create_user(f"sean{i}", "nah").student for i in range(50)]
+        request = self.factory.get('/api/students/')
+        response = self.client.get('/api/students/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), self.jsonify([StudentSerializer(instance=self.student, context={"request": request}).data]))
+
+
+class StudentStatsTest(APITest):
+    def test_studentstat_self(self):
+        response = self.client.get('/api/studentstats/self/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_studentstat_list_smoke(self):
+        s = [self.student] + [User.objects.create_user(f"sean{i}", "nah").student for i in range(50)]
+        request = self.factory.get('/api/studentstats/')
+        response = self.client.get('/api/studentstats/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), len(s))
+
+    def test_studentstat_permissions(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        s = [self.student] + [User.objects.create_user(f"sean{i}", "nah").student for i in range(50)]
+        response = self.client.get(f'/api/studentstats/{s[3].id}/')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_studentstat_permissions_list(self):
+        self.student.profile_type = 'STUD'
+        self.student.save()
+
+        s = [self.student] + [User.objects.create_user(f"sean{i}", "nah").student for i in range(50)]
+        request = self.factory.get('/api/studentstats/')
+        response = self.client.get('/api/studentstats/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 1)
 
 
 class QuizTestCase(TestCase):

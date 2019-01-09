@@ -1,6 +1,8 @@
 from rest_framework import serializers
-from .models import Question, QuestionUserData, Category, CategoryUserData, Answer, Student, QuestionMedia, Feedback
 from django.contrib.auth.models import User
+
+from .utils import get_stats_student
+from .models import Question, QuestionUserData, Category, CategoryUserData, Answer, Student, QuestionMedia, Feedback
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,16 +11,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-
     class Meta:
         model = Student
-        fields = ('user', 'name', 'location', 'description', 'image', 'completed_survey')
+        fields = ('user', 'name', 'location', 'description', 'image', 'completed_survey', 'profile_type')
 
 class SmallStudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = Student
-        fields = ('user',)
+        fields = ('user', 'profile_type')
 
 class CategorySerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='text', allow_null=True)
@@ -80,6 +81,14 @@ class StudentStatsSerializer(serializers.Serializer):
     num_incorrect = serializers.IntegerField(read_only=True)
     subjects = serializers.DictField()
     performance = serializers.DictField()
+
+    @staticmethod
+    def student_to_stat(student, date):
+        stats = get_stats_student(student, date)
+        stats['location'] = student.location
+        stats['image'] = student.image
+        return stats
+
 
 
 class QuestionFeedbackSerializer(serializers.Serializer):
