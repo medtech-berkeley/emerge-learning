@@ -7,7 +7,6 @@ import {Container} from "reactstrap";
 
 export class MainDashboard extends React.Component {
     componentDidMount() {
-        this.props.refreshStudents();
         this.props.getCategories();
         this.props.getLeaderboard();
     }

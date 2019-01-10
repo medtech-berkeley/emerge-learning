@@ -6,7 +6,7 @@ import { UPDATE_DATA } from "../actions/DataActions"
 const initialState = {
     api: {
         categories: [],
-        user: [{
+        user: {
             "user": {
                 "username": "",
                 "email": "",
@@ -15,7 +15,7 @@ const initialState = {
             "location": "",
             "description": "",
             "image": ""
-        }],
+        },
         students: [{
         "user": {
             "username": "",

@@ -1,13 +1,18 @@
 import React from "react";
 import {Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Button, Container} from "reactstrap";
 import {Link} from "react-router-dom";
+import PropTypes from "prop-types";
 import Cookies from "js-cookie";
 
 // TODO: add Link
 
 export class NavBar extends React.Component {
+    componentWillMount() {
+      this.props.refreshStudent()
+    }
+
     getClassListNavItem(pathname) {
-      console.log(this.props.pathname);
+      // console.log(this.props.pathname);
       if (pathname === this.props.pathname) {
         return 'nav-item active';
       } else {
@@ -34,9 +39,10 @@ export class NavBar extends React.Component {
             <li className={this.getClassListNavItem('/dashboard/settings/')}>
               <a className="nav-link" href="/dashboard/settings">Settings</a>
             </li>
-            <li className={this.getClassListNavItem('/dashboard/instructor/')}>
+            {this.props.user.profile_type != 'STUD' ? 
+              <li className={this.getClassListNavItem('/dashboard/instructor/')}>
               <a className="nav-link" href="/dashboard/instructor/">Instructor</a>
-            </li>            
+            </li> : null}          
               </ul>
           </div>
           <form method="post" action="/logout/" className="navbar-right form-inline my-2 my-lg-0">
@@ -47,3 +53,8 @@ export class NavBar extends React.Component {
         </div>);
     }
 }
+
+NavBar.propTypes = {
+  user: PropTypes.object,
+  refreshStudent: PropTypes.func
+};

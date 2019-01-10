@@ -90,12 +90,12 @@ export function updateCategoryData(name, maxTime, timeStarted, timeCompleted) {
 export function getCurrentQuestion(categoryId) {
 	return dispatch => fetch("/quiz/question?category="+categoryId, window.getHeader)
 		.then(r => r.json().then(question => {
-			console.debug(question);
+			// console.debug(question);
 			if (question.completed) {
-				console.debug("category completed.");
+				// console.debug("category completed.");
 				dispatch(updateCategoryCompleted(categoryId, question.num_attempted, question.num_correct))
 			} else {
-				console.debug("dispatch update current question.");
+				// console.debug("dispatch update current question.");
 				dispatch(updateCurrentQuestion(question))
 			}
 		}));
@@ -142,7 +142,7 @@ export function answerQuestion(questionId, answerId, categoryId) {
 		.then(r => r.json().then(answer => {
 			if (answer.accepted) {
 				dispatch(getCurrentQuestion(categoryId))
-				console.debug("answer accepted")
+				// console.debug("answer accepted")
 			} else {
 				dispatch(updateSubmitError(answer.reason));
 			}
@@ -203,9 +203,9 @@ export function submitFeedback(feedback, question) {
 	return dispatch => fetch("/quiz/feedback", headers)
 		.then(r => r.json().then(submit => {
 			if (submit.accepted) {
-				console.debug("Feedback submitted")
+				// console.debug("Feedback submitted")
 			} else {
-				console.debug("Feedback submission failed")
+				// console.debug("Feedback submission failed")
 			}
 		}));
 }

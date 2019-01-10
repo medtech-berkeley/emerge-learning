@@ -7,8 +7,8 @@ import { QuizComplete } from "./QuizComplete";
 export class QuizBase extends React.Component {
 	componentDidMount() {
 		this.quizID = this.props.match.params.quizId;
-		console.log("QuizBase did mount.");
-		console.log(this.quizID);
+		// console.log("QuizBase did mount.");
+		// console.log(this.quizID);
 		this.props.getCurrentQuestion(this.quizID);
 		this.props.getCategoryData(this.quizID);
 	}

@@ -13,7 +13,7 @@ export class FeedbackSummary extends React.Component {
     }
 
     handleClick(item){
-        console.log(item.question__id);
+        // console.log(item.question__id);
         this.setState({selected: item})
 
     }

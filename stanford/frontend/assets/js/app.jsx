@@ -1,7 +1,7 @@
 import React from "react";
 import MainDashboardApi from "./containers/MainDashboardApi"
 import 'whatwg-fetch';
-import {NavBar} from "./components/NavBar";
+import NavBarApi from "./containers/NavBarApi";
 import history from "./history";
 import {Router, Route, Switch} from "react-router-dom";
 import UserDashboardApi from "./containers/UserDashboardApi";
@@ -19,7 +19,7 @@ export class App extends React.Component {
         return (<div>
                     <Router history={history}>
                         <div>
-                        <NavBar pathname={history.location.pathname}/>
+                        <NavBarApi pathname={history.location.pathname}/>
                             <div className="content-area">
                                 <Route exact={true} path="/dashboard" component={MainDashboardApi}/>
                                 <Route path="/dashboard/profile" component={UserDashboardApi}/>

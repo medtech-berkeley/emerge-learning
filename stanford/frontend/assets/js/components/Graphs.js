@@ -8,7 +8,7 @@ export class Graphs extends React.Component {
 
     getSubjectData() {
       if (this.props.data.subjects) {
-        console.log(this.props.data.subjects);
+        // console.log(this.props.data.subjects);
         const subjectNames = Object.keys(this.props.data.subjects)
         var graphElements = []
         for (var name of subjectNames) {
@@ -125,7 +125,7 @@ export class Graphs extends React.Component {
               {name: strDate(dateNow), points: questionBucket["correct"]["day0"]},
         ];
 
-      console.log(this.props.data)
+      // console.log(this.props.data)
 
         return (
             <div className="Graphs">
