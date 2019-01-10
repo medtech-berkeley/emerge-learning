@@ -144,6 +144,9 @@ class CategoryUserData(models.Model):
     def __str__(self):
         return "Category " + str(self.category.name) + " Data - " + self.student.user.username
 
+    def is_completed(self):
+        return time_completed is not None
+
     class Meta:
         unique_together = ('category', 'student')
 

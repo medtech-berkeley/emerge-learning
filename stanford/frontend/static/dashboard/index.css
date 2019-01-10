@@ -217,6 +217,10 @@ th {
     margin-bottom: 35px;
 }
 
+.card-complete {
+    opacity: 0.5;
+}
+
 .UserInfo {
     margin-right: 3rem;
 }

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from .utils import get_stats_student
 from .models import Question, QuestionUserData, Category, CategoryUserData, Answer, Student, QuestionMedia, Feedback
@@ -23,9 +24,21 @@ class SmallStudentSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='text', allow_null=True)
+    is_completed = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ('id', 'name', 'start', 'end', 'sponsor', 'is_challenge', 'max_time', 'image', 'tags')
+        fields = ('id', 'name', 'start', 'end', 'sponsor', 'is_challenge', 'max_time', 'image', 'tags', 'is_completed')
+
+    def get_is_completed(self, instance):
+        try:
+            user = self.context['request'].user.student
+            category_data = CategoryUserData.objects.get(student=user, category=instance)
+            return category_data.time_completed is not None or timezone.now() >= (category_data.time_started + instance.max_time)
+        except CategoryUserData.DoesNotExist:
+            return False
+        except Exception:
+            return None
 
 
 class CategoryUserDataSerializer(serializers.ModelSerializer):

@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 export class CategoryCard extends React.Component {
 	render() {
 		return (
-			<div className="col-sm-4">
+			<div className={"col-sm-4" + (this.props.is_completed && " card-complete")}>
 				<div className="card card-shadow">
 			        <div className="row no-gutters">
 			            <div className="category-img col-auto">
@@ -25,9 +25,10 @@ export class CategoryCard extends React.Component {
 			                    		to={"quiz/" + this.props.id} 
 			                    		className="btn btn-outline-success" 
 			                    		onClick={() => this.props.selectCategory(this.props.id)}>
-			                    		{this.props.is_challenge && <div>Start Challenge</div>}{!this.props.is_challenge && <div>Start Practice</div>}
+										{this.props.is_completed ? <div className="">Review Answers</div> :
+											((this.props.is_challenge && <div>Start Challenge</div>) || <div>Start Practice</div>)
+										}
 			                    	</Link>
-			                   		<a href="#" className="btn btn-outline-primary">Info</a>
 			                   	</div>
 			                </div>
 			            </div>
