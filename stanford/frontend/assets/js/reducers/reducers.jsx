@@ -67,7 +67,11 @@ export function stanfordApp(state = initialState, action) {
             newState.api.students = action.students;
             break;
         case (UPDATE_CATEGORIES):
-            newState.api.categories = action.categories;
+            let categoriesSorted = action.categories.sort(
+                (a, b) => {
+                return b.is_completed - a.is_completed;
+            });
+            newState.api.categories = categoriesSorted;
             break;
         case (UPDATE_QUESTION_USER_DATA):
             newState.api.questionUserData = action.questionUserData;
@@ -97,7 +101,10 @@ export function stanfordApp(state = initialState, action) {
             newState.ui.results = action.results;
             break;
         case (UPDATE_LEADERBOARD):
-            newState.api.leaderboardResult = action.leaderboardResult;
+            let leaderboardResultSorted = action.leaderboardResult.sort(function(a, b) {
+                return parseFloat(b.score) - parseFloat(a.score);
+            });
+            newState.api.leaderboardResult = leaderboardResultSorted;
             break;
         case (UPDATE_CATEGORY_DATA):
             newState.ui.maxTime = action.maxTime;

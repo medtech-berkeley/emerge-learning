@@ -29,6 +29,7 @@ export class CategoryCard extends React.Component {
 											((this.props.is_challenge && <div>Start Challenge</div>) || <div>Start Practice</div>)
 										}
 			                    	</Link>
+									<a href="#" className="btn btn-outline-primary">Info</a>
 			                   	</div>
 			                </div>
 			            </div>

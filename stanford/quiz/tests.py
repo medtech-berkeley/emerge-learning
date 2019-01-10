@@ -203,6 +203,7 @@ class CategoryTest(APITest):
     def test_category_single(self):
         q = self._create_categories(1)
         request = self.factory.get(f'/api/categories/{q[0].id}/')
+        request.user = self.student.user
         response = self.client.get(f'/api/categories/{q[0].id}/')
 
         self.assertEqual(response.status_code, 200)
@@ -211,6 +212,7 @@ class CategoryTest(APITest):
     def test_category_single_list(self):
         q = self._create_categories(1)
         request = self.factory.get('/api/categories/')
+        request.user = self.student.user
         response = self.client.get('/api/categories/')
 
         self.assertEqual(response.status_code, 200)
@@ -219,6 +221,7 @@ class CategoryTest(APITest):
     def test_category_many(self):
         q = self._create_categories(50)
         request = self.factory.get(f'/api/categories/{q[13].id}/')
+        request.user = self.student.user
         response = self.client.get(f'/api/categories/{q[13].id}/')
 
         self.assertEqual(response.status_code, 200)
@@ -227,6 +230,7 @@ class CategoryTest(APITest):
     def test_category_many_list(self):
         q = self._create_categories(50)
         request = self.factory.get('/api/categories/')
+        request.user = self.student.user
         response = self.client.get('/api/categories/')
 
         self.assertEqual(response.status_code, 200)
