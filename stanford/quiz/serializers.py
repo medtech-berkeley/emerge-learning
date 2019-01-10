@@ -37,8 +37,6 @@ class CategorySerializer(serializers.ModelSerializer):
             return category_data.time_completed is not None or timezone.now() >= (category_data.time_started + instance.max_time)
         except CategoryUserData.DoesNotExist:
             return False
-        except Exception:
-            return None
 
 
 class CategoryUserDataSerializer(serializers.ModelSerializer):

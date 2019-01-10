@@ -3,11 +3,7 @@ import { MainDashboard } from '../components/MainDashboard'
 import { getCategories, selectCategory, getLeaderboard } from '../actions/Actions'
 
 const mapStateToProps = state => {
-	let leaderboardResultSorted = state.api.leaderboardResult.sort(function(a, b) {
-    	return parseFloat(b.score) - parseFloat(a.score);
-	});
-
-    return {categories: state.api.categories, students: state.api.students, leaderboardResult: leaderboardResultSorted};
+    return {categories: state.api.categories, students: state.api.students, leaderboardResult: state.api.leaderboardResult};
 };
 
 const mapDispatchToProps = dispatch => {
