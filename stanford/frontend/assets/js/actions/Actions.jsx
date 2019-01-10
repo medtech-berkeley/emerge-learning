@@ -13,6 +13,14 @@ export const UPDATE_LEADERBOARD = 'UPDATE_LEADERBOARD';
 export const UPDATE_TIMER = 'UPDATE_TIMER';
 export const UPDATE_FEEDBACK_SUMMARY = 'UPDATE_FEEDBACK_SUMMARY';
 export const SELECT_ANSWER = 'SELECT_ANSWER';
+export const CHANGE_PAGE = 'CHANGE_PAGE';
+
+export function changePage(page) {
+	return {
+		type: CHANGE_PAGE,
+		page
+	}
+}
 
 export function getUsers() {
 	return dispatch => fetch("/api/users", window.getHeader)

@@ -19,7 +19,7 @@ export class App extends React.Component {
         return (<div>
                     <Router history={history}>
                         <div>
-                        <NavBarApi pathname={history.location.pathname}/>
+                        <NavBarApi/>
                             <div className="content-area">
                                 <Route exact={true} path="/dashboard" component={MainDashboardApi}/>
                                 <Route path="/dashboard/profile" component={UserDashboardApi}/>
