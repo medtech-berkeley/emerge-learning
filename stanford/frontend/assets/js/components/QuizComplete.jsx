@@ -2,6 +2,7 @@ import React from "react";
 import Confetti from "react-dom-confetti";
 import {Card, CardBody, CardHeader, CardFooter, Container, Row} from "reactstrap";
 import {QuizResults} from "./QuizResults";
+import {Planet} from 'react-kawaii';
 import PropTypes from "prop-types";
 
 export class QuizComplete extends React.Component {
@@ -16,7 +17,7 @@ export class QuizComplete extends React.Component {
 		this.config = {
 		  angle: 100,
 		  spread: 360,
-		  startVelocity: 43,
+		  startVelocity: 40,
 		  elementCount: 127,
 		  decay: 0.91
 		};
@@ -28,7 +29,7 @@ export class QuizComplete extends React.Component {
 
 	shouldShowConfetti() {
 		this.setState({
-			showConfetti: this.props.num_correct == this.props.num_attempted
+			showConfetti: this.props.num_correct / this.props.num_attempted >= 0.7
 		});
 	}
 
@@ -37,9 +38,14 @@ export class QuizComplete extends React.Component {
 		return (
 			<Container>
 				<div className="card text-center">
-				  <div className="card-header">
+				  <div className="card-header" style={{"height": "5.5rem"}}>
 				  	<h3>
-				    Great Work!
+				  		<div className="floating" style={{"display": "inline-block", "margin-right": "20px"}}>
+				  			<Planet size={60} mood="lovestruck" color="#70D7A3"/>
+				  		</div>
+				  		<div style={{"display": "inline-block", "transform": "translateY(-20px)"}}>
+				    	Great Work!
+				    	</div>
 				    </h3>
 				  </div>
 				  <div className="card-body">
