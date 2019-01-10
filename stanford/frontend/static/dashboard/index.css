@@ -219,6 +219,7 @@ th {
 
 .card-complete {
     opacity: 0.5;
+    transition-duration: 0.8s;
 }
 
 .card-complete:hover {
