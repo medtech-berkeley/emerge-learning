@@ -221,6 +221,10 @@ th {
     opacity: 0.5;
 }
 
+.card-complete:hover {
+    opacity: 1;
+}
+
 .UserInfo {
     margin-right: 3rem;
 }
