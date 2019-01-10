@@ -30,19 +30,19 @@ export class NavBar extends React.Component {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav ml-auto">
-            <li className={this.getClassListNavItem('dashboard')}>
-              <Link className="nav-link" to="/dashboard" onClick={() => this.props.changePage('dashboard')}>Dashboard<span className="sr-only"></span></Link>
+            <li className={this.getClassListNavItem('/dashboard')}>
+              <Link className="nav-link" to="/dashboard">Dashboard<span className="sr-only"></span></Link>
             </li>
-            <li className={this.getClassListNavItem('profile')}>
+            <li className={this.getClassListNavItem('/dashboard/profile')}>
             
-              <Link className="nav-link" to="/dashboard/profile" onClick={() => this.props.changePage('profile')}>Profile</Link>
+              <Link className="nav-link" to="/dashboard/profile">Profile</Link>
             </li>
-            <li className={this.getClassListNavItem('settings')}>
-              <Link className="nav-link" to="/dashboard/settings" onClick={() => this.props.changePage('settings')}>Settings</Link>
+            <li className={this.getClassListNavItem('/dashboard/settings')}>
+              <Link className="nav-link" to="/dashboard/settings">Settings</Link>
             </li>
             {this.props.user.profile_type != 'STUD' ? 
-              <li className={this.getClassListNavItem('instructor')}>
-                <Link className="nav-link" to="/dashboard/instructor/" onClick={() => this.props.changePage('instructor')}>Instructor</Link>
+              <li className={this.getClassListNavItem('/dashboard/instructor')}>
+                <Link className="nav-link" to="/dashboard/instructor/">Instructor</Link>
               </li> : null}          
               </ul>
           </div>

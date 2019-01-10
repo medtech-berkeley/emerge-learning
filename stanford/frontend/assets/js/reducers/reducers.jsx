@@ -14,7 +14,8 @@ const initialState = {
             "name": "",
             "location": "",
             "description": "",
-            "image": ""
+            "image": "",
+            "profile_type": "STUD"
         },
         students: [{
         "user": {
