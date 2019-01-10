@@ -11,6 +11,7 @@ export class QuizBase extends React.Component {
 		// console.log(this.quizID);
 		this.props.getCurrentQuestion(this.quizID);
 		this.props.getCategoryData(this.quizID);
+		window.scroll(0, 0);
 	}
 
 	render() {
