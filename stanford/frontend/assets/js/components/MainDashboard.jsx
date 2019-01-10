@@ -3,6 +3,8 @@ import {CategoriesBox} from "./CategoriesBox"
 import {Leaderboard} from "./Leaderboard"
 import PropTypes from "prop-types"
 import {Container} from "reactstrap";
+import {Planet, Cat} from 'react-kawaii';
+
 
 
 export class MainDashboard extends React.Component {

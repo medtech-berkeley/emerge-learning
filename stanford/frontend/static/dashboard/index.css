@@ -347,6 +347,21 @@ html.nontouch .card-answer:hover, .card-answer.selected  {
 }
 
 /* key-frame animations */
+
+.floating {  
+    animation-name: floating;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    margin-left: 30px;
+}
+
+@keyframes floating {
+    from { transform: translate(0,  0px); }
+    65%  { transform: translate(0, -5px); }
+    to   { transform: translate(0, -0px); }    
+}
+
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
