@@ -69,7 +69,7 @@ export function stanfordApp(state = initialState, action) {
         case (UPDATE_CATEGORIES):
             let categoriesSorted = action.categories.sort(
                 (a, b) => {
-                return b.is_completed - a.is_completed;
+                return a.is_completed - b.is_completed;
             });
             newState.api.categories = categoriesSorted;
             break;
