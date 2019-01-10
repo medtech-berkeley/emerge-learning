@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 export class CategoryCard extends React.Component {
 	render() {
 		return (
-			<div className={"col-sm-4" + (this.props.is_completed && " card-complete")}>
+			<div className={"col-sm-4" + (this.props.is_completed ? " card-complete" : "")}>
 				<div className="card card-shadow">
 			        <div className="row no-gutters">
 			            <div className="category-img col-auto">
