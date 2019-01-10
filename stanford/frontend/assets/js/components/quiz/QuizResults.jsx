@@ -2,7 +2,7 @@ import React from "react";
 import {Card, CardBody, CardHeader, Collapse, Container, Badge} from "reactstrap";
 import PropTypes from "prop-types";
 import {QuizQuestion} from "./QuizQuestion";
-import {QuestionFeedback} from "./QuestionFeedback";
+import {QuestionFeedback} from "../instructor/QuestionFeedback";
 
 export class QuizResults extends React.Component {
     constructor(props) {

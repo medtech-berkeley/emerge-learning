@@ -1,17 +1,12 @@
 import React from "react";
 // import {CategoriesBox} from "./CategoriesBox"
 import PropTypes from "prop-types";
-import {NavBar} from "./NavBar";
 import {UserInfo} from "./UserInfo";
 import {Badges} from "./Badges";
 import {Graphs} from "./Graphs";
-import {Recent} from "./Recent";
 import {PointsHeader} from "./PointsHeader";
 
 import {Button, Col, Container, Row} from "reactstrap";
-// import {NavBar} from "./NavBar";
-// import {Router, Route} from "react-router";
-// import history from "../history";
 
 export class UserDashboard extends React.Component {
 

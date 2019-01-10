@@ -1,8 +1,6 @@
 import React from "react";
 import {Alert, Card, CardBody, CardHeader, Collapse, Container, Badge} from "reactstrap";
 import PropTypes from "prop-types";
-import {QuizQuestion} from "./QuizQuestion";
-
 
 // CSRF TOKEN STUFF
 

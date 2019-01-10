@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { refreshStudent } from '../actions/LoadUserActions'
-import { NavBar } from '../components/NavBar';
+import { NavBar } from '../components/dashboard/NavBar';
 
 const mapStateToProps = state => {
     return {'user': state.api.user, 'page': state.ui.page};

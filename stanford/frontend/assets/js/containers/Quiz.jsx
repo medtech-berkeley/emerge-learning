@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { QuizBase } from '../components/QuizBase'
+import { QuizBase } from '../components/quiz/QuizBase'
 import { getCurrentQuestion, answerQuestion, getResults, getCategoryData, submitFeedback, selectAnswer } from '../actions/Actions'
 
 const mapStateToProps = state => {

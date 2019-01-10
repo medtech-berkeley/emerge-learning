@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { MainDashboard } from '../components/MainDashboard'
+import { MainDashboard } from '../components/dashboard/MainDashboard'
 import { getCategories, selectCategory, getLeaderboard } from '../actions/Actions'
 
 const mapStateToProps = state => {

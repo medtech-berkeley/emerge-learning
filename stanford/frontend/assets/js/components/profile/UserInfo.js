@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Card, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Button, Container} from "reactstrap";
-import {NavBar} from "./NavBar";
 
 //
 // const user = (props) => {

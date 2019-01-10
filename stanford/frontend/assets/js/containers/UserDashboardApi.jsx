@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { UserDashboard } from '../components/UserDashboard'
+import { UserDashboard } from '../components/profile/UserDashboard'
 import { refreshStudent } from '../actions/LoadUserActions'
 import { refreshData } from '../actions/DataActions'
 import { getQuestionUserData } from '../actions/Actions'

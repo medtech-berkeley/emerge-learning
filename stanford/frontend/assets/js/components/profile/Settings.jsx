@@ -2,7 +2,6 @@ import React from "react"
 import {Card, CardBody, CardHeader, CardFooter, Container, Row, Col} from "reactstrap";
 import PropTypes from "prop-types"
 import {SettingsPane, SettingsPage, SettingsContent, SettingsMenu} from 'react-settings-pane'
-import {NavBar} from "./NavBar";
 
 // CSRF TOKEN STUFF
 

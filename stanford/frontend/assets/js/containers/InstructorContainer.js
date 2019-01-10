@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { Instructor } from '../components/Instructor'
+import { Instructor } from '../components/instructor/Instructor'
 import { refreshStudent } from '../actions/LoadUserActions'
 import { refreshData } from '../actions/DataActions'
 import { getQuestionUserData, getFeedbackSummary } from '../actions/Actions'
