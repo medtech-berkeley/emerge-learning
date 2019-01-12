@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import { ListGroup, ListGroupItem, Row, Col, Input, Button, FormGroup } from 'reactstrap';
+import { ListGroup, ListGroupItem, Row, Col, Input, Button, Alert } from 'reactstrap';
+import { UncontrolledAlert } from 'reactstrap';
+import { MessageBox } from '../ui-components/MessageBox';
 
 export class UserManagement extends React.Component {
     componentWillMount() {
@@ -9,6 +11,7 @@ export class UserManagement extends React.Component {
 
     render() {
         return (<div>
+            <MessageBox messages={this.props.messages} limit={1} />
             <ListGroup className="mb-3">
                 {this.props.students.map((student, i) =>
                     <StudentListItem {...student}

@@ -2,6 +2,7 @@ import { UPDATE_CATEGORY_DATA, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SEL
 import { UPDATE_LEADERBOARD, UPDATE_TIMER } from "../actions/Actions"
 import { UPDATE_STUDENT, UPDATE_STUDENTS } from "../actions/LoadUserActions"
 import { UPDATE_DATA } from "../actions/DataActions"
+import { ADD_MESSAGE } from "../actions/UIActions";
 
 const initialState = {
     api: {
@@ -47,6 +48,7 @@ const initialState = {
         num_correct: 0,
         num_attempted: 0,
         results: [],
+        messages: {}
     },
 };
 
@@ -80,12 +82,16 @@ export function stanfordApp(state = initialState, action) {
                 patchData(newState.api.students, 'id', action.students);
             }
             break;
-        case (UPDATE_CATEGORIES):
-            let categoriesSorted = action.categories.sort(
-                (a, b) => {
-                return a.is_completed - b.is_completed;
-            });
-            newState.api.categories = categoriesSorted;
+        case (ADD_MESSAGE):
+            if (!newState.ui.messages[action.context]) {
+                newState.ui.messages[action.context] = [];
+            }
+
+            newState.ui.messages[action.context].push(
+                {
+                    message: action.message,
+                    stream: action.stream
+                });
             break;
         case (UPDATE_QUESTION_USER_DATA):
             newState.api.questionUserData = action.questionUserData;
