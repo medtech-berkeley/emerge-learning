@@ -1,4 +1,5 @@
 import 'whatwg-fetch';
+import { sendMessage, throwError } from './UIActions';
 
 export const UPDATE_STUDENT = 'UPDATE_STUDENT';
 export const UPDATE_STUDENTS = 'UPDATE_STUDENTS';
@@ -42,7 +43,11 @@ export function updateProfileType(id, profile_type) {
 	return dispatch => fetch("/api/students/" + id + "/", patchData)
 	.then(r =>
 		r.json().then(student => {
-			dispatch(updateStudent(student))
+			dispatch(updateStudent(student));
+			dispatch(sendMessage('userman', 'The user has been successfully updated!'));
 		}))
-	.catch(m => console.error(m));
+	.catch(m => {
+		console.error(m);
+		dispatch(throwError('userman', 'An error has occured while updating the user.'));
+	});
 }
