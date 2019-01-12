@@ -1,29 +1,12 @@
 import React from "react";
 import {Alert, Card, CardBody, CardHeader, Collapse, Container, Badge} from "reactstrap";
+import Cookies from "js-cookie";
 import PropTypes from "prop-types";
 
-// CSRF TOKEN STUFF
-
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-var csrftoken = getCookie('csrftoken');
 
 const CSRFToken = () => {
     return (
-        <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
+        <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get('csrftoken')} />
     );
 };
 
@@ -47,7 +30,7 @@ export class QuestionFeedback extends React.Component {
 
 	render() {
 		return (
-			<Container >
+			<Container>
             <br/>
                    { this.state.submitted ?
                         
