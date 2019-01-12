@@ -82,16 +82,12 @@ export function stanfordApp(state = initialState, action) {
                 patchData(newState.api.students, 'id', action.students);
             }
             break;
-        case (ADD_MESSAGE):
-            if (!newState.ui.messages[action.context]) {
-                newState.ui.messages[action.context] = [];
-            }
-
-            newState.ui.messages[action.context].push(
-                {
-                    message: action.message,
-                    stream: action.stream
-                });
+        case (UPDATE_CATEGORIES):
+            let categoriesSorted = action.categories.sort(
+                (a, b) => {
+                return a.is_completed - b.is_completed;
+            });
+            newState.api.categories = categoriesSorted;
             break;
         case (ADD_MESSAGE):
             if (!newState.ui.messages[action.context]) {
