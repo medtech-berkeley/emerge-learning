@@ -3,7 +3,6 @@ import {Alert, Card, CardBody, CardHeader, Collapse, Container, Badge} from "rea
 import Cookies from "js-cookie";
 import PropTypes from "prop-types";
 
-
 const CSRFToken = () => {
     return (
         <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get('csrftoken')} />
@@ -11,7 +10,6 @@ const CSRFToken = () => {
 };
 
 export class QuestionFeedback extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {feedback: "", question: "", submitted: false}
@@ -33,7 +31,6 @@ export class QuestionFeedback extends React.Component {
 			<Container>
             <br/>
                    { this.state.submitted ?
-                        
                         <Alert>Feedback submitted!</Alert> : 
                         <form onSubmit={this.handleSubmit.bind(this)}>
                             <CSRFToken />

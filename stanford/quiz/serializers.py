@@ -11,10 +11,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email')
 
 class StudentSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(allow_null=True)
     class Meta:
         model = Student
-        fields = ('user', 'name', 'location', 'description', 'image', 'completed_survey', 'profile_type')
+        fields = ('id', 'user', 'name', 'location', 'description', 'image', 'completed_survey', 'profile_type')
 
 class SmallStudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()

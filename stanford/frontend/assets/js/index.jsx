@@ -59,6 +59,17 @@ window.putHeader = {
     },
 };
 
+window.patchHeader = {
+    method: 'PATCH',
+    credentials: "same-origin",
+    headers: {
+        "X-CSRFToken": Cookies.get("csrftoken"),
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "cache-control": "no-cache"
+    },
+};
+
 window.deleteHeader = {
     method: 'delete',
     credentials: "same-origin",

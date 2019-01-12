@@ -54,7 +54,7 @@
     "react-settings-pane": "^0.1.5",
     "react-spring": "^4.2.1",
     "react-state-animation": "^0.1.0",
-    "react-tabs": "^2.2.2",
+    "react-tabs": "^2.3.0",
     "reactstrap": "^5.0.0",
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.2",

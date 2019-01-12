@@ -30,3 +30,19 @@ export function refreshStudents() {
 			dispatch(updateStudents(students))
 		}));
 }
+
+export function updateProfileType(id, profile_type) {
+	let data = {
+		profile_type
+	};
+
+	let patchData = JSON.parse(JSON.stringify(window.patchHeader));
+	patchData.body = JSON.stringify(data);
+
+	return dispatch => fetch("/api/students/" + id + "/", patchData)
+	.then(r =>
+		r.json().then(student => {
+			dispatch(updateStudent(student))
+		}))
+	.catch(m => console.error(m));
+}

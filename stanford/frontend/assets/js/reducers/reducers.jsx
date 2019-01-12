@@ -17,16 +17,7 @@ const initialState = {
             "image": "",
             "profile_type": "STUD"
         },
-        students: [{
-        "user": {
-            "username": "",
-            "email": ""
-        },
-        "name": "",
-        "location": "",
-        "description": "",
-        "": ""
-        }],
+        students: [],
         leaderboardResult: [],
         questionUserData: [],
         data: [],
@@ -59,6 +50,20 @@ const initialState = {
     },
 };
 
+function patchData(list, key, item) {
+    var changed = false;
+    for (var i = 0; i < list.length; i++) {
+        if (list[i][key] == item[key]) {
+            list[i] = item;
+            changed = true;
+        }
+    }
+
+    if (!changed) {
+        list.push(item);
+    }
+}
+
 export function stanfordApp(state = initialState, action) {
     let newState = JSON.parse(JSON.stringify(state));
     switch (action.type) {
@@ -69,7 +74,11 @@ export function stanfordApp(state = initialState, action) {
             newState.ui.page = action.page
             break;
         case (UPDATE_STUDENTS):
-            newState.api.students = action.students;
+            if (Array.isArray(action.students)) {
+                newState.api.students = action.students;
+            } else {
+                patchData(newState.api.students, 'id', action.students);
+            }
             break;
         case (UPDATE_CATEGORIES):
             let categoriesSorted = action.categories.sort(

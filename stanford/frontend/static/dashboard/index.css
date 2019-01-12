@@ -13,6 +13,11 @@ body {
     background-size: cover;
 }
 
+.user-elem .row {
+    display: flex;
+    align-items: center;
+}
+
 .login-button {
     position: absolute;
     top: 10px;
