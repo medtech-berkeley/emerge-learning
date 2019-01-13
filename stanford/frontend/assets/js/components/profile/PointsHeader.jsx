@@ -5,8 +5,8 @@ export class PointsHeader extends React.Component {
     render() {
         return (
             <div className="PointsHeader">
-                <Card style={{"padding": "20px 20px 10px 20px"}}>
-                </Card>
+                {/* <Card style={{"padding": "20px 20px 10px 20px"}}>
+                </Card> */}
             </div>);
     }
 }

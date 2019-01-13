@@ -243,7 +243,8 @@ th {
 
 .Badges {
     width: 100%;
-    margin-right: 40px;
+    margin-right: 20px;
+    margin-left: 20px;
 }
 
 .PointsHeader {
@@ -252,6 +253,8 @@ th {
 
 .Graphs {
     width: 100%;
+    margin-right: 20px;
+    margin-left: 20px;
 }
 
 .CategoriesBox {
