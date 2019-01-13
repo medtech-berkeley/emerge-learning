@@ -257,6 +257,12 @@ th {
    margin-top:20px;
 }
 
+.category .buttons {
+    line-height: 3;
+    display: block;
+    text-align: center;
+}
+
 .category-img {
     transform: translate(15%, 20%);
     margin-right: 12px;

@@ -1,26 +1,26 @@
 import React from "react"
-import {Card, CardBody, CardHeader, CardFooter, Container, Button} from "reactstrap";
+import {Row, Col, Card, CardText, CardTitle, CardBody, CardHeader, CardFooter, Container, Button} from "reactstrap";
 import PropTypes from "prop-types"
 import {Link} from "react-router-dom";
 
 export class CategoryCard extends React.Component {
 	render() {
 		return (
-			<div className={"col-sm-4" + (this.props.is_completed ? " card-complete" : "")}>
-				<div className="card card-shadow">
-			        <div className="row no-gutters">
+			<Col sm={4} className={this.props.is_completed ? "category card-complete" : "category"}>
+				<Card className="card-shadow">
+			        <Row noGutters={true}>
 			            <div className="category-img col-auto">
 			                <img width="64" height="64" src={this.props.image} className="img-fluid" alt={this.props.name}/>
 			            </div>
-			            <div className="col">
-			                <div className="card-body">
-			                    <h4 className="card-title">
+			            <Col>
+			                <CardBody>
+			                    <CardTitle>
 			                    	{this.props.name}
 			                    	{this.props.is_challenge && 
 			                    	<img src="https://i.imgur.com/NWR88o8.png" className="icon img-fluid" alt=""/>}
-			                    </h4>
-			                    <p className="card-text section-text">{this.props.sponsor}</p>
-			                    <div className="row">
+			                    </CardTitle>
+			                    <CardText className="section-text">{this.props.sponsor}</CardText>
+			                    <Row className="buttons">
 			                    	<Link 
 			                    		to={"/dashboard/quiz/" + this.props.id} 
 			                    		className="btn btn-outline-success" 
@@ -30,12 +30,12 @@ export class CategoryCard extends React.Component {
 										}
 			                    	</Link>
 									<a href="#" className="btn btn-outline-primary">Info</a>
-			                   	</div>
-			                </div>
-			            </div>
-			        </div>
-			  	</div>
-			</div>
+			                   	</Row>
+			                </CardBody>
+			            </Col>
+			        </Row>
+			  	</Card>
+			</Col>
 		);
 	}
 }
