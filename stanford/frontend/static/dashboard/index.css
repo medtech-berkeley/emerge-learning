@@ -27,6 +27,7 @@ body {
 
 html {
     height: 100%;
+    overflow: hidden;
 }
 
 .navbar .container { min-height: 273px; }
