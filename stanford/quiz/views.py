@@ -9,6 +9,8 @@ from django.shortcuts import redirect
 from django.db.models import Count
 from django.core.files.base import File, ContentFile
 from django.contrib.auth.models import User
+from django.views.decorators.cache import never_cache
+from django.contrib.auth.decorators import user_passes_test
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
 from rest_framework import permissions, generics, mixins
@@ -21,7 +23,6 @@ from .serializers import QuestionSerializer, QuestionUserDataSerializer, Categor
 from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, CategoryUserDataSerializer, QuestionFeedbackSerializer
 from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
 
-from django.contrib.auth.decorators import user_passes_test
 
 def is_instructor(user):
     return user.is_authenticated and (user.student.profile_type in ['ADMN', 'INST'] or user.is_superuser)
@@ -152,11 +153,11 @@ class QuestionFeedbackViewSet(ViewSet):
     def retrieve(self, request, pk=None):
         return list(self, request)
 
+@never_cache
 @login_required
 def get_question(request):
-
     """
-    Return random question from category that user hasn't done yet, create QuestionUserData model info
+    Return arbitrary question from category that user hasn't done yet, create QuestionUserData model info
     :param request: GET request with category ID
     :return: JSONResponse of question
     """
@@ -175,16 +176,16 @@ def get_question(request):
 
             started_question = QuestionUserData.objects.filter(question__category=category.id, student=student, answer=None)
 
-            out_of_time = (category_data.time_completed or timezone.now()) > category_data.time_started + category.max_time
+            outoftime = (category_data.time_completed or timezone.now()) > category_data.time_started + category.max_time
 
-            if not out_of_time and started_question.exists():
+            if not outoftime and started_question.exists():
                 question = started_question.first().question
             else:
                 # check for questions user has already started, exclude from final set
                 question_set = get_unanswered_questions(student, category)
 
                 stats = get_student_category_stats(category, student)
-                if len(question_set) == 0 or out_of_time:
+                if len(question_set) == 0 or outoftime:
                     for question in question_set:
                         question_data = QuestionUserData.objects.create(student=student, question=question)
 
@@ -194,7 +195,7 @@ def get_question(request):
 
                     response = {'accepted': True,
                                 'completed': True,
-                                'out_of_time': out_of_time,
+                                'outoftime': outoftime,
                                 'num_attempted': stats['num_attempted'],
                                 'num_correct': stats['num_correct']}
                     return JsonResponse(data=response)
@@ -297,12 +298,13 @@ def get_category_results(request):
             return JsonResponse({'accepted': False, 'reason': 'Category not started yet'}, status=404)
 
         category_data = category_data.first()
-
         end_time = category_data.time_started + category.max_time
 
         question_set = get_unanswered_questions(student, category)
         if len(question_set) > 0 and timezone.now() <= end_time:
             return JsonResponse({'accepted': False, 'reason': 'Category has not yet been completed'}, status=400)
+        
+        outoftime = (category_data.time_completed or timezone.now()) > end_time
 
         result = []
         user_data = QuestionUserData.objects.filter(question__category=category, student=student)
@@ -314,7 +316,7 @@ def get_category_results(request):
                 'selected': qud.answer.pk if qud.answer else None
             }
             result.append(question)
-        return JsonResponse({'accepted': True, 'results': result})
+        return JsonResponse({'accepted': True, 'results': result, 'outoftime': outoftime})
 
     return HttpResponse(status=400)
 

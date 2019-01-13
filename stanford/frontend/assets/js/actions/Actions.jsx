@@ -101,7 +101,7 @@ export function getCurrentQuestion(categoryId) {
 			// console.debug(question);
 			if (question.completed) {
 				// console.debug("category completed.");
-				dispatch(updateCategoryCompleted(categoryId, question.num_attempted, question.num_correct))
+				dispatch(updateCategoryCompleted(categoryId, question.num_attempted, question.num_correct, question.outoftime))
 			} else {
 				// console.debug("dispatch update current question.");
 				dispatch(updateCurrentQuestion(question))
@@ -164,12 +164,13 @@ export function updateSubmitError(reason) {
 	}
 }
 
-export function updateCategoryCompleted(categoryId, num_attempted, num_correct) {
+export function updateCategoryCompleted(categoryId, num_attempted, num_correct, outoftime) {
 	return {
 		type: UPDATE_CATEGORY_COMPLETED,
 		categoryId,
 		num_attempted,
-		num_correct
+		num_correct,
+		outoftime
 	}
 }
 

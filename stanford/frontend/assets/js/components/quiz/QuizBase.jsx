@@ -39,6 +39,7 @@ export class QuizBase extends React.Component {
 										num_correct={this.props.num_correct}
 										results={ this.props.results }
 										submitFeedback={ this.props.submitFeedback}
+										outoftime={ this.props.outoftime }
 									/>
 
 			}
@@ -55,6 +56,7 @@ QuizBase.propTypes = {
 	categoryName: PropTypes.string,
 	num_attempted: PropTypes.number,
 	num_correct: PropTypes.number,
+	outoftime: PropTypes.bool,
 	results: PropTypes.array,
     getCurrentQuestion: PropTypes.func,
     getCategoryData: PropTypes.func,

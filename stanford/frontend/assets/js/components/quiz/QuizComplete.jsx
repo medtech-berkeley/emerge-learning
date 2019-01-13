@@ -44,12 +44,12 @@ export class QuizComplete extends React.Component {
 				  			<Planet size={60} mood="lovestruck" color="#70D7A3"/>
 				  		</div>
 				  		<div style={{"display": "inline-block", "transform": "translateY(-20px)"}}>
-				    	Great Work!
+				    		Great Work!
 				    	</div>
 				    </h3>
 				  </div>
 				  <div className="card-body">
-                      <h5 className="card-title">You have successfully completed {this.props.name}.</h5>
+                      <h5 className="card-title">{ this.props.outoftime ? "You ran out of time to complete" : "You have successfully completed" } {this.props.name}.</h5>
                       <h4>Your Score: { this.props.num_correct } / { this.props.num_attempted }
                       <div id="confetti" style={{transform:"translateX(50%)"}}>
 						<Confetti active={ this.state.showConfetti } config={ this.config }/>

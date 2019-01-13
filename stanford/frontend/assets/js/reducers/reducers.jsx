@@ -23,7 +23,7 @@ const initialState = {
         questionUserData: [],
         data: [],
         question: {
-            answers: ['Kill her', 'Run away', 'Apply aloe-vera to her gunshot wound', 'Check her vitals'],
+            answers: ['Help her', 'Run away', 'Apply aloe-vera to her gunshot wound', 'Check her vitals'],
             text: 'You find a woman with blue lips after a loud noise was heard. What do you do?',
             id: -1,
         }
@@ -44,6 +44,7 @@ const initialState = {
             created: "",
             selectedAnswer: null
         },
+        outoftime: false,
         complete: false,
         num_correct: 0,
         num_attempted: 0,
@@ -117,6 +118,7 @@ export function stanfordApp(state = initialState, action) {
             newState.ui.complete = true;
             newState.ui.num_attempted = action.num_attempted;
             newState.ui.num_correct = action.num_correct;
+            newState.ui.outoftime = action.outoftime;
             break;
         case UPDATE_STUDENT:
             newState.api.user = action.user;
