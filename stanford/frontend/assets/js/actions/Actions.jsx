@@ -96,7 +96,7 @@ export function updateCategoryData(name, maxTime, timeStarted, timeCompleted) {
 }
 
 export function getCurrentQuestion(categoryId) {
-	return dispatch => fetch("/quiz/question?category="+categoryId, window.getHeader)
+	return dispatch => fetch("/quiz/question?quiz="+categoryId, window.getHeader)
 		.then(r => r.json().then(question => {
 			// console.debug(question);
 			if (question.completed) {
@@ -175,7 +175,7 @@ export function updateCategoryCompleted(categoryId, num_attempted, num_correct, 
 }
 
 export function getResults(categoryId) {
-	return dispatch => fetch("/quiz/results?category=" + categoryId, window.getHeader)
+	return dispatch => fetch("/quiz/results?quiz=" + categoryId, window.getHeader)
 	.then(r => r.json().then(json => {
 	    // TODO: add check for accepted
 		dispatch(updateCategoryResults(json.results))
