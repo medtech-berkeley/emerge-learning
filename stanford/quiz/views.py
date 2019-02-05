@@ -15,13 +15,13 @@ from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
 from rest_framework import permissions, generics, mixins
 
-from .utils import get_unanswered_questions, get_student_category_stats
+from .utils import get_unanswered_questions, get_student_quiz_stats
 from .utils import get_stats_student
-from .models import Question, QuestionUserData, Category, Student, Feedback
-from .models import Student, Category, Question, Answer, QuestionUserData, CategoryUserData, GVK_EMRI_Demographics
-from .serializers import QuestionSerializer, QuestionUserDataSerializer, CategorySerializer, AnswerSerializer, LeaderboardStatSerializer
-from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, CategoryUserDataSerializer, QuestionFeedbackSerializer
-from .sheetreader import LoadFromCSV, LoadCategoryFromCSV
+from .models import Question, QuestionUserData, Quiz, Student, Feedback
+from .models import Student, Quiz, Question, Answer, QuestionUserData, QuizUserData, GVK_EMRI_Demographics
+from .serializers import QuestionSerializer, QuestionUserDataSerializer, QuizSerializer, AnswerSerializer, LeaderboardStatSerializer
+from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, QuizUserDataSerializer, QuestionFeedbackSerializer
+from .sheetreader import LoadFromCSV, LoadQuizFromCSV
 
 
 def is_instructor(user):
@@ -69,17 +69,17 @@ class AnswerViewSet(ModelViewSet):
     permission_classes = [IsInstructor]
 
 
-class CategoryViewSet(ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+class QuizViewSet(ModelViewSet):
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
 
 
-class CategoryUserDataViewSet(ModelViewSet):
-    serializer_class = CategoryUserDataSerializer
-    lookup_field="category"
+class QuizUserDataViewSet(ModelViewSet):
+    serializer_class = QuizUserDataSerializer
+    lookup_field="quiz"
 
     def get_queryset(self):
-        return CategoryUserData.objects.filter(student=self.request.user.student)
+        return QuizUserData.objects.filter(student=self.request.user.student)
 
 
 class QuestionUserDataViewSet(ModelViewSet):
@@ -157,41 +157,41 @@ class QuestionFeedbackViewSet(ViewSet):
 @login_required
 def get_question(request):
     """
-    Return arbitrary question from category that user hasn't done yet, create QuestionUserData model info
-    :param request: GET request with category ID
+    Return arbitrary question from quiz that user hasn't done yet, create QuestionUserData model info
+    :param request: GET request with quiz ID
     :return: JSONResponse of question
     """
     if request.method == 'GET':
         student = request.user.student
         if student:
             try:
-                category = Category.objects.get(id=request.GET['category'])
-            except (Category.DoesNotExist, KeyError):
-                return JsonResponse({'accepted': False, 'reason': 'Missing or invalid category in request'}, status=400)
+                quiz = Quiz.objects.get(id=request.GET['quiz'])
+            except (Quiz.DoesNotExist, KeyError):
+                return JsonResponse({'accepted': False, 'reason': 'Missing or invalid quiz in request'}, status=400)
 
-            if not student.category_data.filter(category=category).exists():
-                CategoryUserData.objects.create(student=student, category=category)
+            if not student.quiz_data.filter(quiz=quiz).exists():
+                QuizUserData.objects.create(student=student, quiz=quiz)
 
-            category_data = student.category_data.filter(category=category).first()
+            quiz_data = student.quiz_data.filter(quiz=quiz).first()
 
-            started_question = QuestionUserData.objects.filter(question__category=category.id, student=student, answer=None)
+            started_question = QuestionUserData.objects.filter(question__quiz=quiz.id, student=student, answer=None)
 
-            outoftime = (category_data.time_completed or timezone.now()) > category_data.time_started + category.max_time
+            outoftime = (quiz_data.time_completed or timezone.now()) > quiz_data.time_started + quiz.max_time
 
             if not outoftime and started_question.exists():
                 question = started_question.first().question
             else:
                 # check for questions user has already started, exclude from final set
-                question_set = get_unanswered_questions(student, category)
+                question_set = get_unanswered_questions(student, quiz)
 
-                stats = get_student_category_stats(category, student)
+                stats = get_student_quiz_stats(quiz, student)
                 if len(question_set) == 0 or outoftime:
                     for question in question_set:
                         question_data = QuestionUserData.objects.create(student=student, question=question)
 
-                    if category_data.time_completed is None:
-                        category_data.time_completed = timezone.now()
-                        category_data.save()
+                    if quiz_data.time_completed is None:
+                        quiz_data.time_completed = timezone.now()
+                        quiz_data.save()
 
                     response = {'accepted': True,
                                 'completed': True,
@@ -237,7 +237,7 @@ def submit_answer(request):
             try:
                 question_id = request.POST['question']
                 answer_id = request.POST['answer']
-            except (Category.DoesNotExist, KeyError):
+            except (Quiz.DoesNotExist, KeyError):
                 return JsonResponse({'accepted': False, 'reason': 'Missing or invalid question or answer in request'}, status=400)
 
             question = Question.objects.filter(id=question_id)
@@ -254,18 +254,18 @@ def submit_answer(request):
                 return JsonResponse({'accepted': False, 'reason': 'Answer not for specified question'}, status=400)
 
             user_data = student.question_data.filter(question=question)
-            category_data = student.category_data.filter(category=question.category)
+            quiz_data = student.quiz_data.filter(quiz=question.quiz)
 
             if not user_data.exists():
                 return JsonResponse({'accepted': False, 'reason': 'Question not started yet'}, status=404)
 
-            if not category_data.exists():
-                return JsonResponse({'accepted': False, 'reason': 'Category not started yet'}, status=404)
+            if not quiz_data.exists():
+                return JsonResponse({'accepted': False, 'reason': 'Quiz not started yet'}, status=404)
 
             user_data = user_data.first()
-            category_data = category_data.first()
+            quiz_data = quiz_data.first()
 
-            end_time = category_data.time_started + question.category.max_time
+            end_time = quiz_data.time_started + question.quiz.max_time
             if user_data.answer is None and timezone.now() < end_time:
                 user_data.answer = answer
                 user_data.time_completed = timezone.now()
@@ -281,33 +281,33 @@ def submit_answer(request):
 
 
 @login_required
-def get_category_results(request):
+def get_quiz_results(request):
     if request.method != 'GET':
         return HttpResponse(status=405)
 
     student = request.user.student
     if student:
         try:
-            category = Category.objects.get(id=request.GET['category'])
-        except (Category.DoesNotExist, KeyError):
-            return JsonResponse({'accepted': False, 'reason': 'Missing or invalid category in request'}, status=400)
+            quiz = Quiz.objects.get(id=request.GET['quiz'])
+        except (Quiz.DoesNotExist, KeyError):
+            return JsonResponse({'accepted': False, 'reason': 'Missing or invalid quiz in request'}, status=400)
 
-        category_data = student.category_data.filter(category=category)
+        quiz_data = student.quiz_data.filter(quiz=quiz)
 
-        if not category_data.exists():
-            return JsonResponse({'accepted': False, 'reason': 'Category not started yet'}, status=404)
+        if not quiz_data.exists():
+            return JsonResponse({'accepted': False, 'reason': 'Quiz not started yet'}, status=404)
 
-        category_data = category_data.first()
-        end_time = category_data.time_started + category.max_time
+        quiz_data = quiz_data.first()
+        end_time = quiz_data.time_started + quiz.max_time
 
-        question_set = get_unanswered_questions(student, category)
+        question_set = get_unanswered_questions(student, quiz)
         if len(question_set) > 0 and timezone.now() <= end_time:
-            return JsonResponse({'accepted': False, 'reason': 'Category has not yet been completed'}, status=400)
+            return JsonResponse({'accepted': False, 'reason': 'Quiz has not yet been completed'}, status=400)
         
-        outoftime = (category_data.time_completed or timezone.now()) > end_time
+        outoftime = (quiz_data.time_completed or timezone.now()) > end_time
 
         result = []
-        user_data = QuestionUserData.objects.filter(question__category=category, student=student)
+        user_data = QuestionUserData.objects.filter(question__quiz=quiz, student=student)
         for qud in user_data:
             question = {
                 'text': qud.question.text,
@@ -345,9 +345,9 @@ def get_stats(request):
         query_set = QuestionUserData.objects
 
         if tags:
-            query_set = QuestionUserData.objects.filter(question__category__tags__text__in=tags)
+            query_set = QuestionUserData.objects.filter(question__quiz__tags__text__in=tags)
         if difficulties:
-            query_set = QuestionUserData.objects.filter(question__category__difficulty__in=difficulties)
+            query_set = QuestionUserData.objects.filter(question__quiz__difficulty__in=difficulties)
 
         stats = get_stats_student(student, query_set=query_set)
         return JsonResponse({'accepted': True, 'stats': stats})
@@ -395,10 +395,10 @@ def upload_questions(request):
     return redirect('dashboard')
 
 @user_passes_test(is_admin)
-def upload_categories(request):
+def upload_quizzes(request):
     if request.method == 'POST' and 'file' in request.FILES:
-        category_file = ContentFile(request.FILES['file'].read().decode('utf-8'))
-        LoadCategoryFromCSV(category_file)
+        quiz_file = ContentFile(request.FILES['file'].read().decode('utf-8'))
+        LoadQuizFromCSV(quiz_file)
     return redirect('dashboard')
 
 @login_required
