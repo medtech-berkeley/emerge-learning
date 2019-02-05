@@ -7,7 +7,7 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 from django.utils import timezone
-from .models import Category, Question, Answer, Tag
+from .models import Quiz, Question, Answer, Tag
 from django.core.files import File
 import csv
 import datetime
@@ -24,21 +24,21 @@ def LoadFromCSV(file):
         reader = csv.reader(f)
         for row in reader:
             row = [x for x in row if x != '']
-            #row structure: |Question|Category|AnswerChoice|AnswerChoice|...|AnswerChoice|CorrectAnswer
+            #row structure: |Question|Quiz|AnswerChoice|AnswerChoice|...|AnswerChoice|CorrectAnswer
             question_text = row[0][:300]
-            question_category = row[1]
+            question_quiz = row[1]
             question_answer = row[-1]
             remainder = len(row) - 3
-            c = Category.objects.filter(name=question_category)
+            c = Quiz.objects.filter(name=question_quiz)
             if not c.exists():
                 continue
-            q = Question.objects.create(text=question_text,category=c.first())
+            q = Question.objects.create(text=question_text,quiz=c.first())
             answers = [int(x.strip()) for x in question_answer.split(',')]
             for choice in range(2, 2 + remainder):
                 Answer.objects.create(text=row[choice], is_correct= (choice - 1) in answers, question=q).save()
             q.save()
 
-def LoadCategoryFromCSV(file):
+def LoadQuizFromCSV(file):
     with file.open("rt") as f:
         reader = csv.reader(f)
         for row in reader:
@@ -52,18 +52,19 @@ def LoadCategoryFromCSV(file):
             image = row[-2]
             difficulty = row[-1]
             remainder = len(row) - 7
-            if (len(Category.objects.all().filter(name=name)) != 0):
+            if (len(Quiz.objects.all().filter(name=name)) != 0):
                 continue
-            c = Category.objects.create(name = name,
+            c = Quiz.objects.create(name = name,
                 start=start,
                 end=end,
-                sponsor = sponsor,
                 is_challenge=is_challenge,
                 image=image,
                 difficulty = difficulty.upper()[0] + difficulty.lower()[1:])
-            for tag in range(5, 5 + remainder):
-                if (len(Tag.objects.filter(text=row[tag])) == 0):
-                    c.tags.create(text = row[tag]).save()
+
+            # TODO: re implement per question tags
+            # for tag in range(5, 5 + remainder):
+            #     if (len(Tag.objects.filter(text=row[tag])) == 0):
+            #         c.tags.create(text = row[tag]).save()
             c.save()
 
             #[c.tags.add(tag) for tag in tags]

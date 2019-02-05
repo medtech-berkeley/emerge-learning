@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Question, Category, Student, QuestionUserData, Answer, Tag, QuestionMedia, CategoryUserData, Feedback
+from .models import Question, Quiz, Student, QuestionUserData, Answer, Tag, QuestionMedia, QuizUserData, Feedback
 
 # Register your models here.
 
@@ -14,9 +14,9 @@ class QuestionAdmin(admin.ModelAdmin):
 
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(QuestionMedia)
-admin.site.register(Category)
+admin.site.register(Quiz)
 admin.site.register(Student)
 admin.site.register(QuestionUserData)
 admin.site.register(Tag)
-admin.site.register(CategoryUserData)
+admin.site.register(QuizUserData)
 admin.site.register(Feedback)
