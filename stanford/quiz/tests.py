@@ -198,43 +198,43 @@ class QuestionTest(APITest):
 
 class QuizTest(APITest):
     def test_quiz_null(self):
-        response = self.client.get('/api/categories/')
+        response = self.client.get('/api/quizzes/')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [])
 
     def test_quiz_single(self):
         q = self._create_categories(1)
-        request = self.factory.get(f'/api/categories/{q[0].id}/')
+        request = self.factory.get(f'/api/quizzes/{q[0].id}/')
         request.user = self.student.user
-        response = self.client.get(f'/api/categories/{q[0].id}/')
+        response = self.client.get(f'/api/quizzes/{q[0].id}/')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), QuizSerializer(instance=q[0], context={"request": request}).data)
 
     def test_quiz_single_list(self):
         q = self._create_categories(1)
-        request = self.factory.get('/api/categories/')
+        request = self.factory.get('/api/quizzes/')
         request.user = self.student.user
-        response = self.client.get('/api/categories/')
+        response = self.client.get('/api/quizzes/')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [QuizSerializer(instance=q[0], context={"request": request}).data])
 
     def test_quiz_many(self):
         q = self._create_categories(50)
-        request = self.factory.get(f'/api/categories/{q[13].id}/')
+        request = self.factory.get(f'/api/quizzes/{q[13].id}/')
         request.user = self.student.user
-        response = self.client.get(f'/api/categories/{q[13].id}/')
+        response = self.client.get(f'/api/quizzes/{q[13].id}/')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), QuizSerializer(instance=q[13], context={"request": request}).data)
 
     def test_quiz_many_list(self):
         q = self._create_categories(50)
-        request = self.factory.get('/api/categories/')
+        request = self.factory.get('/api/quizzes/')
         request.user = self.student.user
-        response = self.client.get('/api/categories/')
+        response = self.client.get('/api/quizzes/')
 
         self.assertEqual(response.status_code, 200)
         response_questions = sorted(response.json(), key=lambda d: d['id'])
@@ -246,7 +246,7 @@ class QuizTest(APITest):
         self.student.save()
 
         q = self._create_categories(50)
-        response = self.client.get(f'/api/categories/{q[0].id}/')
+        response = self.client.get(f'/api/quizzes/{q[0].id}/')
 
         self.assertEqual(response.status_code, 200)
 
@@ -255,7 +255,7 @@ class QuizTest(APITest):
         self.student.save()
 
         q = self._create_categories(50)
-        response = self.client.get('/api/categories/')
+        response = self.client.get('/api/quizzes/')
 
         self.assertEqual(response.status_code, 200)
 

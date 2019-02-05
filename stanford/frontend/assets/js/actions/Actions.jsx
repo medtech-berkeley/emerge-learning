@@ -51,7 +51,7 @@ export function updateTimer(time) {
 
 
 export function getCategories() {
-	return dispatch => fetch("/api/categories", window.getHeader)
+	return dispatch => fetch("/api/quizzes", window.getHeader)
 		.then(r => r.json().then(categories => {
 			dispatch(updateCategories(categories))
 		}));
@@ -110,9 +110,9 @@ export function getCurrentQuestion(categoryId) {
 }
 
 export function getCategoryData(categoryId) {
-	return dispatch => fetch("/api/categoryuserdata/" + categoryId, window.getHeader)
+	return dispatch => fetch("/api/quizuserdata/" + categoryId, window.getHeader)
 		.then(r => r.json().then(categoryUserData => {
-			fetch("/api/categories/" + categoryId, window.getHeader)
+			fetch("/api/quizzes/" + categoryId, window.getHeader)
 			.then(r => r.json().then(category => {
 				var time = category.max_time.split(':');
 				let maxTime = (+time[0]) * 60 * 60 + (+time[1]) * 60 + (+time[2]);
