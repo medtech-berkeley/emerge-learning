@@ -15,7 +15,7 @@ import os
 router = routers.SimpleRouter()
 router.register(r'questions', QuestionViewSet, 'Question')
 router.register(r'answers', AnswerViewSet, 'Answer')
-router.register(r'categories', QuizViewSet, 'Quiz')
+router.register(r'quizzes', QuizViewSet, 'Quiz')
 router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData')
 router.register(r'quizuserdata', QuizUserDataViewSet, 'QuizUserData')
 router.register(r'students', StudentViewSet, 'Student')
@@ -39,7 +39,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
     path('stats/', get_stats, name='stats'),
     path('instructor/uploadquestions/', upload_questions),
-    path('instructor/uploadcategories/', upload_quizzes),
+    path('instructor/uploadquizzes/', upload_quizzes),
     re_path(r'^dashboard/.*$', dashboard, name='dashboard')
 ]
 
