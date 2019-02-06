@@ -17,7 +17,8 @@ export class QuizBase extends React.Component {
 	render() {
 		return (
 			<div>
-			{!this.props.complete ? <QuizQuestion categoryId={this.quizID}
+			{!this.props.complete ? <QuizQuestion
+										categoryId={this.quizID}
 										text={this.props.currentQuestion.text}
 										answers={this.props.currentQuestion.answers}
 										name={this.props.categoryName}
