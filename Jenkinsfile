@@ -41,7 +41,7 @@ pipeline {
   post {
     always {
       sh 'docker-compose -f docker-compose.yml -f testing.yml down -v'
-      sh 'docker stop $(docker ps -qf "name=.*$ID.*")'
+      sh 'docker stop $(docker ps -qf "name=.*$ID.*") || true'
       sh 'docker container prune -f'
       sh 'docker rmi -f builder.pernixsoft.ml:5000/stanford-quiz:$ID'
       sh 'docker image prune -f'

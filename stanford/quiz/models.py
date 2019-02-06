@@ -44,14 +44,12 @@ class Tag(models.Model):
     def __str__(self):
         return self.text
 
-class Category(models.Model):
+class Quiz(models.Model):
     name = models.CharField(max_length=100)
     start = models.DateTimeField()
     end = models.DateTimeField()
-    sponsor = models.CharField(max_length=50)
     is_challenge = models.BooleanField()
-    image = models.ImageField(upload_to="category_images", default='default.jpg')
-    tags = models.ManyToManyField(Tag, blank=True, related_name="categories")
+    image = models.ImageField(upload_to="quiz_images", default='default.jpg')
     max_time = models.DurationField(default=datetime.timedelta(minutes=10))
 
     NOVICE = 'Novice'
@@ -75,12 +73,13 @@ class Category(models.Model):
 
 class Question(models.Model):
     text = models.TextField()
-    category = models.ForeignKey(Category, related_name="questions", on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, related_name="questions", on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
     media = models.ForeignKey('QuestionMedia', related_name="media", blank=True, null=True, on_delete=models.DO_NOTHING)
+    tags = models.ManyToManyField(Tag, blank=True, related_name="categories")
 
     def __str__(self):
-        return self.category.name + " - Question " + str(self.id)
+        return self.quiz.name + " - Question " + str(self.id)
 
 
 class QuestionMedia(models.Model):
@@ -131,24 +130,24 @@ class QuestionUserData(models.Model):
     class Meta:
         unique_together = ('question', 'student')
 
-class CategoryUserData(models.Model):
+class QuizUserData(models.Model):
     """
-    Stores student-specific metadata for each category. Time it took to complete, etc.
+    Stores student-specific metadata for each quiz. Time it took to complete, etc.
     """
 
-    student = models.ForeignKey(Student, related_name="category_data", on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, related_name="category_data", on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, related_name="quiz_data", on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, related_name="quiz_data", on_delete=models.CASCADE)
     time_started = models.DateTimeField(default=timezone.now)
     time_completed = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return "Category " + str(self.category.name) + " Data - " + self.student.user.username
+        return "Quiz " + str(self.quiz.name) + " Data - " + self.student.user.username
 
     def is_completed(self):
         return time_completed is not None
 
     class Meta:
-        unique_together = ('category', 'student')
+        unique_together = ('quiz', 'student')
 
 
 class GVK_EMRI_Demographics(models.Model):
