@@ -80,7 +80,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'quiz', 'text', 'answers', 'created', 'media', 'tags')
+        fields = ('id', 'text', 'answers', 'created', 'media', 'tags')
 
 
 class StudentStatsSerializer(serializers.Serializer):

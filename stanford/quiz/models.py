@@ -51,6 +51,27 @@ class Quiz(models.Model):
     is_challenge = models.BooleanField()
     image = models.ImageField(upload_to="quiz_images", default='default.jpg')
     max_time = models.DurationField(default=datetime.timedelta(minutes=10))
+    tags = models.ManyToManyField(Tag, related_name="quizzes")
+
+    @property
+    def questions(self):
+        return Question.objects.filter(tags__in=self.tags.all())
+
+    def __str__(self):
+        return self.name
+
+class Category(models.Model):
+    name = models.CharField(max_length=256, primary_key=True)
+
+    def __str__(self):
+        return self.name
+
+class Question(models.Model):
+    text = models.TextField()
+    category = models.ForeignKey(Category, related_name="questions", on_delete=models.CASCADE)
+    created = models.DateTimeField(default=timezone.now)
+    media = models.ForeignKey('QuestionMedia', related_name="media", blank=True, null=True, on_delete=models.DO_NOTHING)
+    tags = models.ManyToManyField(Tag, blank=True, related_name="questions")
 
     NOVICE = 'Novice'
     INTERMEDIATE = 'Intermediate'
@@ -68,18 +89,7 @@ class Quiz(models.Model):
     )
 
     def __str__(self):
-        return self.name
-
-
-class Question(models.Model):
-    text = models.TextField()
-    quiz = models.ForeignKey(Quiz, related_name="questions", on_delete=models.CASCADE)
-    created = models.DateTimeField(default=timezone.now)
-    media = models.ForeignKey('QuestionMedia', related_name="media", blank=True, null=True, on_delete=models.DO_NOTHING)
-    tags = models.ManyToManyField(Tag, blank=True, related_name="categories")
-
-    def __str__(self):
-        return self.quiz.name + " - Question " + str(self.id)
+        return self.category.name + " - Question " + str(self.id)
 
 
 class QuestionMedia(models.Model):
@@ -119,6 +129,7 @@ class QuestionUserData(models.Model):
 
     student = models.ForeignKey(Student, related_name="question_data", on_delete=models.CASCADE)
     question = models.ForeignKey(Question, related_name="question_data", on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, related_name="question_data", on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, blank=True, null=True, related_name="question_data", on_delete=models.CASCADE)
     time_started = models.DateTimeField(default=timezone.now)
     time_completed = models.DateTimeField(blank=True, null=True)
@@ -128,7 +139,7 @@ class QuestionUserData(models.Model):
         return "Question " + str(self.question.id) + " Data - " + self.student.user.username
 
     class Meta:
-        unique_together = ('question', 'student')
+        unique_together = ('question', 'student', 'quiz')
 
 class QuizUserData(models.Model):
     """
@@ -145,6 +156,10 @@ class QuizUserData(models.Model):
 
     def is_completed(self):
         return time_completed is not None
+
+    def is_out_of_time(self):
+        end_time = self.time_started + self.quiz.max_time
+        return (self.time_completed or timezone.now()) > end_time
 
     class Meta:
         unique_together = ('quiz', 'student')
