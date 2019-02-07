@@ -4,11 +4,18 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models.signals import post_save
+from django.db import transaction
 from django.dispatch import receiver
 from os import path
 
 from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_CHOICES, \
                              ORG_CHOICES, DEVICE_CHOICES, INTERNET_CHOICES, PROFILE_CHOICES
+
+def on_transaction_commit(func):
+    def inner(*args, **kwargs):
+        transaction.on_commit(lambda: func(*args, **kwargs))
+
+    return inner
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -46,9 +53,9 @@ class Tag(models.Model):
 
 class Quiz(models.Model):
     name = models.CharField(max_length=100)
-    start = models.DateTimeField()
-    end = models.DateTimeField()
-    is_challenge = models.BooleanField()
+    start = models.DateTimeField(default=timezone.now)
+    end = models.DateTimeField(default=timezone.datetime(9999, 1, 1, tzinfo=timezone.utc))
+    is_challenge = models.BooleanField(default=False)
     image = models.ImageField(upload_to="quiz_images", default='default.jpg')
     max_time = models.DurationField(default=datetime.timedelta(minutes=10))
     tags = models.ManyToManyField(Tag, related_name="quizzes")
@@ -62,6 +69,16 @@ class Quiz(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=256, primary_key=True)
+    practice_quiz = models.ForeignKey(Quiz, related_name="practice_category", on_delete=models.SET_NULL, null=True, blank=True)
+
+    @receiver(post_save, sender='quiz.Category')
+    def create_category(sender, instance, created, **kwargs):
+        if created:
+            practice_tag = Tag.objects.create(text=instance.name + " Practice")
+            quiz = Quiz.objects.create(name=' '.join([instance.name, "Practice"]))
+            quiz.tags.add(practice_tag)
+            instance.practice_quiz = quiz
+            instance.save()
 
     def __str__(self):
         return self.name
@@ -87,6 +104,13 @@ class Question(models.Model):
         choices=DIFFICULTY_CHOICES,
         default=NOVICE,
     )
+
+    @receiver(post_save, sender='quiz.Question')
+    @on_transaction_commit
+    def create_question(sender, instance, created, **kwargs):
+        if created:
+            # TODO: add/create "all" tag
+            pass
 
     def __str__(self):
         return self.category.name + " - Question " + str(self.id)
