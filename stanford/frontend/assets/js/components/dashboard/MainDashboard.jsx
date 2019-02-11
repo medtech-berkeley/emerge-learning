@@ -1,6 +1,8 @@
-import React from "react"
-import {CategoriesBox} from "./CategoriesBox"
-import {Leaderboard} from "./Leaderboard"
+import React from "react";
+import {CategoriesBox} from "./CategoriesBox";
+import {Leaderboard} from "./Leaderboard";
+import {ConsentForm} from "./ConsentForm";
+import {DemographicSurvey} from "./DemographicSurvey";
 import PropTypes from "prop-types"
 import {Container} from "reactstrap";
 import {Planet, Cat} from 'react-kawaii';
@@ -18,6 +20,8 @@ export class MainDashboard extends React.Component {
 		    <div>
                 <Container>
                     <div id="dashboard">
+                    <ConsentForm />
+                    <DemographicSurvey />
                         <div>
                             <p className="section-text">CHALLENGES</p>
                             <hr />
