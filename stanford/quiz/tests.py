@@ -13,39 +13,42 @@ from django.utils import timezone
 from django.core.files.base import File
 
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
-from .models import Question, Category, Quiz, QuizUserData, QuestionUserData, Answer, Student, Tag
+from .models import Question, Category, Quiz, QuizUserData, QuestionUserData, Answer, Student, Tag, QuestionMedia
 from .utils import get_stats_student, get_stats_question_total, get_stats_quiz, end_quiz
 from .serializers import QuestionSerializer, AnswerSerializer, QuizSerializer, FeedbackSerializer
 from .serializers import QuestionUserDataSerializer, QuizUserDataSerializer, StudentSerializer
 from .serializers import StudentStatsSerializer
 
-@skip
 class TestSheetReading(TestCase):
     def setUp(self):
         self.test_sheet = File(open("quiz/Test.csv"))
         self.test_sheet2 = File(open("quiz/Test - Categories.csv"))
 
-    def test_all(self):
+    def test_load_quizzes(self):
         LoadQuizFromCSV(self.test_sheet2)
-        self.assertEqual(len(Quiz.objects.all()), 12)
-        # print("12 categories found")
+        self.assertEqual(len(Quiz.objects.all()), 2)
+        
+        quiz1 = Quiz.objects.get(name="Test1")
+        self.assertEqual(quiz1.image, "image")
+        self.assertEqual(quiz1.is_challenge, True)
+        self.assertEqual(quiz1.can_retake, False)
+        self.assertEqual(quiz1.num_questions, -1)
 
-        # TODO: reimplement tags
-        # self.assertEqual(len(Tag.objects.all()), 33)
+        quiz2 = Quiz.objects.get(name="Test2")
+        self.assertEqual(quiz2.image, "image")
+        self.assertEqual(quiz2.is_challenge, False)
+        self.assertEqual(quiz2.can_retake, True)
+        self.assertEqual(quiz2.num_questions, 15)
 
+        self.assertEqual(len(Tag.objects.all()), 2)
 
-        # print("33 tags found")
-        Quiz.objects.create(name="cat1", start=timezone.now(),
-                                               end=timezone.now(), is_challenge=False).save()
+    def test_load_questions(self):
         LoadFromCSV(self.test_sheet)
-        x = Question.objects.all()
-        # for i in range(len(x)):
-        #     ans = Answer.objects.filter(question=x[i])
-        #     print(x[i].text)
-        #     for an in ans:
-        #         print(an.text, " CORRECT" if an.is_correct else " WRONG")
-        self.assertEqual(len(Question.objects.all()), 3)
-        # print("3 questions found")
+        questions = Question.objects.all()
+        self.assertEqual(Question.objects.count(), 3)
+        self.assertEqual(QuestionMedia.objects.count(), 1)
+        self.assertEqual(Tag.objects.count(), 6)
+        self.assertEqual(Category.objects.count(), 2)
 
 
 class TestUtils(TestCase):
@@ -78,6 +81,7 @@ class TestUtils(TestCase):
 
         for i in range(n_answers):
             Answer.objects.create(
+                num=i,
                 text=token_hex(16),
                 is_correct=(i == 2),
                 question=question
@@ -121,6 +125,7 @@ class APITest(TestUtils):
         self.student.save()
         self.factory = RequestFactory()
         random.seed(42)
+
 
 class QuestionTest(APITest):
     def test_question_null(self):
@@ -698,103 +703,103 @@ class QuizTestCase(TestCase):
         quiz1.save()
 
         c1_q1 = Question.objects.create(text="c1_q1", category=cat1)
-        Answer.objects.create(text="a1", question=c1_q1, is_correct=True)
-        Answer.objects.create(text="a2", question=c1_q1, is_correct=False)
-        Answer.objects.create(text="a3", question=c1_q1, is_correct=False)
-        Answer.objects.create(text="a4", question=c1_q1, is_correct=False)
+        Answer.objects.create(num=1, text="a1", question=c1_q1, is_correct=True)
+        Answer.objects.create(num=2, text="a2", question=c1_q1, is_correct=False)
+        Answer.objects.create(num=3, text="a3", question=c1_q1, is_correct=False)
+        Answer.objects.create(num=4, text="a4", question=c1_q1, is_correct=False)
 
         c1_q2 = Question.objects.create(text="c1_q2", category=cat1)
-        Answer.objects.create(text="a1", question=c1_q2, is_correct=False)
-        Answer.objects.create(text="a2", question=c1_q2, is_correct=False)
-        Answer.objects.create(text="a3", question=c1_q2, is_correct=True)
-        Answer.objects.create(text="a4", question=c1_q2, is_correct=False)
+        Answer.objects.create(num=1, text="a1", question=c1_q2, is_correct=False)
+        Answer.objects.create(num=2, text="a2", question=c1_q2, is_correct=False)
+        Answer.objects.create(num=3, text="a3", question=c1_q2, is_correct=True)
+        Answer.objects.create(num=4, text="a4", question=c1_q2, is_correct=False)
 
         c1_q3 = Question.objects.create(text="c1_q3", category=cat1)
-        Answer.objects.create(text="a1", question=c1_q3, is_correct=False)
-        Answer.objects.create(text="a2", question=c1_q3, is_correct=False)
-        Answer.objects.create(text="a3", question=c1_q3, is_correct=False)
-        Answer.objects.create(text="a4", question=c1_q3, is_correct=True)
+        Answer.objects.create(num=1, text="a1", question=c1_q3, is_correct=False)
+        Answer.objects.create(num=2, text="a2", question=c1_q3, is_correct=False)
+        Answer.objects.create(num=3, text="a3", question=c1_q3, is_correct=False)
+        Answer.objects.create(num=4, text="a4", question=c1_q3, is_correct=True)
 
         cat2 = Category.objects.create(name="cat2")
         quiz2 = cat2.practice_quiz
 
         c2_q1 = Question.objects.create(text="c2_q1", category=cat2)
-        Answer.objects.create(text="a1", question=c2_q1, is_correct=True)
-        Answer.objects.create(text="a2", question=c2_q1, is_correct=False)
-        Answer.objects.create(text="a3", question=c2_q1, is_correct=True)
-        Answer.objects.create(text="a4", question=c2_q1, is_correct=False)
+        Answer.objects.create(num=1, text="a1", question=c2_q1, is_correct=True)
+        Answer.objects.create(num=2, text="a2", question=c2_q1, is_correct=False)
+        Answer.objects.create(num=3, text="a3", question=c2_q1, is_correct=True)
+        Answer.objects.create(num=4, text="a4", question=c2_q1, is_correct=False)
 
         c2_q2 = Question.objects.create(text="c2_q2", category=cat2)
-        Answer.objects.create(text="a1", question=c2_q2, is_correct=True)
-        Answer.objects.create(text="a2", question=c2_q2, is_correct=False)
+        Answer.objects.create(num=1, text="a1", question=c2_q2, is_correct=True)
+        Answer.objects.create(num=2, text="a2", question=c2_q2, is_correct=False)
 
         c2_q3 = Question.objects.create(text="c2_q3", category=cat2)
-        Answer.objects.create(text="a1", question=c2_q3, is_correct=False)
-        Answer.objects.create(text="a2", question=c2_q3, is_correct=False)
-        Answer.objects.create(text="a3", question=c2_q3, is_correct=False)
-        Answer.objects.create(text="a4", question=c2_q3, is_correct=True)
+        Answer.objects.create(num=1, text="a1", question=c2_q3, is_correct=False)
+        Answer.objects.create(num=2, text="a2", question=c2_q3, is_correct=False)
+        Answer.objects.create(num=3, text="a3", question=c2_q3, is_correct=False)
+        Answer.objects.create(num=4, text="a4", question=c2_q3, is_correct=True)
 
         cat3 = Category.objects.create(name="cat3")
         quiz3 = cat3.practice_quiz
 
         c3_q1 = Question.objects.create(text="c3_q1", category=cat3)
-        Answer.objects.create(text="a1", question=c3_q1, is_correct=True)
-        Answer.objects.create(text="a2", question=c3_q1, is_correct=False)
-        Answer.objects.create(text="a3", question=c3_q1, is_correct=False)
-        Answer.objects.create(text="a4", question=c3_q1, is_correct=False)
+        Answer.objects.create(num=1, text="a1", question=c3_q1, is_correct=True)
+        Answer.objects.create(num=2, text="a2", question=c3_q1, is_correct=False)
+        Answer.objects.create(num=3, text="a3", question=c3_q1, is_correct=False)
+        Answer.objects.create(num=4, text="a4", question=c3_q1, is_correct=False)
 
         c3_q2 = Question.objects.create(text="c3_q2", category=cat3)
-        Answer.objects.create(text="a3", question=c3_q2, is_correct=True)
-        Answer.objects.create(text="a4", question=c3_q2, is_correct=False)
+        Answer.objects.create(num=1, text="a3", question=c3_q2, is_correct=True)
+        Answer.objects.create(num=2, text="a4", question=c3_q2, is_correct=False)
 
         cat4 = Category.objects.create(name="cat4")
         quiz4 = cat4.practice_quiz
 
         c4_q1 = Question.objects.create(text="c4_q1", category=cat4, difficulty=Question.INTERMEDIATE)
-        Answer.objects.create(text="a1", question=c4_q1, is_correct=True)
-        Answer.objects.create(text="a2", question=c4_q1, is_correct=False)
-        Answer.objects.create(text="a3", question=c4_q1, is_correct=True)
-        Answer.objects.create(text="a4", question=c4_q1, is_correct=False)
+        Answer.objects.create(num=1, text="a1", question=c4_q1, is_correct=True)
+        Answer.objects.create(num=2, text="a2", question=c4_q1, is_correct=False)
+        Answer.objects.create(num=3, text="a3", question=c4_q1, is_correct=True)
+        Answer.objects.create(num=4, text="a4", question=c4_q1, is_correct=False)
 
         c4_q2 = Question.objects.create(text="c4_q2", category=cat4, difficulty=Question.INTERMEDIATE)
-        Answer.objects.create(text="a1", question=c4_q2, is_correct=True)
-        Answer.objects.create(text="a2", question=c4_q2, is_correct=False)
-        Answer.objects.create(text="a3", question=c4_q2, is_correct=True)
-        Answer.objects.create(text="a4", question=c4_q2, is_correct=False)
+        Answer.objects.create(num=1, text="a1", question=c4_q2, is_correct=True)
+        Answer.objects.create(num=2, text="a2", question=c4_q2, is_correct=False)
+        Answer.objects.create(num=3, text="a3", question=c4_q2, is_correct=True)
+        Answer.objects.create(num=4, text="a4", question=c4_q2, is_correct=False)
 
         cat5 = Category.objects.create(name="cat5")
         quiz5 = cat5.practice_quiz
 
-        c5_q1 = Question.objects.create(text="c5_q1", category=cat5, difficulty=Question.ADVANCED)
-        Answer.objects.create(text="a1", question=c5_q1, is_correct=True)
-        Answer.objects.create(text="a2", question=c5_q1, is_correct=False)
-        Answer.objects.create(text="a3", question=c5_q1, is_correct=True)
-        Answer.objects.create(text="a4", question=c5_q1, is_correct=False)
+        c5_q1 = Question.objects.create(text="c5_q1", category=cat5, difficulty=Question.EXPERT)
+        Answer.objects.create(num=1, text="a1", question=c5_q1, is_correct=True)
+        Answer.objects.create(num=2, text="a2", question=c5_q1, is_correct=False)
+        Answer.objects.create(num=3, text="a3", question=c5_q1, is_correct=True)
+        Answer.objects.create(num=4, text="a4", question=c5_q1, is_correct=False)
 
 
-        c5_q2 = Question.objects.create(text="c5_q2",category=cat5, difficulty=Question.ADVANCED)
-        Answer.objects.create(text="a1", question=c5_q2, is_correct=True)
-        Answer.objects.create(text="a2", question=c5_q2, is_correct=False)
-        Answer.objects.create(text="a3", question=c5_q2, is_correct=True)
-        Answer.objects.create(text="a4", question=c5_q2, is_correct=False)
+        c5_q2 = Question.objects.create(text="c5_q2",category=cat5, difficulty=Question.EXPERT)
+        Answer.objects.create(num=1, text="a1", question=c5_q2, is_correct=True)
+        Answer.objects.create(num=2, text="a2", question=c5_q2, is_correct=False)
+        Answer.objects.create(num=3, text="a3", question=c5_q2, is_correct=True)
+        Answer.objects.create(num=4, text="a4", question=c5_q2, is_correct=False)
 
         cat6 = Category.objects.create(name="cat6")
         quiz6 = cat6.practice_quiz
 
-        c6_q1 = Question.objects.create(text="c6_q1", category=cat6, difficulty=Question.ADVANCED)
-        Answer.objects.create(text="a1", question=c6_q1, is_correct=True)
-        Answer.objects.create(text="a2", question=c6_q1, is_correct=False)
-        Answer.objects.create(text="a3", question=c6_q1, is_correct=True)
-        Answer.objects.create(text="a4", question=c6_q1, is_correct=False)
+        c6_q1 = Question.objects.create(text="c6_q1", category=cat6, difficulty=Question.EXPERT)
+        Answer.objects.create(num=1, text="a1", question=c6_q1, is_correct=True)
+        Answer.objects.create(num=2, text="a2", question=c6_q1, is_correct=False)
+        Answer.objects.create(num=3, text="a3", question=c6_q1, is_correct=True)
+        Answer.objects.create(num=4, text="a4", question=c6_q1, is_correct=False)
 
         cat7 = Category.objects.create(name="cat7")
         quiz7 = cat7.practice_quiz
         for i in range(11):
-            question = Question.objects.create(text=f"c7_q{i + 1}", category=cat7, difficulty=Question.ADVANCED)
-            Answer.objects.create(text="a1", question=question, is_correct=True)
-            Answer.objects.create(text="a2", question=question, is_correct=False)
-            Answer.objects.create(text="a3", question=question, is_correct=True)
-            Answer.objects.create(text="a4", question=question, is_correct=False)
+            question = Question.objects.create(text=f"c7_q{i + 1}", category=cat7, difficulty=Question.EXPERT)
+            Answer.objects.create(num=1, text="a1", question=question, is_correct=True)
+            Answer.objects.create(num=2, text="a2", question=question, is_correct=False)
+            Answer.objects.create(num=3, text="a3", question=question, is_correct=True)
+            Answer.objects.create(num=4, text="a4", question=question, is_correct=False)
             self.questions.append(question)
 
 
@@ -826,6 +831,34 @@ class QuizTestCase(TestCase):
     def test_start_quiz(self):
         response = self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         self.assertEqual(response.status_code, 200)
+
+    def test_start_quiz_required(self):
+        self.quizzes[0].required = True
+        self.quizzes[0].save()
+        response = self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
+        self.assertEqual(response.status_code, 200)
+
+    def test_start_quiz_other_required(self):
+        self.quizzes[0].required = True
+        self.quizzes[0].save()
+        response = self.client.get("/quiz/start", {'quiz': self.quizzes[1].id})
+        self.assertEqual(response.status_code, 400)
+
+    def test_start_quiz_after_required_completion(self):
+        self.quizzes[0].required = True
+        self.quizzes[0].save()
+
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
+        for i in range(3):
+            response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
+            question_id = response.json()['id']
+            question = Question.objects.get(id=question_id)
+            answer = question.answers.filter(is_correct=True).first()
+            self.client.post("/quiz/answer", {'quiz': self.quizzes[0].id, 'question': question_id, 'answer': answer.id})
+        
+        response = self.client.get("/quiz/start", {'quiz': self.quizzes[1].id})
+        self.assertEqual(response.status_code, 200)
+
     
     def test_quiz_question_limit(self):
         self.client.get("/quiz/start", {'quiz': self.quizzes[6].id})

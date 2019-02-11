@@ -1,12 +1,2 @@
-TESTING1,2018/1/1,2018/11/2,sponsor,TRUE,tag1,tag2,tag3,image,Novice,
-TESTING2,2018/1/2,2018/11/3,sponsor2,FALSE,tag4,tag5,tag6,tag7,image,Advanced
-TESTING3,2018/1/3,2018/11/4,sponsor,TRUE,tag7,tag8,tag9,image,Novice,
-TESTING4,2018/1/4,2018/11/5,sponsor3,FALSE,tag10,tag11,tag12,tag8,image,Advanced
-TESTING5,2018/1/5,2018/11/6,sponsor,TRUE,tag13,tag14,tag15,image,Novice,
-TESTING6,2018/1/6,2018/11/7,sponsor4,FALSE,tag16,tag17,tag18,tag9,image,Advanced
-TESTING7,2018/1/7,2018/11/8,sponsor,TRUE,tag19,tag20,tag21,image,Novice,
-TESTING8,2018/1/8,2018/11/9,sponsor5,FALSE,tag22,tag23,tag24,tag10,image,Advanced
-TESTING9,2018/1/9,2018/11/10,sponsor,TRUE,tag25,tag26,tag27,image,Novice,
-TESTING10,2018/1/10,2018/11/11,sponsor6,FALSE,tag28,tag29,tag30,tag11,image,Advanced
-TESTING11,2018/1/11,2018/11/12,sponsor,TRUE,tag31,tag32,tag33,image,Novice,
-TESTING12,2018/1/12,2018/11/13,sponsor7,FALSE,image,Advanced,,,,
+Test1,image,2018/12/20,2019/12/20,TRUE,FALSE,TRUE,week-1 tester,-1
+Test2,image,2018/12/20,2019/12/20,FALSE,TRUE,FALSE,,15
