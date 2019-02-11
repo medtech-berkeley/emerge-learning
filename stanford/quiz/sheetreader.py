@@ -7,7 +7,7 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 from django.utils import timezone
-from .models import Quiz, Question, Answer, Tag
+from .models import Quiz, Question, Answer, Tag, QuestionMedia, Category
 from django.core.files import File
 import csv
 import datetime
@@ -23,48 +23,133 @@ def LoadFromCSV(file):
     with file.open("rt") as f:
         reader = csv.reader(f)
         for row in reader:
-            row = [x for x in row if x != '']
-            #row structure: |Question|Quiz|AnswerChoice|AnswerChoice|...|AnswerChoice|CorrectAnswer
-            question_text = row[0][:300]
-            question_quiz = row[1]
-            question_answer = row[-1]
-            remainder = len(row) - 3
-            c = Quiz.objects.filter(name=question_quiz)
-            if not c.exists():
-                continue
-            q = Question.objects.create(text=question_text,quiz=c.first())
-            answers = [int(x.strip()) for x in question_answer.split(',')]
-            for choice in range(2, 2 + remainder):
-                Answer.objects.create(text=row[choice], is_correct= (choice - 1) in answers, question=q).save()
-            q.save()
+            try:
+                row = [x for x in row]
+                #row structure: |ID|Question|Category|Difficulty|Multimedia Type|Media Filename|Pretest/PostTest|Tags|AnswerChoice|AnswerChoice|...|AnswerChoice|CorrectAnswer
+                num_fields = 8
+
+                question_id = int(row[0])
+                question_text = row[1]
+                question_category = row[2]
+                difficulty = row[3].title()
+                multimedia_type = row[4].upper()
+                multimedia_filename = row[5]
+                pretest = row[6].lower()
+                tags = row[7].split()
+
+                question_answer = row[-1]
+                remainder = len(row) - num_fields - 1
+
+                c = Category.objects.filter(name=question_category)
+                if not c.exists():
+                    c = Category.objects.create(name=question_category)
+                else:
+                    c = c.first()
+
+                #clean difficulty into accepted format (defaulting to basic)
+                clean_difficulty = Question.BASIC
+                for rep, _ in Question.DIFFICULTY_CHOICES:
+                    if difficulty == rep:
+                        clean_difficulty = rep
+
+                q = Question.objects.filter(id=question_id)
+                if not q.exists():
+                    q = Question.objects.create(id=question_id,
+                                                text=question_text,
+                                                category=c,
+                                                difficulty=clean_difficulty)
+                else:
+                    q = q.first()
+                    q.text = question_text
+                    q.category = c
+                    q.difficulty = clean_difficulty
+                    q.save()
+
+                #clean multimedia into accepted format (defaulting to none)
+                clean_multimedia = None
+                for rep, _ in QuestionMedia.MEDIA_CHOICES:
+                    if multimedia_type == rep:
+                        clean_multimedia = rep
+                    
+                m = q.media
+                if clean_multimedia is not None:
+                    if m is not None:
+                        m.media_type = clean_multimedia
+                        m.filename = multimedia_filename
+                        m.save()
+                    else:
+                        m = QuestionMedia.objects.create(media_type=clean_multimedia,
+                                                         media_file=multimedia_filename)
+                    q.media = m
+                elif m is not None:
+                    q.media = None
+                    m.delete()
+                q.save()
+
+                if pretest == 'y':
+                    tags.append('pretest')
+                
+                # add all tags to the quest
+                q.tags.clear()
+                for tag_text in tags:
+                    q.add_tag(tag_text)
+                q.save()
+                
+                answers = [int(x.strip()) for x in question_answer.split(',')]
+                for choice in range(remainder):
+                    a = Answer.objects.filter(num=choice, question=q)
+                    if a.exists():
+                        a = a.first()
+                        a.text = row[num_fields + choice]
+                        a.is_correct = (choice + 1 in answers)
+                        a.save()
+                    else:
+                        a = Answer.objects.create(num=choice,
+                                                  text=row[num_fields + choice],
+                                                  is_correct= (choice + 1) in answers,
+                                                  question=q)
+
+                for answer in Answer.objects.filter(num__gte=remainder, question=q):
+                    answer.delete()
+            except Exception as e:
+                raise e
 
 def LoadQuizFromCSV(file):
     with file.open("rt") as f:
         reader = csv.reader(f)
         for row in reader:
-            #row structure: |Name|Start|End|Sponsor|is_challenge|tags|image|difficulty
-            row = [x for x in row if x != '']
-            name = row[0]
-            start = pytz.utc.localize(timezone.datetime.strptime(row[1], "%Y/%m/%d"))
-            end = pytz.utc.localize(timezone.datetime.strptime(row[2], "%Y/%m/%d"))
-            sponsor = row[3]
-            is_challenge = row[4] == "TRUE"
-            image = row[-2]
-            difficulty = row[-1]
-            remainder = len(row) - 7
-            if (len(Quiz.objects.all().filter(name=name)) != 0):
-                continue
-            c = Quiz.objects.create(name = name,
-                start=start,
-                end=end,
-                is_challenge=is_challenge,
-                image=image,
-                difficulty = difficulty.upper()[0] + difficulty.lower()[1:])
+            try:
+                #row structure: |Name|Image|Start|End|is_challenge|retake|tags|limit
+                row = [x for x in row]
+                name = row[0]
+                image = row[1]
+                start = pytz.utc.localize(timezone.datetime.strptime(row[2], "%Y/%m/%d"))
+                end = pytz.utc.localize(timezone.datetime.strptime(row[3], "%Y/%m/%d"))
+                is_challenge = row[4].upper() == "TRUE"
+                retake = row[5].upper() == "TRUE"
+                tags = row[6].split()
+                limit = int(row[7])
+                q = Quiz.objects.filter(name=name)
+                if q.exists():
+                    q = q.first()
+                    q.start = start
+                    q.end = end
+                    q.is_challenge = is_challenge
+                    q.image = image
+                    q.num_questions = limit
+                    q.can_retake = retake
+                else:
+                    q = Quiz.objects.create(name = name,
+                        start=start,
+                        end=end,
+                        is_challenge=is_challenge,
+                        image=image,
+                        can_retake=retake,
+                        num_questions=limit)
 
-            # TODO: re implement per question tags
-            # for tag in range(5, 5 + remainder):
-            #     if (len(Tag.objects.filter(text=row[tag])) == 0):
-            #         c.tags.create(text = row[tag]).save()
-            c.save()
-
-            #[c.tags.add(tag) for tag in tags]
+                q.tags.clear()
+                for tag_text in tags:
+                    q.add_tag(tag_text)
+                q.save()
+            except Exception as e:
+                print(e)

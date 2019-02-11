@@ -13,39 +13,42 @@ from django.utils import timezone
 from django.core.files.base import File
 
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
-from .models import Question, Category, Quiz, QuizUserData, QuestionUserData, Answer, Student, Tag
+from .models import Question, Category, Quiz, QuizUserData, QuestionUserData, Answer, Student, Tag, QuestionMedia
 from .utils import get_stats_student, get_stats_question_total, get_stats_quiz, end_quiz
 from .serializers import QuestionSerializer, AnswerSerializer, QuizSerializer, FeedbackSerializer
 from .serializers import QuestionUserDataSerializer, QuizUserDataSerializer, StudentSerializer
 from .serializers import StudentStatsSerializer
 
-@skip
 class TestSheetReading(TestCase):
     def setUp(self):
         self.test_sheet = File(open("quiz/Test.csv"))
         self.test_sheet2 = File(open("quiz/Test - Categories.csv"))
 
-    def test_all(self):
+    def test_load_quizzes(self):
         LoadQuizFromCSV(self.test_sheet2)
-        self.assertEqual(len(Quiz.objects.all()), 12)
-        # print("12 categories found")
+        self.assertEqual(len(Quiz.objects.all()), 2)
+        
+        quiz1 = Quiz.objects.get(name="Test1")
+        self.assertEqual(quiz1.image, "image")
+        self.assertEqual(quiz1.is_challenge, True)
+        self.assertEqual(quiz1.can_retake, False)
+        self.assertEqual(quiz1.num_questions, -1)
 
-        # TODO: reimplement tags
-        # self.assertEqual(len(Tag.objects.all()), 33)
+        quiz2 = Quiz.objects.get(name="Test2")
+        self.assertEqual(quiz2.image, "image")
+        self.assertEqual(quiz2.is_challenge, False)
+        self.assertEqual(quiz2.can_retake, True)
+        self.assertEqual(quiz2.num_questions, 15)
 
+        self.assertEqual(len(Tag.objects.all()), 2)
 
-        # print("33 tags found")
-        Quiz.objects.create(name="cat1", start=timezone.now(),
-                                               end=timezone.now(), is_challenge=False).save()
+    def test_load_questions(self):
         LoadFromCSV(self.test_sheet)
-        x = Question.objects.all()
-        # for i in range(len(x)):
-        #     ans = Answer.objects.filter(question=x[i])
-        #     print(x[i].text)
-        #     for an in ans:
-        #         print(an.text, " CORRECT" if an.is_correct else " WRONG")
-        self.assertEqual(len(Question.objects.all()), 3)
-        # print("3 questions found")
+        questions = Question.objects.all()
+        self.assertEqual(Question.objects.count(), 3)
+        self.assertEqual(QuestionMedia.objects.count(), 1)
+        self.assertEqual(Tag.objects.count(), 6)
+        self.assertEqual(Category.objects.count(), 2)
 
 
 class TestUtils(TestCase):
