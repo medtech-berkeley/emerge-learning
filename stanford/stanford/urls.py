@@ -3,8 +3,8 @@ from django.urls import path, include, re_path
 from frontend.views import index, change_user_info, dashboard
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, QuizViewSet, QuestionUserDataViewSet, StudentViewSet, StudentStatsViewSet, QuizUserDataViewSet, QuestionFeedbackViewSet, LeaderboardStatViewSet
-from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, upload_quizzes, submit_feedback
 from quiz.views import submit_consent_form
+from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, upload_quizzes, submit_feedback, start_quiz
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import signup, logins
@@ -35,6 +35,7 @@ urlpatterns = [
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
     path('quiz/results', get_quiz_results),
+    path('quiz/start', start_quiz),
     path('api/', include(router.urls)),
     path('signup/', signup, name='signup'),
     path('login/', logins, name='login'),

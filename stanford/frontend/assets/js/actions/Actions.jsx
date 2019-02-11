@@ -112,6 +112,13 @@ export function getCurrentQuestion(categoryId) {
 		}));
 }
 
+export function startQuiz(categoryId) {
+	return dispatch => fetch("/quiz/start?quiz="+categoryId, window.getHeader)
+		.then(r => r.json().then(quiz => {
+			dispatch(getCurrentQuestion(categoryId));
+		}));
+}
+
 export function getCategoryData(categoryId) {
 	return dispatch => fetch("/api/quizuserdata/" + categoryId, window.getHeader)
 		.then(r => r.json().then(categoryUserData => {

@@ -4,9 +4,27 @@ import PropTypes from "prop-types"
 import {Link} from "react-router-dom";
 
 export class CategoryCard extends React.Component {
+	getClasses() {
+		let classes = "category";
+		if(this.props.is_completed && !this.props.can_retake) {
+			classes += " card-complete";
+		} 
+		return classes;
+	}
+
+	getButtonText() {
+		if (this.props.is_completed && !this.props.can_retake) {
+			return "Review Answers";
+		} else if (this.props.is_challenge) {
+			return "Start Challenge";
+		} else {
+			return "Start Practice";
+		}
+	}
+
 	render() {
 		return (
-			<Col sm={4} className={this.props.is_completed ? "category card-complete" : "category"}>
+			<Col sm={4} className={this.getClasses()}>
 				<Card className="card-shadow">
 			        <Row noGutters={true}>
 			            <div className="category-img col-auto">
@@ -25,9 +43,7 @@ export class CategoryCard extends React.Component {
 			                    		to={"/dashboard/quiz/" + this.props.id} 
 			                    		className="btn btn-outline-success" 
 			                    		onClick={() => this.props.selectCategory(this.props.id)}>
-										{this.props.is_completed ? <div className="">Review Answers</div> :
-											((this.props.is_challenge && <div>Start Challenge</div>) || <div>Start Practice</div>)
-										}
+										<div>{this.getButtonText()}</div>
 			                    	</Link>
 									<a href="#" className="btn btn-outline-primary">Info</a>
 			                   	</Row>
