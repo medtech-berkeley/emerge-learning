@@ -12,6 +12,7 @@ from django.core.files import File
 import csv
 import datetime
 import pytz
+import re
 
 # try:
 #     import argparse
@@ -89,10 +90,15 @@ def LoadFromCSV(file):
                 if pretest == 'y':
                     tags.append('pretest')
                 
+                practice = True
                 # add all tags to the quest
                 q.tags.clear()
                 for tag_text in tags:
                     q.add_tag(tag_text)
+                    if tag_text == 'pretest' or re.match('week-[0-9]+', tag_text):
+                        practice == False
+                if practice:
+                    q.tags.add(c.practice_tag)
                 q.save()
                 
                 answers = [int(x.strip()) for x in question_answer.split(',')]
