@@ -33,7 +33,7 @@ export class QuestionUpload extends React.Component {
                     <p>Upload Categories</p>
                     <Row style={{"display": "inline-block"}}>
                     <Container color="success" size="sm" >
-                        <form method="POST" action="/instructor/uploadcategories/" encType="multipart/form-data" >
+                        <form method="POST" action="/instructor/uploadquizzes/" encType="multipart/form-data" >
                         <CSRFToken />
                             <input type="file" name="file" accept=".csv" />
                             <input className="btn btn-success" type="submit" />

@@ -95,6 +95,10 @@ class Category(models.Model):
             instance.practice_quiz = quiz
             instance.save()
 
+    @property
+    def practice_tag(self) -> Tag:
+        return self.practice_quiz.tags.get(text=self.name + "-practice")
+
     def __str__(self):
         return self.name
 

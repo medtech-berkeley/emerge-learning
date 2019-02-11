@@ -49,6 +49,7 @@ class TestSheetReading(TestCase):
         self.assertEqual(QuestionMedia.objects.count(), 1)
         self.assertEqual(Tag.objects.count(), 6)
         self.assertEqual(Category.objects.count(), 2)
+        self.assertEqual(Question.objects.get(id=1001).tags.count(), 2)
 
 
 class TestUtils(TestCase):
