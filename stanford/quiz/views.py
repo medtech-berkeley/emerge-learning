@@ -1,4 +1,5 @@
 import pytz
+import random
 import datetime
 
 from django.http import HttpResponse, JsonResponse
@@ -226,7 +227,7 @@ def get_question(request):
                                 'num_correct': stats['num_correct']}
                     return JsonResponse(data=response)
 
-                question = question_set[0]
+                question = random.choice(question_set)
                 # create QuestionUserData as user has started to answer question
                 question_data = QuestionUserData.objects.create(student=student, question=question, quiz_userdata=quiz_data)
 
