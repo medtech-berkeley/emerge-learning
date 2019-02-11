@@ -172,6 +172,7 @@ class QuestionUserData(models.Model):
         return "Question " + str(self.question.id) + " Data - " + self.student.user.username
 
     class Meta:
+        get_latest_by = 'time_started'
         unique_together = ('question', 'student', 'quiz_userdata')
 
 class QuizUserData(models.Model):
@@ -183,6 +184,9 @@ class QuizUserData(models.Model):
     quiz = models.ForeignKey(Quiz, related_name="quiz_data", on_delete=models.CASCADE)
     time_started = models.DateTimeField(default=timezone.now)
     time_completed = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        get_latest_by = 'time_started'
 
     def __str__(self):
         return "Quiz " + str(self.quiz.name) + " Data - " + self.student.user.username

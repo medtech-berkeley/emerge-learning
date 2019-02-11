@@ -800,7 +800,12 @@ class QuizTestCase(TestCase):
         for q in self.questions:
             self.assertIn(all_tag, q.tags.all())
 
+    def test_start_quiz(self):
+        response = self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
+        self.assertEqual(response.status_code, 200)
+
     def test_get_question_basic(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         self.assertEqual(response.status_code, 200)
         question = response.json()
@@ -808,11 +813,13 @@ class QuizTestCase(TestCase):
         self.assertEqual(len(question['answers']), 4)
 
     def test_get_question_multiple_categories(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         self.assertEqual(response.status_code, 200)
         question = response.json()
         self.assertIn(self.quizzes[0].tags.first().text, question['tags'])
 
+        self.client.get("/quiz/start", {'quiz': self.quizzes[1].id})
         response2 = self.client.get("/quiz/question", {'quiz': self.quizzes[1].id})
         self.assertEqual(response2.status_code, 200)
         question2 = response2.json()
@@ -820,6 +827,7 @@ class QuizTestCase(TestCase):
         self.assertIn(self.quizzes[1].tags.first().text, question2['tags'])
         self.assertNotEqual(question, question2)
 
+        self.client.get("/quiz/start", {'quiz': self.quizzes[2].id})
         response3 = self.client.get("/quiz/question", {'quiz': self.quizzes[2].id})
         self.assertEqual(response3.status_code, 200)
         question3 = response3.json()
@@ -829,6 +837,7 @@ class QuizTestCase(TestCase):
         self.assertNotEqual(question2, question3)
     
     def test_get_question_all_complete(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         for i in range(3):
             response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
             self.assertEqual(response.status_code, 200)
@@ -848,6 +857,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(question['completed'], True)
 
     def test_answer_basic(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -860,6 +870,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], True)
 
     def test_answer_multiple_attempts(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -877,6 +888,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['accepted'], False)
 
     def test_answer_sequential_questions(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -911,6 +923,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], False)
 
     def test_answer_multiple_categories(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -922,6 +935,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['accepted'], True)
         self.assertEqual(answer_json['correct'], True)
 
+        self.client.get("/quiz/start", {'quiz': self.quizzes[1].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[1].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -939,6 +953,7 @@ class QuizTestCase(TestCase):
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
 
+        self.client.get("/quiz/start", {'quiz': self.quizzes[2].id})
         response2 = self.client.get("/quiz/question", {'quiz': self.quizzes[2].id})
         question_id2 = response2.json()['id']
         question2 = Question.objects.get(id=question_id2)
@@ -957,6 +972,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], True)
 
     def test_answer_late(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -972,6 +988,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['accepted'], False)  # rejected due to lateness despite being correct
 
     def test_answer_forgotten(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})  # user never submits an answer
 
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
@@ -986,6 +1003,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(answer_json['correct'], True)
 
     def test_stats_student(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -994,6 +1012,7 @@ class QuizTestCase(TestCase):
         answer_response = self.client.post("/quiz/answer", {'quiz': self.quizzes[0].id, 'question': question_id, 'answer': answer.id})
         answer_json = answer_response.json()
 
+        self.client.get("/quiz/start", {'quiz': self.quizzes[1].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[1].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -1008,6 +1027,7 @@ class QuizTestCase(TestCase):
         question = Question.objects.get(id=question_id)
         answer = question.answers.filter(is_correct=True).first()
 
+        self.client.get("/quiz/start", {'quiz': self.quizzes[2].id})
         response2 = self.client.get("/quiz/question", {'quiz': self.quizzes[2].id})
         question_id2 = response2.json()['id']
         question2 = Question.objects.get(id=question_id2)
@@ -1022,6 +1042,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(3, get_stats_student(self.student)['num_correct'])
 
     def test_stats_question_total_single_user(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -1043,6 +1064,7 @@ class QuizTestCase(TestCase):
             clients.append(client)
 
         for i, client in enumerate(clients):
+            client.get("/quiz/start", {'quiz': self.quizzes[0].id})
             response = client.get("/quiz/question", {'quiz': self.quizzes[0].id})
             question_id = response.json()['id']
             question = Question.objects.get(id=question_id)
@@ -1069,6 +1091,7 @@ class QuizTestCase(TestCase):
             students.append(student)
 
         for i, client in enumerate(clients):
+            client.get("/quiz/start", {'quiz': self.quizzes[0].id})
             response = client.get("/quiz/question", {'quiz': self.quizzes[0].id})
             question_id = response.json()['id']
             question = Question.objects.get(id=question_id)
@@ -1087,6 +1110,7 @@ class QuizTestCase(TestCase):
 
     # # TODO: add tests for multiple questions
     def test_stats_question_total_null(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -1097,6 +1121,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(0, stats['num_attempted'])
 
     def test_stats_quiz_single_user(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -1131,6 +1156,7 @@ class QuizTestCase(TestCase):
             clients.append(client)
 
         for i, client in enumerate(clients):
+            client.get("/quiz/start", {'quiz': self.quizzes[0].id})
             response = client.get("/quiz/question", {'quiz': self.quizzes[0].id})
             question = Question.objects.get(id=response.json()['id'])
             answer = question.answers.filter(is_correct=True).first()
@@ -1154,6 +1180,7 @@ class QuizTestCase(TestCase):
         self.assertEqual(NUM_STUDENTS, stats['num_incorrect'])
 
     def test_stats_quiz_null(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         question = Question.objects.get(id=response.json()['id'])
 
@@ -1169,6 +1196,7 @@ class QuizTestCase(TestCase):
         pass
 
     def test_get_completed_answers(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         num_questions = self.quizzes[0].questions.count()
         for _ in range(num_questions):
             response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
@@ -1195,6 +1223,8 @@ class QuizTestCase(TestCase):
 
     def test_get_completed_answers_fail(self):
         # start a quiz
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
+        # get a quetion
         self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
         # try to get answers
         response = self.client.get("/quiz/results", {'quiz': self.quizzes[0].id})
@@ -1202,6 +1232,7 @@ class QuizTestCase(TestCase):
                                                                 "that is not completed")
 
     def test_get_stats_student(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[3].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[3].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)
@@ -1216,6 +1247,7 @@ class QuizTestCase(TestCase):
 
         self.client.post("/quiz/answer", {'quiz': self.quizzes[3].id, 'question': question_id, 'answer': answer.id})
 
+        self.client.get("/quiz/start", {'quiz': self.quizzes[4].id})
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[4].id})
         question_id = response.json()['id']
         question = Question.objects.get(id=question_id)

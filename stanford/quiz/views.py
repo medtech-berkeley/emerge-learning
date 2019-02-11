@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework import permissions, generics, mixins
 
 from .utils import get_unanswered_questions, get_student_quiz_stats
-from .utils import get_stats_student
+from .utils import get_stats_student, end_quiz
 from .models import Question, QuestionUserData, Quiz, Student, Feedback
 from .models import Student, Quiz, Question, Answer, QuestionUserData, QuizUserData, GVK_EMRI_Demographics
 from .serializers import QuestionSerializer, QuestionUserDataSerializer, QuizSerializer, AnswerSerializer, LeaderboardStatSerializer
@@ -155,6 +155,34 @@ class QuestionFeedbackViewSet(ViewSet):
 
 @never_cache
 @login_required
+def start_quiz(request):
+    """
+    Starts a quiz for a user if the user hasn't taken it yet
+    or is allowed to retake it, creates QuizUserData model info
+    :param request: GET request with quiz ID
+    :return: JSONResponse with accepted: True/Fale
+    """
+    if request.method == 'GET':
+        student = request.user.student
+        if student:
+            try:
+                quiz = Quiz.objects.get(id=int(request.GET['quiz']))
+            except (Quiz.DoesNotExist, KeyError, ValueError):
+                return JsonResponse({'accepted': False, 'reason': 'Missing or invalid quiz in request'}, status=400)
+            
+            quiz_data = student.quiz_data.filter(quiz=quiz)
+            if quiz_data.exists():
+                quiz_data = quiz_data.latest()
+                if quiz.can_retake and (quiz_data.is_out_of_time or quiz_data.is_completed):
+                    end_quiz(quiz_data)
+                else:
+                    return JsonResponse({'accepted': False, 'reason': 'This quiz has already been started'}, status=400)
+            
+            QuizUserData.objects.create(student=student, quiz=quiz)
+            return JsonResponse({'accepted': True}, status=200)
+
+@never_cache
+@login_required
 def get_question(request):
     """
     Return arbitrary question from quiz that user hasn't done yet, create QuestionUserData model info
@@ -169,10 +197,12 @@ def get_question(request):
             except (Quiz.DoesNotExist, KeyError, ValueError):
                 return JsonResponse({'accepted': False, 'reason': 'Missing or invalid quiz in request'}, status=400)
 
-            if not student.quiz_data.filter(quiz=quiz).exists():
-                QuizUserData.objects.create(student=student, quiz=quiz)
+            quiz_data = student.quiz_data.filter(quiz=quiz)
 
-            quiz_data = student.quiz_data.filter(quiz=quiz).first()
+            if not quiz_data.exists():
+                return JsonResponse({'accepted': False, 'reason': 'Must start a quiz before getting a question'}, status=400)
+
+            quiz_data = quiz_data.latest()
 
             started_question = QuestionUserData.objects.filter(quiz_userdata=quiz_data, student=student, answer=None)
 
@@ -184,14 +214,10 @@ def get_question(request):
                 # check for questions user has already started, exclude from final set
                 question_set = get_unanswered_questions(student, quiz_data)
 
-                stats = get_student_quiz_stats(quiz_data, student)
                 if len(question_set) == 0 or outoftime:
-                    for question in question_set:
-                        question_data = QuestionUserData.objects.create(student=student, question=question, quiz_userdata=quiz_data)
+                    end_quiz(quiz_data)
 
-                    if quiz_data.time_completed is None:
-                        quiz_data.time_completed = timezone.now()
-                        quiz_data.save()
+                    stats = get_student_quiz_stats(quiz_data, student)
 
                     response = {'accepted': True,
                                 'completed': True,
@@ -258,7 +284,7 @@ def submit_answer(request):
             if not quiz_data.exists():
                 return JsonResponse({'accepted': False, 'reason': 'Quiz not started yet'}, status=404)
 
-            quiz_data = quiz_data.first()
+            quiz_data = quiz_data.latest()
 
             user_data = student.question_data.filter(question=question, quiz_userdata=quiz_data)
 
@@ -298,7 +324,7 @@ def get_quiz_results(request):
         if not quiz_data.exists():
             return JsonResponse({'accepted': False, 'reason': 'Quiz not started yet'}, status=404)
 
-        quiz_data = quiz_data.first()
+        quiz_data = quiz_data.latest()
 
         question_set = get_unanswered_questions(student, quiz_data)
         if len(question_set) > 0 and not quiz_data.is_out_of_time():
