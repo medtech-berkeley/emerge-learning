@@ -6,6 +6,18 @@ import requests
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.views.decorators.cache import never_cache
+from django.core.mail import EmailMessage
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
+from django.contrib.sites.shortcuts import get_current_site
+import logging
+from django.conf import settings
+from django.http import HttpResponse
+
+logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def signup(request):
     if request.method == 'POST':
@@ -16,7 +28,10 @@ def signup(request):
             except User.DoesNotExist:
                 try:
                     user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
-                    login(request, user)
+                    user.is_active = False
+                    user.save()
+                    logger.info("created user")
+                    # login(request, user)
                     student = Student.objects.get(user=user)
                     student.name = request.POST['username']
                     if 'image' in request.FILES:
@@ -28,6 +43,24 @@ def signup(request):
                         img_temp.flush()
                         student.image.save("image.jpg", File(img_temp), save=True)
                     student.save()
+
+                    logger.info("saved student")
+
+                    # Send Email
+                    current_site = get_current_site(request)
+                    mail_subject = 'Activate your blog account.'
+                    message = render_to_string('acc_active_email.html', {
+                        'user': user,
+                        'domain': current_site.domain,
+                        'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                        'token':account_activation_token.make_token(user),
+                    })
+                    to_email = request.POST['email']
+                    email = EmailMessage(
+                                mail_subject, message, to=[to_email]
+                    )
+                    email.send()
+
                     return redirect('dashboard')
                 except Exception as e:
                     print(str(type(e)) + ":", e)
@@ -53,3 +86,17 @@ def logins(request):
 def logout_view(request):
     logout(request)
     return redirect('dashboard')
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return redirect('dashboard')
+    else:
+        return HttpResponse('Activation link is invalid!')
