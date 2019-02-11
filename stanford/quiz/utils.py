@@ -140,7 +140,20 @@ def end_quiz(quiz_userdata: QuizUserData):
 
     for question in question_set:
         if n_answered < quiz.num_questions:
-            question_data = QuestionUserData.objects.create(student=student, question=question, quiz_userdata=quiz_userdata)
+            qud = QuestionUserData.objects.filter(student=student, 
+                                                  question=question,
+                                                  quiz_userdata=quiz_userdata)
+
+            if qud.exists():
+                qud = qud.first()
+                qud.time_completed = timezone.now()
+                qud.save()
+            else:
+                question_data = QuestionUserData.objects.create(student=student,
+                                                                question=question,
+                                                                quiz_userdata=quiz_userdata, 
+                                                                time_completed=timezone.now())
+
             n_answered += 1
 
     if quiz_userdata.time_completed is None:
