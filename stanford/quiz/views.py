@@ -415,24 +415,47 @@ def get_stats(request):
     return HttpResponse(status=400)
 
 @login_required
+def submit_consent_form(request):
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+
+    consent = request.POST['consent']
+
+    student = request.user.student
+    if student:
+        student.consent = consent.lower() == "true"
+        student.consent_prompt_required = False
+        student.save()
+
+        return HttpResponse(200)
+    else:
+        return HttpResponse(status=403)
+
+@login_required
 def submit_demographics_form(request):
     if request.method != 'POST':
         return HttpResponse(status=405)
     
     student = request.user.student
     if student:
-        if not student.completed_survey:
+        print(student.completed_demographic_survey)
+        if not student.completed_demographic_survey:
             required_fields = ['birth_year', 'gender', 'job', 'education_level', 'country', 'state', 'years_of_experience', 'organization']
             optional_fields = ["med_cardio_refresher", "med_cardio_date", "obgyn_refresher", "obgyn_date", "trauma_refresher", "trauma_date",
                                "pediatrics_refresher", "pediatrics_date", "pediatrics_refresher", "pediatrics_date", "leadership_refresher",
                                "leadership_date", "most_used_device", "internet_reliability", "work_device_hours", "personal_device_hours"]
 
+            print("before hang loose")
             for field in required_fields:
                 if field not in request.POST:
-                    return HttpResponse(400)
+                    print(request.POST)
+                    print(field)
+                    return HttpResponse(status=400)
                 setattr(student, field, request.POST[field])
             
-            student.completed_survey = True
+            print("hang loose")
+            print(request.POST['birth_year'])
+            student.completed_demographic_survey = True
             
             if student.organization == 'GVK':
                 gvk_fields = {field:request.Post[field] for field in optional_fields}
@@ -441,7 +464,7 @@ def submit_demographics_form(request):
                 
             student.save()
             
-        return HttpResponse(200)
+        return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
 
