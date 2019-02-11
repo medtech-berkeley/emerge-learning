@@ -71,8 +71,10 @@ class AnswerViewSet(ModelViewSet):
 
 
 class QuizViewSet(ModelViewSet):
-    queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
+
+    def get_queryset(self):
+        return Quiz.objects.filter(start__lte=timezone.now())
 
 
 class QuizUserDataViewSet(ModelViewSet):
