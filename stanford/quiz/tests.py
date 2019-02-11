@@ -760,7 +760,6 @@ class QuizTestCase(TestCase):
         Answer.objects.create(text="a3", question=c4_q2, is_correct=True)
         Answer.objects.create(text="a4", question=c4_q2, is_correct=False)
 
-
         cat5 = Category.objects.create(name="cat5")
         quiz5 = cat5.practice_quiz
 
@@ -777,8 +776,18 @@ class QuizTestCase(TestCase):
         Answer.objects.create(text="a3", question=c5_q2, is_correct=True)
         Answer.objects.create(text="a4", question=c5_q2, is_correct=False)
 
-        self.quizzes = [quiz1, quiz2, quiz3, quiz4, quiz5]
-        self.questions = [c1_q1, c1_q2, c1_q3, c2_q1, c2_q2, c2_q3, c3_q1, c3_q2, c4_q1, c4_q2, c5_q1, c5_q2]
+        cat6 = Category.objects.create(name="cat6")
+        quiz6 = cat6.practice_quiz
+
+        c6_q1 = Question.objects.create(text="c6_q1", category=cat6, difficulty=Question.ADVANCED)
+        Answer.objects.create(text="a1", question=c6_q1, is_correct=True)
+        Answer.objects.create(text="a2", question=c6_q1, is_correct=False)
+        Answer.objects.create(text="a3", question=c6_q1, is_correct=True)
+        Answer.objects.create(text="a4", question=c6_q1, is_correct=False)
+
+
+        self.quizzes = [quiz1, quiz2, quiz3, quiz4, quiz5, quiz6]
+        self.questions = [c1_q1, c1_q2, c1_q3, c2_q1, c2_q2, c2_q3, c3_q1, c3_q2, c4_q1, c4_q2, c5_q1, c5_q2, c6_q1]
 
         # add all questions to corresponding practice quiz
         for question in self.questions:
@@ -1078,13 +1087,13 @@ class QuizTestCase(TestCase):
             clients.append(client)
 
         for i, client in enumerate(clients):
-            client.get("/quiz/start", {'quiz': self.quizzes[0].id})
-            response = client.get("/quiz/question", {'quiz': self.quizzes[0].id})
+            client.get("/quiz/start", {'quiz': self.quizzes[5].id})
+            response = client.get("/quiz/question", {'quiz': self.quizzes[5].id})
             question_id = response.json()['id']
             question = Question.objects.get(id=question_id)
             answer = question.answers.filter(is_correct=True).first()
 
-            answer_response = client.post("/quiz/answer", {'quiz': self.quizzes[0].id, 'question': question_id, 'answer': answer.id})
+            answer_response = client.post("/quiz/answer", {'quiz': self.quizzes[5].id, 'question': question_id, 'answer': answer.id})
             answer_json = answer_response.json()
 
             # get stats and make sure everyone got it correct
@@ -1105,8 +1114,8 @@ class QuizTestCase(TestCase):
             students.append(student)
 
         for i, client in enumerate(clients):
-            client.get("/quiz/start", {'quiz': self.quizzes[0].id})
-            response = client.get("/quiz/question", {'quiz': self.quizzes[0].id})
+            client.get("/quiz/start", {'quiz': self.quizzes[5].id})
+            response = client.get("/quiz/question", {'quiz': self.quizzes[5].id})
             question_id = response.json()['id']
             question = Question.objects.get(id=question_id)
             if i % 2 == 0:
@@ -1114,7 +1123,7 @@ class QuizTestCase(TestCase):
             else:
                 answer = question.answers.filter(is_correct=False).first()
 
-            answer_response = client.post("/quiz/answer", {'quiz': self.quizzes[0].id, 'question': question_id, 'answer': answer.id})
+            answer_response = client.post("/quiz/answer", {'quiz': self.quizzes[5].id, 'question': question_id, 'answer': answer.id})
 
         stats = get_stats_question_total(question)
 
