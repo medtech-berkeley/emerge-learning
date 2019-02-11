@@ -22,7 +22,7 @@
 				</form>
 		    </nav>
         <div class="landing-content">
-            <h1 class="landing-header">Practice. Learn. Save Lives.</h1>
+            <h1 class="landing-header">Emerge Learning</h1>
             <form class="signup" method="POST" action="{% url 'signup' %}">
               {% if error %}
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -75,15 +75,63 @@
 	          <div class="col-lg-4">
 	            <div class="features-icons-item mx-auto mb-0 mb-lg-3">
 	              <div class="features-icons-icon d-flex">
-			        	<img id="third-img" src="{% static 'landingpage/img/trophy.png' %}" alt="coins">
+			        	<img id="third-img" src="{% static 'landingpage/img/medicine.png' %}" alt="coins">
 <!-- 	                <i class="icon-check m-auto text-primary"></i>
  -->	              </div>
-	              <h3>Win Prizes</h3>
-	              <p class="lead mb-0">Compete for monetary prizes through tests of your knowledge!</p>
+	              <h3>Save Lives</h3>
+	              <p class="lead mb-0">Apply your new knowledge and skills to help those in need.</p>
 	            </div>
 	          </div>
 	        </div>
+          <!-- video section -->
 	      </div>
-	    </section>
+      </section>
+      <section>
+          <br>
+          <br>
+          <div class="container">
+            <div class="row">
+              <div class="col"><div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/75V7g0EEKA4" width="200" height="200" allowfullscreen></iframe>
+                </div></div>
+            </div>
+          </div>
+      </section>
+
+      <!-- footer -->
+      <div class="container">
+      <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row">
+          <div class="col-12 col-md">
+            <a href="https://mtab.berkeley.edu">
+            <img class="mb-2" src= "{% static 'landingpage/img/mtablogo.png' %}" alt="" width="62" height="54">
+            </a>
+<!--             <small class="d-block mb-3 text-muted" style="margin-left: 2rem;">© 2017-2018</small>
+ -->          </div>
+          <div class="col-6 col-md">
+            <h5>Contact</h5>
+            <ul class="list-unstyled text-small">
+              <li><a class="text-muted" href="#"></a></li>
+              <li><a class="text-muted" href="#">General Inquiries</a></li>
+              <li><a class="text-muted" href="#">Feedback</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-md">
+            <h5>Resources</h5>
+            <ul class="list-unstyled text-small">
+              <li><a class="text-muted" href="#">Educational Resources</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-md">
+            <h5>About</h5>
+            <ul class="list-unstyled text-small">
+              <li><a class="text-muted" href="https://mtab.berkeley.edu">Medical Technology at Berkeley</a></li>
+              <li><a class="text-muted" href="https://emed.stanford.edu/">Stanford Emergency Medicine</a></li>
+              <li><a class="text-muted" href="#">Research Study</a></li>
+            </ul>
+          </div>
+        </div>
+      </footer> 
+      </div>
   </body>
 </html>
