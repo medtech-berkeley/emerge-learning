@@ -145,6 +145,7 @@ export function answerQuestion(questionId, answerId, categoryId) {
     let data = new FormData();
     data.append("question", questionId);
     data.append("answer", answerId);
+    data.append("quiz", categoryId);
     headers.body = data;
 	return dispatch => fetch("/quiz/answer", headers)
 		.then(r => r.json().then(answer => {
