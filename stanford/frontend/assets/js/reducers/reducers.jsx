@@ -31,7 +31,6 @@ const initialState = {
     ui: {
         currentTime: Math.floor((new Date).getTime()/1000),
         page: 'dashboard',
-        categoryId: -1,
         timeStarted: Math.floor((new Date).getTime()/1000),
         maxTime: 300,
         categoryId: -1,
@@ -106,6 +105,8 @@ export function stanfordApp(state = initialState, action) {
             break;
         case (SELECT_CATEGORY):
             newState.ui.categoryId = action.categoryId;
+            newState.ui.complete = initialState.ui.complete;
+            newState.ui.outoftime = initialState.ui.outoftime;
             break;
         case (UPDATE_CURRENT_QUESTION):
             newState.ui.currentQuestion = action.currentQuestion;
