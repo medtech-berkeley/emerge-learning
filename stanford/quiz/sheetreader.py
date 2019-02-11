@@ -112,14 +112,14 @@ def LoadFromCSV(file):
                 for answer in Answer.objects.filter(num__gte=remainder, question=q):
                     answer.delete()
             except Exception as e:
-                raise e
+                print(e)
 
 def LoadQuizFromCSV(file):
     with file.open("rt") as f:
         reader = csv.reader(f)
         for row in reader:
             try:
-                #row structure: |Name|Image|Start|End|is_challenge|retake|tags|limit
+                #row structure: |Name|Image|Start|End|is_challenge|retake|required|tags|limit
                 row = [x for x in row]
                 name = row[0]
                 image = row[1]
@@ -127,8 +127,10 @@ def LoadQuizFromCSV(file):
                 end = pytz.utc.localize(timezone.datetime.strptime(row[3], "%Y/%m/%d"))
                 is_challenge = row[4].upper() == "TRUE"
                 retake = row[5].upper() == "TRUE"
-                tags = row[6].split()
-                limit = int(row[7])
+                required = row[6].upper() == "TRUE"
+                tags = row[7].split()
+                limit = int(row[8])
+
                 q = Quiz.objects.filter(name=name)
                 if q.exists():
                     q = q.first()
@@ -138,6 +140,7 @@ def LoadQuizFromCSV(file):
                     q.image = image
                     q.num_questions = limit
                     q.can_retake = retake
+                    q.required = required
                 else:
                     q = Quiz.objects.create(name = name,
                         start=start,
@@ -145,7 +148,8 @@ def LoadQuizFromCSV(file):
                         is_challenge=is_challenge,
                         image=image,
                         can_retake=retake,
-                        num_questions=limit)
+                        num_questions=limit,
+                        required=required)
 
                 q.tags.clear()
                 for tag_text in tags:

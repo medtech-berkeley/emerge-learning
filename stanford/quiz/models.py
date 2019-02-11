@@ -68,6 +68,7 @@ class Quiz(models.Model, AddTagMixin):
     tags = models.ManyToManyField(Tag, related_name="quizzes")
     can_retake = models.BooleanField(default=False)
     num_questions = models.IntegerField(default=-1) # -1 indicates there is no limit
+    required = models.BooleanField(default=False)
 
     @property
     def questions(self):

@@ -203,6 +203,13 @@ def start_quiz(request):
                 else:
                     return JsonResponse({'accepted': False, 'reason': 'This quiz has already been started'}, status=400)
             
+            # check if there are any required quizzes left to do
+            if not quiz.required:
+                completed_quizzes = Quiz.objects.filter(quiz_data__student=student).exclude(quiz_data__time_completed=None)
+                required_quizzes = Quiz.objects.filter(required=True).difference(completed_quizzes)
+                if required_quizzes.count() > 0:
+                    return JsonResponse({'accepted': False, 'reason': 'Missing one or more required tests.'}, status=400)
+
             QuizUserData.objects.create(student=student, quiz=quiz)
             return JsonResponse({'accepted': True}, status=200)
 
@@ -322,6 +329,9 @@ def submit_answer(request):
                 user_data.answer = answer
                 user_data.time_completed = timezone.now()
                 user_data.save()
+
+                if quiz_data.is_done():
+                    end_quiz(quiz_data)
 
                 return JsonResponse({'accepted': True, 'correct': answer.is_correct})
             elif quiz_data.is_out_of_time():
