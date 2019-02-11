@@ -7,6 +7,11 @@ export class QuizQuestion extends React.Component {
 	VIDEO = "VID";
 	AUDIO = "AUD";
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.id != this.props.id) {
+			window.scroll(0, 0);
+		}
+	}
 
 	getMediaField() {
 		if (this.props.media) {
