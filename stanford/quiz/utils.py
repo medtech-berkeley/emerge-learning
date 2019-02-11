@@ -141,7 +141,7 @@ def get_unanswered_questions(student, quiz_data):
 def end_quiz(quiz_userdata):
     question_set = get_unanswered_questions(quiz_userdata.student, quiz_userdata)
     for question in question_set:
-        question_data = QuestionUserData.objects.create(student=student, question=question, quiz_userdata=quiz_userdata)
+        question_data = QuestionUserData.objects.create(student=quiz_userdata.student, question=question, quiz_userdata=quiz_userdata)
 
     if quiz_userdata.time_completed is None:
         quiz_userdata.time_completed = timezone.now()

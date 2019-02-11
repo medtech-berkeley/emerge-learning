@@ -14,7 +14,7 @@ from django.core.files.base import File
 
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
 from .models import Question, Category, Quiz, QuizUserData, QuestionUserData, Answer, Student, Tag
-from .utils import get_stats_student, get_stats_question_total, get_stats_quiz
+from .utils import get_stats_student, get_stats_question_total, get_stats_quiz, end_quiz
 from .serializers import QuestionSerializer, AnswerSerializer, QuizSerializer, FeedbackSerializer
 from .serializers import QuestionUserDataSerializer, QuizUserDataSerializer, StudentSerializer
 from .serializers import StudentStatsSerializer
@@ -692,6 +692,8 @@ class QuizTestCase(TestCase):
     def setUp(self):
         cat1 = Category.objects.create(name="cat1")
         quiz1 = cat1.practice_quiz
+        quiz1.can_retake = False
+        quiz1.save()
 
         c1_q1 = Question.objects.create(text="c1_q1", category=cat1)
         Answer.objects.create(text="a1", question=c1_q1, is_correct=True)
@@ -803,6 +805,18 @@ class QuizTestCase(TestCase):
     def test_start_quiz(self):
         response = self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
         self.assertEqual(response.status_code, 200)
+    
+    def test_retake_quiz(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[4].id})
+        end_quiz(QuizUserData.objects.first())
+        response = self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
+        self.assertEqual(response.status_code, 200)
+    
+    def test_cannot_retake_quiz(self):
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
+        end_quiz(QuizUserData.objects.first())
+        response = self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
+        self.assertEqual(response.status_code, 400)
 
     def test_get_question_basic(self):
         self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})

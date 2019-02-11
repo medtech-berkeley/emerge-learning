@@ -75,7 +75,7 @@ class Category(models.Model):
     def create_category(sender, instance, created, **kwargs):
         if created:
             practice_tag = Tag.objects.create(text=instance.name + " Practice")
-            quiz = Quiz.objects.create(name=' '.join([instance.name, "Practice"]))
+            quiz = Quiz.objects.create(name=' '.join([instance.name, "Practice"]), can_retake=True)
             quiz.tags.add(practice_tag)
             instance.practice_quiz = quiz
             instance.save()
