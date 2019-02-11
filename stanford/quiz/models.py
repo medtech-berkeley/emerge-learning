@@ -58,6 +58,7 @@ class Quiz(models.Model):
     image = models.ImageField(upload_to="quiz_images", default='default.jpg')
     max_time = models.DurationField(default=datetime.timedelta(minutes=10))
     tags = models.ManyToManyField(Tag, related_name="quizzes")
+    can_retake = models.BooleanField(default=False)
 
     @property
     def questions(self):
@@ -74,7 +75,7 @@ class Category(models.Model):
     def create_category(sender, instance, created, **kwargs):
         if created:
             practice_tag = Tag.objects.create(text=instance.name + " Practice")
-            quiz = Quiz.objects.create(name=' '.join([instance.name, "Practice"]))
+            quiz = Quiz.objects.create(name=' '.join([instance.name, "Practice"]), can_retake=True)
             quiz.tags.add(practice_tag)
             instance.practice_quiz = quiz
             instance.save()
@@ -161,7 +162,7 @@ class QuestionUserData(models.Model):
 
     student = models.ForeignKey(Student, related_name="question_data", on_delete=models.CASCADE)
     question = models.ForeignKey(Question, related_name="question_data", on_delete=models.CASCADE)
-    quiz = models.ForeignKey(Quiz, related_name="question_data", on_delete=models.CASCADE)
+    quiz_userdata = models.ForeignKey("QuizUserData", related_name="question_data", on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, blank=True, null=True, related_name="question_data", on_delete=models.CASCADE)
     time_started = models.DateTimeField(default=timezone.now)
     time_completed = models.DateTimeField(blank=True, null=True)
@@ -171,7 +172,8 @@ class QuestionUserData(models.Model):
         return "Question " + str(self.question.id) + " Data - " + self.student.user.username
 
     class Meta:
-        unique_together = ('question', 'student', 'quiz')
+        get_latest_by = 'time_started'
+        unique_together = ('question', 'student', 'quiz_userdata')
 
 class QuizUserData(models.Model):
     """
@@ -183,6 +185,9 @@ class QuizUserData(models.Model):
     time_started = models.DateTimeField(default=timezone.now)
     time_completed = models.DateTimeField(blank=True, null=True)
 
+    class Meta:
+        get_latest_by = 'time_started'
+
     def __str__(self):
         return "Quiz " + str(self.quiz.name) + " Data - " + self.student.user.username
 
@@ -192,9 +197,6 @@ class QuizUserData(models.Model):
     def is_out_of_time(self):
         end_time = self.time_started + self.quiz.max_time
         return (self.time_completed or timezone.now()) > end_time
-
-    class Meta:
-        unique_together = ('quiz', 'student')
 
 
 class GVK_EMRI_Demographics(models.Model):

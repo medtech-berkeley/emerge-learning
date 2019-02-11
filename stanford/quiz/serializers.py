@@ -27,12 +27,12 @@ class QuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Quiz
-        fields = ('id', 'name', 'start', 'end', 'is_challenge', 'max_time', 'image', 'is_completed')
+        fields = ('id', 'name', 'start', 'end', 'is_challenge', 'max_time', 'image', 'is_completed', 'can_retake')
 
     def get_is_completed(self, instance):
         try:
             user = self.context['request'].user.student
-            quiz_data = QuizUserData.objects.get(student=user, quiz=instance)
+            quiz_data = QuizUserData.objects.filter(student=user, quiz=instance).latest()
             return quiz_data.time_completed is not None or timezone.now() >= (quiz_data.time_started + instance.max_time)
         except QuizUserData.DoesNotExist:
             return False
