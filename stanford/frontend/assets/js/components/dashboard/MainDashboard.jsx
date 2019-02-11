@@ -13,6 +13,7 @@ export class MainDashboard extends React.Component {
     componentDidMount() {
         this.props.getCategories();
         this.props.getLeaderboard();
+        this.props.refreshStudent();
     }
 
 	render() {
@@ -20,8 +21,11 @@ export class MainDashboard extends React.Component {
 		    <div>
                 <Container>
                     <div id="dashboard">
-                    <ConsentForm />
-                    <DemographicSurvey />
+                    {<ConsentForm submitConsentForm={this.props.submitConsentForm}
+                                  consent_prompt_required={this.props.user.consent_prompt_required}
+                    />}
+                    <DemographicSurvey submitDemographicSurvey={this.props.submitDemographicSurvey}
+                                       demographic_survey_required={this.props.user.consent && !this.props.user.completed_demographic_survey}/>
                         <div>
                             <p className="section-text">CHALLENGES</p>
                             <hr />

@@ -6,10 +6,15 @@ export class ConsentForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modal: false
+      modal: this.props.consent_prompt_required
     };
 
     this.toggle = this.toggle.bind(this);
+  }
+
+  handleSubmit(consent) {
+    this.props.submitConsentForm(consent);
+    event.preventDefault();
   }
 
   toggle() {
@@ -21,15 +26,14 @@ export class ConsentForm extends React.Component {
   render() {
     return (
       <div>
-        <Button color="primary" onClick={this.toggle}>Consent</Button>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+        <Modal isOpen={this.props.consent_prompt_required} className={this.props.className}>
           <ModalHeader>
           	Informed Consent Waiver
 
           	<div className="floating" 
           		 style=
           		 {
-          			{"display": "inline-block", "margin-right": "20px", "position": "absolute", "top": "1rem", "right": "2.5rem"}
+          			{"display": "inline-block", "marginRight": "20px", "position": "absolute", "top": "1rem", "right": "2.5rem"}
           		 }>
 				<Planet size={30} mood="happy" color="#70D7A3"/>
 			</div>
@@ -82,8 +86,8 @@ export class ConsentForm extends React.Component {
 
           </ModalBody>
           <ModalFooter>
-            <Button color="secondary" onClick={this.toggle}>I am not a study participant</Button>
-            <Button color="success" onClick={this.toggle}>I consent</Button>{' '}
+            <Button color="secondary" onClick={() => this.handleSubmit(false)}>I am not a study participant</Button>
+            <Button color="success" onClick={() => this.handleSubmit(true)}>I consent</Button>{' '}
           </ModalFooter>
         </Modal>
       </div>

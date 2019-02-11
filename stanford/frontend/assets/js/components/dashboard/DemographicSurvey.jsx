@@ -5,11 +5,19 @@ import {Planet} from 'react-kawaii';
 export class DemographicSurvey extends React.Component {
   constructor(props) {
     super(props);
+    this.handleSubmit= this.handleSubmit.bind(this);
+
     this.state = {
-      modal: false
+      modal: this.props.demographic_survey_required
     };
 
+
     this.toggle = this.toggle.bind(this);
+  }
+
+  handleSubmit(event) {
+  	event.preventDefault();
+    this.props.submitDemographicSurvey(event.target);
   }
 
   toggle() {
@@ -21,8 +29,10 @@ export class DemographicSurvey extends React.Component {
   render() {
     return (
       <div>
-        <Button color="primary" onClick={this.toggle}>Demographic Survey</Button>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+{/*      	{console.log(this.state.modal)}
+*/}        <Modal isOpen={this.props.demographic_survey_required} className={this.props.className}>
+        <form onSubmit={this.handleSubmit}>
+
           <ModalHeader>
           	Demographic Survey
 
@@ -45,16 +55,14 @@ export class DemographicSurvey extends React.Component {
           </p>
 
           <br />
-
-          <Form>
               <div class="form-group">
-			    <label for="inputAge">Age</label>
-			    <input type="number" step="0.25" class="form-control" id="inputAge" aria-describedby="inputAge" placeholder="Enter Age"/>
+			    <label for="birth_year">What year were you born in?</label>
+			    <input type="number" step="1" class="form-control" name="birth_year" id="birth_year" aria-describedby="inputAge"/>
 			  </div>
 
 			  <div class="form-group">
 			    <label for="">Gender</label>
-				<select class="form-control" name="inputGender">
+				<select class="form-control" name="gender">
 				  <option value="F">Female</option>
 				  <option value="M">Male</option>
 				  <option value="O">Other</option>
@@ -63,7 +71,7 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 			    <label for="">Job</label>
-				<select class="form-control" name="inputJob">
+				<select class="form-control" name="job">
 				  <option value="F">EMT B</option>
 				  <option value="M">EMT A</option>
 				  <option value="O">Paramedic</option>
@@ -73,7 +81,7 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 			    <label for="">Education</label>
-				<select class="form-control" name="inputEducation">
+				<select class="form-control" name="education_level">
 				  <option value="F">Lower Primary School</option>
 				  <option value="M">Upper Primary School</option>
 				  <option value="O">Grade 10 (or equivalent)</option>
@@ -85,7 +93,7 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 			    <label for="">Country</label>
-				<select class="form-control" name="inputCountry">
+				<select class="form-control" name="country">
 					<option value="IN">India</option>
 					<option value="US">United States</option>
 					<option value="NP">Nepal</option>
@@ -340,7 +348,7 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 			    <label for="">State (India Only)</label>
-				<select class="form-control" name="inputState">
+				<select class="form-control" name="state">
 					<option value="NA">Not Applicable</option>
 					<option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
 					<option value="Andhra Pradesh">Andhra Pradesh</option>
@@ -381,13 +389,13 @@ export class DemographicSurvey extends React.Component {
 			  </div>
 
 			  <div class="form-group">
-			    <label for="inputYOE">Years of Experience</label>
-			    <input type="number" step="0.25" class="form-control" id="inputYOE" aria-describedby="inputYOE" placeholder="0"/>
+			    <label for="years_of_experience">Years of Experience</label>
+			    <input type="number" step="0.25" class="form-control" name="years_of_experience" id="years_of_experience" aria-describedby="inputYOE"/>
 			  </div>
 
 			  <div class="form-group">
 			    <label for="">Organization</label>
-				<select class="form-control" name="inputOrganization">
+				<select class="form-control" name="organization">
 				  <option value="G">GVK EMRI</option>
 				  <option value="O">Other</option>
 				</select>			  
@@ -395,7 +403,7 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 			    <label for="">Completed Medical/Cardiovascular Refresher program (GVK EMRI Only)</label>
-				<select class="form-control" name="inputCardio">
+				<select class="form-control" name="med_cardio_refresher">
 				  <option value="NA">N/A</option>
 				  <option value="Y">Male</option>
 				  <option value="N">Other</option>
@@ -403,13 +411,13 @@ export class DemographicSurvey extends React.Component {
 			  </div>
 
               <div class="form-group">
-				<label for="inputDatePedatrics">Date Completed?</label>
-			    <input type="date" class="form-control" id="inputCardioDate" aria-describedby="inputCardioDate" placeholder="Enter Date"/>
+				<label for="med_cardio_date">Date Completed?</label>
+			    <input type="date" class="form-control" name="med_cardio_date" id="med_cardio_date" aria-describedby="inputCardioDate" placeholder="Enter Date"/>
 			  </div>
 
 			  <div class="form-group">
 			    <label for="">Completed OB/GYN Refresher Program (GVK EMRI Only)</label>
-				<select class="form-control" name="inputOBGYN">
+				<select class="form-control" name="obgyn_refresher">
 				  <option value="NA">Not Applicable</option>
 				  <option value="Y">Yes</option>
 				  <option value="N">No</option>
@@ -417,13 +425,13 @@ export class DemographicSurvey extends React.Component {
 			  </div>
 
 			  <div class="form-group">
-				<label for="inputDatePedatrics">Date Completed?</label>
-			    <input type="date" class="form-control" id="inputPediatricsDate" aria-describedby="inputPediatricsDate" placeholder="Enter Date"/>
+				<label for="obgyn_date">Date Completed?</label>
+			    <input type="date" class="form-control" name="obgyn_date" id="obgyn_date" aria-describedby="inputPediatricsDate" placeholder="Enter Date"/>
 			  </div>
 
 			  <div class="form-group">
 			    <label for="">Completed Trauma Refresher Program (GVK EMRI Only)</label>
-				<select class="form-control" name="inputTrauma">
+				<select class="form-control" name="trauma_refresher">
 				  <option value="NA">Not Applicable</option>
 				  <option value="Y">Yes</option>
 				  <option value="N">No</option>
@@ -432,12 +440,12 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 				<label for="inputDatePedatrics">Date Completed?</label>
-			    <input type="date" class="form-control" id="inputTraumaDate" aria-describedby="inputTraumaDate" placeholder="Enter Date"/>
+			    <input type="date" class="form-control" name="trauma_date" id="trauma_date" aria-describedby="inputTraumaDate" placeholder="Enter Date"/>
 			  </div>
 
 			  <div class="form-group">
 			    <label for="">Completed Pediatrics Refresher Program (GVK EMRI Only)</label>
-				<select class="form-control" name="inputPediatrics">
+				<select class="form-control" name="pediatrics_refresher">
 				  <option value="NA">Not Applicable</option>
 				  <option value="Y">Yes</option>
 				  <option value="N">No</option>
@@ -446,12 +454,12 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 				<label for="inputDatePedatrics">Date Completed?</label>
-			    <input type="date" class="form-control" id="inputPediatricsDate" aria-describedby="inputPediatricsDate" placeholder="Enter Date"/>
+			    <input type="date" class="form-control" name="pediatrics_date" id="pediatrics_date" aria-describedby="inputPediatricsDate" placeholder="Enter Date"/>
 			  </div>
 
 			  <div class="form-group">
 			    <label for="">Completed Leadership/Communication Refresher Program (GVK EMRI Only)</label>
-				<select class="form-control" name="inputLeadership">
+				<select class="form-control" name="leadership_refresher">
 				  <option value="NA">Not Applicable</option>
 				  <option value="Y">Yes</option>
 				  <option value="N">No</option>
@@ -460,12 +468,12 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 				<label for="inputDatePedatrics">Date Completed?</label>
-			    <input type="date" class="form-control" id="inputLeadershipDate" aria-describedby="inputLeadershipDate" placeholder="Enter Date"/>
+			    <input type="date" class="form-control" name="leadership_date" id="leadership_date" aria-describedby="inputLeadershipDate" placeholder="Enter Date"/>
 			  </div>
 
 			  <div class="form-group">
 			    <label for="">What device do you use most often to access the internet?</label>
-				<select class="form-control" name="inputDevice">
+				<select class="form-control" name="most_used_device">
 				  <option value="C">Computer</option>
 				  <option value="T">Tablet</option>
 				  <option value="S">Smartphone</option>
@@ -474,29 +482,27 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 			    <label for="">Please rate the quality of your internet access</label>
-				<select class="form-control" name="inputQuality">
+				<select class="form-control" name="internet_reliability">
 				  <option value="P">Poor/Unreliable</option>
 				  <option value="A">Adequate</option>
 				  <option value="E">Excellent</option>
-				</select>			  
+				</select>
 			  </div>
 
 			  <div class="form-group">
-			    <label for="inputAge">How many hours/day do you use your phone or computer for work purposes?</label>
-			    <input type="number" step="0.25" class="form-control" id="inputHoursWork" aria-describedby="inputAge" placeholder="0.0"/>
+			    <label for="work_device_hours">How many hours/day do you use your phone or computer for work purposes?</label>
+			    <input type="number" step="0.25" class="form-control" name="work_device_hours" id="work_device_hours" aria-describedby="work_device_hours"/>
 			  </div>
 
 			  <div class="form-group">
-			    <label for="inputAge">How many hours/day do you use your phone or computer for personal purposes?</label>
-			    <input type="number" step="0.25" class="form-control" id="inputAge" aria-describedby="inputHoursPersonal" placeholder="0.0"/>
+			    <label for="personal_device_hours">How many hours/day do you use your phone or computer for personal purposes?</label>
+			    <input type="number" step="0.25" class="form-control" name="personal_device_hours" id="personal_device_hours" aria-describedby="personal_device_hours"/>
 			  </div>
-		  </Form>
-
           </ModalBody>
           <ModalFooter>
-            <Button color="secondary" onClick={this.toggle}>Close</Button>
-           	<Button type="submit" color="success" onClick={this.toggle}>Submit Information</Button>{' '}
+           	<Button type="submit" color="success">Submit Information</Button>{' '}
           </ModalFooter>
+          </form>
         </Modal>
       </div>
     );

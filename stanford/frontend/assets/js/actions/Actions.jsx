@@ -1,4 +1,5 @@
 import 'whatwg-fetch';
+import { refreshStudent } from "./LoadUserActions.jsx";
 
 export const UPDATE_USERS = 'UPDATE_USERS';
 export const UPDATE_CATEGORIES = 'UPDATE_CATEGORIES';
@@ -14,6 +15,8 @@ export const UPDATE_TIMER = 'UPDATE_TIMER';
 export const UPDATE_FEEDBACK_SUMMARY = 'UPDATE_FEEDBACK_SUMMARY';
 export const SELECT_ANSWER = 'SELECT_ANSWER';
 export const CHANGE_PAGE = 'CHANGE_PAGE';
+export const UPDATE_CONSENT = 'UPDATE_CONSENT';
+export const UPDATE_DEMOSURVEY = 'UPDATE_DEMOSURVEY';
 
 export function changePage(page) {
 	return {
@@ -231,5 +234,55 @@ export function updateFeedbackSummary(feedback) {
 	return {
 		type: UPDATE_FEEDBACK_SUMMARY,
 		feedback
+	}
+}
+
+/* Handling for Consent form and Demographic survey */
+
+export function submitConsentForm(consent) {
+    let headers = Object.assign({}, window.postFormHeader);
+    let data = new FormData();
+    data.append("consent", consent);
+	headers.body = data;
+	return dispatch => fetch("/profile/consentsurvey", headers)
+		.then(r => {
+			console.log(r);
+			if (r.ok) {
+				console.debug("Consent submitted")
+				dispatch(updateConsentForm(r));
+				dispatch(refreshStudent());
+			} else {
+				console.debug("Consent submission failed")
+			}
+		});
+}
+
+export function updateConsentForm(consentResult) {
+	return {
+		type: UPDATE_CONSENT,
+		consentResult
+	}
+}
+
+export function submitDemographicSurvey(reference) {
+    let headers = Object.assign({}, window.postFormHeader);
+    let data = new FormData(reference);
+	headers.body = data;
+	return dispatch => fetch("/profile/demosurvey", headers)
+		.then(r => {
+			if (r.ok) {
+				console.debug("Demographic survey submitted")
+				dispatch(updateDemographicForm(r));
+				dispatch(refreshStudent());
+			} else {
+				console.debug("Demographic survey submission failed")
+			}
+		});
+}
+
+export function updateDemographicForm(demographicResult) {
+	return {
+		type: UPDATE_DEMOSURVEY,
+		demographicResult
 	}
 }
