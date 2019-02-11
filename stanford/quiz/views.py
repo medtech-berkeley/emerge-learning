@@ -174,7 +174,7 @@ def get_question(request):
 
             quiz_data = student.quiz_data.filter(quiz=quiz).first()
 
-            started_question = QuestionUserData.objects.filter(quiz=quiz.id, student=student, answer=None)
+            started_question = QuestionUserData.objects.filter(quiz_userdata=quiz_data, student=student, answer=None)
 
             outoftime = (quiz_data.time_completed or timezone.now()) > quiz_data.time_started + quiz.max_time
 
@@ -182,12 +182,12 @@ def get_question(request):
                 question = started_question.first().question
             else:
                 # check for questions user has already started, exclude from final set
-                question_set = get_unanswered_questions(student, quiz)
+                question_set = get_unanswered_questions(student, quiz_data)
 
-                stats = get_student_quiz_stats(quiz, student)
+                stats = get_student_quiz_stats(quiz_data, student)
                 if len(question_set) == 0 or outoftime:
                     for question in question_set:
-                        question_data = QuestionUserData.objects.create(student=student, question=question, quiz=quiz)
+                        question_data = QuestionUserData.objects.create(student=student, question=question, quiz_userdata=quiz_data)
 
                     if quiz_data.time_completed is None:
                         quiz_data.time_completed = timezone.now()
@@ -202,7 +202,7 @@ def get_question(request):
 
                 question = question_set[0]
                 # create QuestionUserData as user has started to answer question
-                question_data = QuestionUserData.objects.create(student=student, question=question, quiz=quiz)
+                question_data = QuestionUserData.objects.create(student=student, question=question, quiz_userdata=quiz_data)
 
             # strip out correctness indicators from answers
             question_json = QuestionSerializer(instance=question).data
@@ -260,7 +260,7 @@ def submit_answer(request):
 
             quiz_data = quiz_data.first()
 
-            user_data = student.question_data.filter(question=question, quiz=quiz_id)
+            user_data = student.question_data.filter(question=question, quiz_userdata=quiz_data)
 
             if not user_data.exists():
                 return JsonResponse({'accepted': False, 'reason': 'Question not started yet'}, status=404)
@@ -300,14 +300,14 @@ def get_quiz_results(request):
 
         quiz_data = quiz_data.first()
 
-        question_set = get_unanswered_questions(student, quiz)
+        question_set = get_unanswered_questions(student, quiz_data)
         if len(question_set) > 0 and not quiz_data.is_out_of_time():
             return JsonResponse({'accepted': False, 'reason': 'Quiz has not yet been completed'}, status=400)
         
         outoftime = quiz_data.is_out_of_time()
 
         result = []
-        user_data = QuestionUserData.objects.filter(quiz=quiz, student=student)
+        user_data = QuestionUserData.objects.filter(quiz_userdata=quiz_data, student=student)
         for qud in user_data:
             question = {
                 'text': qud.question.text,

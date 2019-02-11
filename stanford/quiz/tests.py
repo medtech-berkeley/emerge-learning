@@ -88,11 +88,11 @@ class TestUtils(TestCase):
         return question
 
     @staticmethod
-    def _create_question_userdata(question, student, quiz):
+    def _create_question_userdata(question, student, quiz_userdata):
         return QuestionUserData.objects.create(
             student=student,
             question=question,
-            quiz=quiz
+            quiz_userdata=quiz_userdata
         )
 
     @staticmethod
@@ -332,7 +332,8 @@ class QUDTest(APITest):
 
     def test_qud_single(self):
         q, quiz = self._create_questions_and_quiz(1, 1, 1)
-        a = self._create_question_userdata(q[0], self.student, quiz[0])
+        quiz_ud = self._create_quiz_userdata(quiz[0], self.student)
+        a = self._create_question_userdata(q[0], self.student, quiz_ud)
         request = self.factory.get(f'/api/questionuserdata/{a.id}/')
         response = self.client.get(f'/api/questionuserdata/{a.id}/')
 
@@ -341,7 +342,8 @@ class QUDTest(APITest):
 
     def test_qud_single_list(self):
         q, quiz = self._create_questions_and_quiz(1, 1, 1)
-        a = self._create_question_userdata(q[0], self.student, quiz[0])
+        quiz_ud = self._create_quiz_userdata(quiz[0], self.student)
+        a = self._create_question_userdata(q[0], self.student, quiz_ud)
         request = self.factory.get('/api/questionuserdata/')
         response = self.client.get('/api/questionuserdata/')
 
@@ -350,8 +352,9 @@ class QUDTest(APITest):
 
     def test_qud_many_single_user(self):
         q, quiz = self._create_questions_and_quiz(50, 4)
+        quiz_ud = self._create_quiz_userdata(quiz[0], self.student)
         for i, question in enumerate(q):
-            qud = self._create_question_userdata(question, self.student, quiz[0])
+            qud = self._create_question_userdata(question, self.student, quiz_ud)
             if i == 13: a = qud
 
         request = self.factory.get(f'/api/questionuserdata/{a.id}/')
@@ -362,8 +365,9 @@ class QUDTest(APITest):
 
     def test_qud_many_single_user_list(self):
         q, quiz = self._create_questions_and_quiz(50, 4)
+        quiz_ud = self._create_quiz_userdata(quiz[0], self.student)
         for i, question in enumerate(q):
-            qud = self._create_question_userdata(question, self.student, quiz[0])
+            qud = self._create_question_userdata(question, self.student, quiz_ud)
         request = self.factory.get('/api/questionuserdata/')
         response = self.client.get('/api/questionuserdata/')
 
@@ -379,8 +383,9 @@ class QUDTest(APITest):
             students.append(User.objects.create_user(f"sean{i}", "none").student)
 
         for student in students:
+            quiz_ud = self._create_quiz_userdata(quiz[0], student)
             for i, question in enumerate(q):
-                qud = self._create_question_userdata(question, student, quiz[0])
+                qud = self._create_question_userdata(question, student, quiz_ud)
                 if i == 13 and student == self.student: a = qud
 
         request = self.factory.get(f'/api/questionuserdata/{a.id}/')
@@ -396,8 +401,9 @@ class QUDTest(APITest):
             students.append(User.objects.create_user(f"sean{i}", "none").student)
 
         for student in students:
+            quiz_ud = self._create_quiz_userdata(quiz[0], student)
             for i, question in enumerate(q):
-                qud = self._create_question_userdata(question, student, quiz[0])
+                qud = self._create_question_userdata(question, student, quiz_ud)
 
         request = self.factory.get('/api/questionuserdata/')
         response = self.client.get('/api/questionuserdata/')
@@ -416,8 +422,9 @@ class QUDTest(APITest):
             students.append(User.objects.create_user(f"sean{i}", "none").student)
 
         for student in students:
+            quiz_ud = self._create_quiz_userdata(quiz[0], student)
             for i, question in enumerate(q):
-                qud = self._create_question_userdata(question, student, quiz[0])
+                qud = self._create_question_userdata(question, student, quiz_ud)
                 if i == 13 and student != self.student: a = qud
 
         request = self.factory.get(f'/api/questionuserdata/{a.id}/')
@@ -430,7 +437,8 @@ class QUDTest(APITest):
         self.student.save()
 
         q, quiz = self._create_questions_and_quiz(50, 4)
-        qud = self._create_question_userdata(q[13], self.student, quiz[0])
+        quiz_ud = self._create_quiz_userdata(quiz[0], self.student)
+        qud = self._create_question_userdata(q[13], self.student, quiz_ud)
         response = self.client.get(f'/api/questionuserdata/{qud.id}/')
 
         self.assertEqual(response.status_code, 200)

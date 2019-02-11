@@ -51,7 +51,7 @@ def get_subject_stats(student, date=None, query_set=QuestionUserData.objects):
 def get_subject_stat(student, query_set, subject, date=None):
     if date is None:
         date = timezone.now()
-    qud = query_set.filter(student=student, time_completed__lte=date, quiz__tags=subject)
+    qud = query_set.filter(student=student, time_completed__lte=date, quiz_userdata__quiz__tags=subject)
 
     stat = {}
     total = qud.count()
@@ -80,7 +80,7 @@ def get_stats_quiz(quiz, date=None):
         date = timezone.now()
 
     stats = {}
-    qud = QuestionUserData.objects.filter(quiz=quiz, time_completed__lte=date)
+    qud = QuestionUserData.objects.filter(quiz_userdata__quiz=quiz, time_completed__lte=date)
     stats['num_attempted'] = qud.count()
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['num_attempted'] - stats['num_correct']
@@ -123,17 +123,17 @@ def get_stats_location_question(question, location, date=None):
     return stats
 
 
-def get_student_quiz_stats(quiz, student):
+def get_student_quiz_stats(quiz_data, student):
     stats = {}
-    qud = QuestionUserData.objects.filter(quiz=quiz, student=student)
+    qud = QuestionUserData.objects.filter(quiz_userdata=quiz_data, student=student)
     stats['num_attempted'] = qud.count()
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['num_attempted'] - stats['num_correct']
     return stats
 
 
-def get_unanswered_questions(student, quiz):
-    user_data = QuestionUserData.objects.filter(student=student, quiz=quiz)
+def get_unanswered_questions(student, quiz_data):
+    user_data = QuestionUserData.objects.filter(student=student, quiz_userdata=quiz_data)
     started_questions = Question.objects.filter(question_data__in=user_data)
-    question_set = quiz.questions.exclude(id__in=started_questions)
+    question_set = quiz_data.quiz.questions.exclude(id__in=started_questions)
     return question_set
