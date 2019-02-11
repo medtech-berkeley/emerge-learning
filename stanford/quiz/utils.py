@@ -1,5 +1,42 @@
-from .models import Student, Question, Quiz, Answer, QuestionUserData, Tag
+from .models import Student, Question, Quiz, Answer, QuestionUserData, QuizUserData, Tag
+
 from django.utils import timezone
+from django.http import Http404
+from django.shortcuts import _get_queryset
+
+def get_latest_object_or_404(klass, *args, **kwargs):
+    """
+    Uses get().latest() to return object, or raises a Http404 exception if
+    the object does not exist.
+
+    klass may be a Model, Manager, or QuerySet object. All other passed
+    arguments and keyword arguments are used in the get() query.
+
+    Note: Like with get(), an MultipleObjectsReturned will be raised if more than one
+    object is found.
+    """
+    queryset = _get_queryset(klass)
+    try:
+        return queryset.filter(*args, **kwargs).latest()
+    except queryset.model.DoesNotExist:
+        raise Http404('No %s matches the given query.' % queryset.model._meta.object_name)
+
+def get_earliest_object_or_404(klass, *args, **kwargs):
+    """
+    Uses get().latest() to return object, or raises a Http404 exception if
+    the object does not exist.
+
+    klass may be a Model, Manager, or QuerySet object. All other passed
+    arguments and keyword arguments are used in the get() query.
+
+    Note: Like with get(), an MultipleObjectsReturned will be raised if more than one
+    object is found.
+    """
+    queryset = _get_queryset(klass)
+    try:
+        return queryset.filter(*args, **kwargs).earliest()
+    except queryset.model.DoesNotExist:
+        raise Http404('No %s matches the given query.' % queryset.model._meta.object_name)
 
 
 def get_stats_student(student, date=None, query_set=QuestionUserData.objects):
@@ -132,16 +169,29 @@ def get_student_quiz_stats(quiz_data, student):
     return stats
 
 
-def get_unanswered_questions(student, quiz_data):
-    user_data = QuestionUserData.objects.filter(student=student, quiz_userdata=quiz_data)
-    started_questions = Question.objects.filter(question_data__in=user_data)
-    question_set = quiz_data.quiz.questions.exclude(id__in=started_questions)
-    return question_set
+def end_quiz(quiz_userdata: QuizUserData):
+    student, quiz = quiz_userdata.student, quiz_userdata.quiz
 
-def end_quiz(quiz_userdata):
-    question_set = get_unanswered_questions(quiz_userdata.student, quiz_userdata)
+    question_set = quiz_userdata.get_unanswered_questions()
+    n_answered = len(quiz_userdata.get_answered_questions())
+
     for question in question_set:
-        question_data = QuestionUserData.objects.create(student=quiz_userdata.student, question=question, quiz_userdata=quiz_userdata)
+        if n_answered < quiz.num_questions:
+            qud = QuestionUserData.objects.filter(student=student, 
+                                                  question=question,
+                                                  quiz_userdata=quiz_userdata)
+
+            if qud.exists():
+                qud = qud.first()
+                qud.time_completed = timezone.now()
+                qud.save()
+            else:
+                question_data = QuestionUserData.objects.create(student=student,
+                                                                question=question,
+                                                                quiz_userdata=quiz_userdata, 
+                                                                time_completed=timezone.now())
+
+            n_answered += 1
 
     if quiz_userdata.time_completed is None:
         quiz_userdata.time_completed = timezone.now()

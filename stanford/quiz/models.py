@@ -59,6 +59,7 @@ class Quiz(models.Model):
     max_time = models.DurationField(default=datetime.timedelta(minutes=10))
     tags = models.ManyToManyField(Tag, related_name="quizzes")
     can_retake = models.BooleanField(default=False)
+    num_questions = models.IntegerField(default=-1) # -1 indicates there is no limit
 
     @property
     def questions(self):
@@ -75,7 +76,9 @@ class Category(models.Model):
     def create_category(sender, instance, created, **kwargs):
         if created:
             practice_tag = Tag.objects.create(text=instance.name + " Practice")
-            quiz = Quiz.objects.create(name=' '.join([instance.name, "Practice"]), can_retake=True)
+            quiz = Quiz.objects.create(name=' '.join([instance.name, "Practice"]),
+                                       can_retake=True,
+                                       num_questions=10)
             quiz.tags.add(practice_tag)
             instance.practice_quiz = quiz
             instance.save()
@@ -192,11 +195,26 @@ class QuizUserData(models.Model):
         return "Quiz " + str(self.quiz.name) + " Data - " + self.student.user.username
 
     def is_completed(self):
-        return time_completed is not None
+        return self.time_completed is not None
 
     def is_out_of_time(self):
         end_time = self.time_started + self.quiz.max_time
         return (self.time_completed or timezone.now()) > end_time
+
+    def is_out_of_questions(self):
+        return (self.quiz.num_questions != -1 and len(self.get_answered_questions()) >= self.quiz.num_questions) or len(self.get_unanswered_questions()) == 0
+
+    def get_answered_questions(self):
+        user_data = QuestionUserData.objects.filter(student=self.student, quiz_userdata=self).exclude(time_completed=None)
+        started_questions = Question.objects.filter(question_data__in=user_data)
+        return started_questions
+
+    def get_unanswered_questions(self):
+        question_set = self.quiz.questions.exclude(id__in=self.get_answered_questions())
+        return question_set
+
+    def is_done(self):
+        return self.is_completed() or self.is_out_of_time() or self.is_out_of_questions()
 
 
 class GVK_EMRI_Demographics(models.Model):
@@ -224,3 +242,4 @@ class GVK_EMRI_Demographics(models.Model):
 
     work_device_hours = models.DecimalField(max_digits=4, decimal_places=2)
     personal_device_hours = models.DecimalField(max_digits=4, decimal_places=2)
+

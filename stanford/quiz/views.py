@@ -1,4 +1,5 @@
 import pytz
+import random
 import datetime
 
 from django.http import HttpResponse, JsonResponse
@@ -15,7 +16,7 @@ from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
 from rest_framework import permissions, generics, mixins
 
-from .utils import get_unanswered_questions, get_student_quiz_stats
+from .utils import get_student_quiz_stats, get_latest_object_or_404
 from .utils import get_stats_student, end_quiz
 from .models import Question, QuestionUserData, Quiz, Student, Feedback
 from .models import Student, Quiz, Question, Answer, QuestionUserData, QuizUserData, GVK_EMRI_Demographics
@@ -80,6 +81,27 @@ class QuizUserDataViewSet(ModelViewSet):
 
     def get_queryset(self):
         return QuizUserData.objects.filter(student=self.request.user.student)
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Perform the lookup filtering.
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+        assert lookup_url_kwarg in self.kwargs, (
+            'Expected view %s to be called with a URL keyword argument '
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            'attribute on the view correctly.' %
+            (self.__class__.__name__, lookup_url_kwarg)
+        )
+
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        obj = get_latest_object_or_404(queryset, **filter_kwargs)
+
+        # May raise a permission denied
+        self.check_object_permissions(self.request, obj)
+
+        return obj
 
 
 class QuestionUserDataViewSet(ModelViewSet):
@@ -173,7 +195,8 @@ def start_quiz(request):
             quiz_data = student.quiz_data.filter(quiz=quiz)
             if quiz_data.exists():
                 quiz_data = quiz_data.latest()
-                if quiz.can_retake and (quiz_data.is_out_of_time or quiz_data.is_completed):
+
+                if quiz.can_retake and quiz_data.is_done():
                     end_quiz(quiz_data)
                 else:
                     return JsonResponse({'accepted': False, 'reason': 'This quiz has already been started'}, status=400)
@@ -206,15 +229,15 @@ def get_question(request):
 
             started_question = QuestionUserData.objects.filter(quiz_userdata=quiz_data, student=student, answer=None)
 
-            outoftime = (quiz_data.time_completed or timezone.now()) > quiz_data.time_started + quiz.max_time
+            outoftime = quiz_data.is_out_of_time()
 
             if not outoftime and started_question.exists():
                 question = started_question.first().question
             else:
                 # check for questions user has already started, exclude from final set
-                question_set = get_unanswered_questions(student, quiz_data)
+                question_set = quiz_data.get_unanswered_questions()
 
-                if len(question_set) == 0 or outoftime:
+                if quiz_data.is_done():
                     end_quiz(quiz_data)
 
                     stats = get_student_quiz_stats(quiz_data, student)
@@ -226,7 +249,7 @@ def get_question(request):
                                 'num_correct': stats['num_correct']}
                     return JsonResponse(data=response)
 
-                question = question_set[0]
+                question = random.choice(question_set)
                 # create QuestionUserData as user has started to answer question
                 question_data = QuestionUserData.objects.create(student=student, question=question, quiz_userdata=quiz_data)
 
@@ -326,8 +349,7 @@ def get_quiz_results(request):
 
         quiz_data = quiz_data.latest()
 
-        question_set = get_unanswered_questions(student, quiz_data)
-        if len(question_set) > 0 and not quiz_data.is_out_of_time():
+        if not quiz_data.is_done():
             return JsonResponse({'accepted': False, 'reason': 'Quiz has not yet been completed'}, status=400)
         
         outoftime = quiz_data.is_out_of_time()
