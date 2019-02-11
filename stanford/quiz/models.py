@@ -14,7 +14,6 @@ from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_
 def on_transaction_commit(func):
     def inner(*args, **kwargs):
         transaction.on_commit(lambda: func(*args, **kwargs))
-
     return inner
 
 class Student(models.Model):
@@ -105,12 +104,21 @@ class Question(models.Model):
         default=NOVICE,
     )
 
+    def save_related(self, request, form, formsets, change):
+        # ensures that all_tag exists after save
+        super(GroupAdmin, self).save_related(request, form, formsets, change)
+        form.instance.add_all_tag()
+
     @receiver(post_save, sender='quiz.Question')
-    @on_transaction_commit
     def create_question(sender, instance, created, **kwargs):
-        if created:
-            # TODO: add/create "all" tag
-            pass
+        instance.add_all_tag()
+
+    def add_all_tag(self):
+        try:
+            all_tag = Tag.objects.get(text='all')
+        except Tag.DoesNotExist:
+            all_tag = Tag.objects.create(text='all')
+        self.tags.add(all_tag)
 
     def __str__(self):
         return self.category.name + " - Question " + str(self.id)

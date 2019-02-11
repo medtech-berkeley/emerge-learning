@@ -786,6 +786,11 @@ class QuizTestCase(TestCase):
         student.save()
         client.login(username=username, password=password)
         return client, student
+    
+    def test_question_all_tags(self):
+        all_tag = Tag.objects.get(text='all')
+        for q in self.questions:
+            self.assertIn(all_tag, q.tags.all())
 
     def test_get_question_basic(self):
         response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
