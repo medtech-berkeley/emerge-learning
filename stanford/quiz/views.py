@@ -16,7 +16,7 @@ from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
 from rest_framework import permissions, generics, mixins
 
-from .utils import get_student_quiz_stats
+from .utils import get_student_quiz_stats, get_latest_object_or_404
 from .utils import get_stats_student, end_quiz
 from .models import Question, QuestionUserData, Quiz, Student, Feedback
 from .models import Student, Quiz, Question, Answer, QuestionUserData, QuizUserData, GVK_EMRI_Demographics
@@ -81,6 +81,27 @@ class QuizUserDataViewSet(ModelViewSet):
 
     def get_queryset(self):
         return QuizUserData.objects.filter(student=self.request.user.student)
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Perform the lookup filtering.
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+        assert lookup_url_kwarg in self.kwargs, (
+            'Expected view %s to be called with a URL keyword argument '
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            'attribute on the view correctly.' %
+            (self.__class__.__name__, lookup_url_kwarg)
+        )
+
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        obj = get_latest_object_or_404(queryset, **filter_kwargs)
+
+        # May raise a permission denied
+        self.check_object_permissions(self.request, obj)
+
+        return obj
 
 
 class QuestionUserDataViewSet(ModelViewSet):

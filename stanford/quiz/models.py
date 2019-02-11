@@ -202,7 +202,7 @@ class QuizUserData(models.Model):
         return (self.time_completed or timezone.now()) > end_time
 
     def is_out_of_questions(self):
-        return len(self.get_answered_questions()) >= self.quiz.num_questions or len(self.get_unanswered_questions()) == 0
+        return (self.quiz.num_questions != -1 and len(self.get_answered_questions()) >= self.quiz.num_questions) or len(self.get_unanswered_questions()) == 0
 
     def get_answered_questions(self):
         user_data = QuestionUserData.objects.filter(student=self.student, quiz_userdata=self).exclude(time_completed=None)

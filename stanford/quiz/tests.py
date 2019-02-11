@@ -844,6 +844,20 @@ class QuizTestCase(TestCase):
         end_quiz(QuizUserData.objects.first())
         response = self.client.get("/quiz/start", {'quiz': self.quizzes[4].id})
         self.assertEqual(response.status_code, 200)
+
+    def test_retake_quiz_complete(self):
+        for _ in range(2):
+            self.client.get("/quiz/start", {'quiz': self.quizzes[6].id})
+            for i in range(10):
+                response = self.client.get("/quiz/question", {'quiz': self.quizzes[6].id})
+                question_id = response.json()['id']
+                question = Question.objects.get(id=question_id)
+                answer = question.answers.filter(is_correct=True).first()
+                response = self.client.post("/quiz/answer", {'quiz': self.quizzes[6].id, 'question': question_id, 'answer': answer.id})
+                self.assertEqual(response.status_code, 200)
+            
+            response = self.client.get("/quiz/question", {'quiz': self.quizzes[6].id})
+            self.assertEqual(response.json()['completed'], True)
     
     def test_cannot_retake_quiz(self):
         self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
