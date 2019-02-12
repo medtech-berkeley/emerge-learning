@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 from .utils import get_stats_student
-from .models import Question, QuestionUserData, Category, CategoryUserData, Answer, Student, QuestionMedia, Feedback
+from .models import Question, QuestionUserData, Quiz, QuizUserData, Answer, Student, QuestionMedia, Feedback
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,7 +14,8 @@ class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer(allow_null=True)
     class Meta:
         model = Student
-        fields = ('id', 'user', 'name', 'location', 'description', 'image', 'completed_survey', 'profile_type')
+        fields = ('id', 'user', 'name', 'location', 'description', 'image', 
+                  'consent_prompt_required', 'consent','completed_demographic_survey', 'profile_type')
 
 class SmallStudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -22,27 +23,26 @@ class SmallStudentSerializer(serializers.ModelSerializer):
         model = Student
         fields = ('user', 'profile_type')
 
-class CategorySerializer(serializers.ModelSerializer):
-    tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='text', allow_null=True)
+class QuizSerializer(serializers.ModelSerializer):
     is_completed = serializers.SerializerMethodField()
 
     class Meta:
-        model = Category
-        fields = ('id', 'name', 'start', 'end', 'sponsor', 'is_challenge', 'max_time', 'image', 'tags', 'is_completed')
+        model = Quiz
+        fields = ('id', 'name', 'start', 'end', 'is_challenge', 'max_time', 'image', 'is_completed', 'can_retake', 'required')
 
     def get_is_completed(self, instance):
         try:
             user = self.context['request'].user.student
-            category_data = CategoryUserData.objects.get(student=user, category=instance)
-            return category_data.time_completed is not None or timezone.now() >= (category_data.time_started + instance.max_time)
-        except CategoryUserData.DoesNotExist:
+            quiz_data = QuizUserData.objects.filter(student=user, quiz=instance).latest()
+            return quiz_data.is_done()
+        except QuizUserData.DoesNotExist:
             return False
 
 
-class CategoryUserDataSerializer(serializers.ModelSerializer):
+class QuizUserDataSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CategoryUserData
-        fields = ('category', 'student', 'time_started', 'time_completed')
+        model = QuizUserData
+        fields = ('quiz', 'student', 'time_started', 'time_completed')
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -75,12 +75,13 @@ class QuestionMediaSerializer(serializers.ModelSerializer):
         fields = ('media_file', 'media_type')
 
 class QuestionSerializer(serializers.ModelSerializer):
+    tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='text', allow_null=True)
     answers = AnswerSerializer(many=True)
     media = QuestionMediaSerializer()
 
     class Meta:
         model = Question
-        fields = ('id', 'category', 'text', 'answers', 'created', 'media',)
+        fields = ('id', 'text', 'answers', 'created', 'media', 'tags')
 
 
 class StudentStatsSerializer(serializers.Serializer):

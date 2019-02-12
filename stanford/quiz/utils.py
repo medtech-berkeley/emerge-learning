@@ -1,5 +1,42 @@
-from .models import Student, Question, Category, Answer, QuestionUserData, Tag
+from .models import Student, Question, Quiz, Answer, QuestionUserData, QuizUserData, Tag
+
 from django.utils import timezone
+from django.http import Http404
+from django.shortcuts import _get_queryset
+
+def get_latest_object_or_404(klass, *args, **kwargs):
+    """
+    Uses get().latest() to return object, or raises a Http404 exception if
+    the object does not exist.
+
+    klass may be a Model, Manager, or QuerySet object. All other passed
+    arguments and keyword arguments are used in the get() query.
+
+    Note: Like with get(), an MultipleObjectsReturned will be raised if more than one
+    object is found.
+    """
+    queryset = _get_queryset(klass)
+    try:
+        return queryset.filter(*args, **kwargs).latest()
+    except queryset.model.DoesNotExist:
+        raise Http404('No %s matches the given query.' % queryset.model._meta.object_name)
+
+def get_earliest_object_or_404(klass, *args, **kwargs):
+    """
+    Uses get().latest() to return object, or raises a Http404 exception if
+    the object does not exist.
+
+    klass may be a Model, Manager, or QuerySet object. All other passed
+    arguments and keyword arguments are used in the get() query.
+
+    Note: Like with get(), an MultipleObjectsReturned will be raised if more than one
+    object is found.
+    """
+    queryset = _get_queryset(klass)
+    try:
+        return queryset.filter(*args, **kwargs).earliest()
+    except queryset.model.DoesNotExist:
+        raise Http404('No %s matches the given query.' % queryset.model._meta.object_name)
 
 
 def get_stats_student(student, date=None, query_set=QuestionUserData.objects):
@@ -51,7 +88,7 @@ def get_subject_stats(student, date=None, query_set=QuestionUserData.objects):
 def get_subject_stat(student, query_set, subject, date=None):
     if date is None:
         date = timezone.now()
-    qud = query_set.filter(student=student, time_completed__lte=date, question__category__tags=subject)
+    qud = query_set.filter(student=student, time_completed__lte=date, quiz_userdata__quiz__tags=subject)
 
     stat = {}
     total = qud.count()
@@ -75,12 +112,12 @@ def get_stats_question_total(question, date=None):
     return stats
 
 
-def get_stats_category(category, date=None):
+def get_stats_quiz(quiz, date=None):
     if date is None:
         date = timezone.now()
 
     stats = {}
-    qud = QuestionUserData.objects.filter(question__category=category, time_completed__lte=date)
+    qud = QuestionUserData.objects.filter(quiz_userdata__quiz=quiz, time_completed__lte=date)
     stats['num_attempted'] = qud.count()
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['num_attempted'] - stats['num_correct']
@@ -99,12 +136,12 @@ def get_stats_location_total(location, date=None):
     return stats
 
 
-def get_stats_location_category(category, location, date=None):
+def get_stats_location_quiz(quiz, location, date=None):
     if date is None:
         date = timezone.now()
 
     stats = {}
-    qud = QuestionUserData.objects.filter(question__category=category, location=location, time_completed__lte=date)
+    qud = QuestionUserData.objects.filter(quiz=quiz, location=location, time_completed__lte=date)
     stats['num_attempted'] = qud.count()
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['num_attempted'] - stats['num_correct']
@@ -123,18 +160,39 @@ def get_stats_location_question(question, location, date=None):
     return stats
 
 
-def get_student_category_stats(category, student):
+def get_student_quiz_stats(quiz_data, student):
     stats = {}
-    qud = QuestionUserData.objects.filter(question__category=category, student=student)
+    qud = QuestionUserData.objects.filter(quiz_userdata=quiz_data, student=student)
     stats['num_attempted'] = qud.count()
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['num_attempted'] - stats['num_correct']
     return stats
 
 
-def get_unanswered_questions(student, category):
-    user_data = QuestionUserData.objects.filter(student=student, question__category=category)
-    started_questions = set(data.question for data in user_data)
-    question_set = [question for question in Question.objects.filter(category=category)
-                    if question not in started_questions]
-    return question_set
+def end_quiz(quiz_userdata: QuizUserData):
+    student, quiz = quiz_userdata.student, quiz_userdata.quiz
+
+    question_set = quiz_userdata.get_unanswered_questions()
+    n_answered = len(quiz_userdata.get_answered_questions())
+
+    for question in question_set:
+        if n_answered < quiz.num_questions:
+            qud = QuestionUserData.objects.filter(student=student, 
+                                                  question=question,
+                                                  quiz_userdata=quiz_userdata)
+
+            if qud.exists():
+                qud = qud.first()
+                qud.time_completed = timezone.now()
+                qud.save()
+            else:
+                question_data = QuestionUserData.objects.create(student=student,
+                                                                question=question,
+                                                                quiz_userdata=quiz_userdata, 
+                                                                time_completed=timezone.now())
+
+            n_answered += 1
+
+    if quiz_userdata.time_completed is None:
+        quiz_userdata.time_completed = timezone.now()
+        quiz_userdata.save()

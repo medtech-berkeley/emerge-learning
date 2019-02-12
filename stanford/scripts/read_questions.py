@@ -1,28 +1,27 @@
-from quiz.models import Question, Answer, Category, QuestionUserData, Student
+from quiz.models import Question, Answer, Quiz, QuestionUserData, Student
 from datetime import datetime, timedelta
 import csv
 
 def run():
-	# spicy_challenge_category = create_category("Spicy Challenge", sponsor="Stanford University")
-	saucy_challenge_category = create_category("Saucy Challenge", sponsor="Harvard University", is_challenge=False)
-	salty_challenge_category = create_category("Salty Challenge", sponsor="Cambridge University", is_challenge=False)
-	# create_questions_answers_from_csv('test.csv', spicy_challenge_category)
+	# spicy_challenge_quiz = create_quiz("Spicy Challenge")
+	saucy_challenge_quiz = create_quiz("Saucy Challenge", is_challenge=False)
+	salty_challenge_quiz = create_quiz("Salty Challenge", is_challenge=False)
+	# create_questions_answers_from_csv('test.csv', spicy_challenge_quiz)
 
 
-def create_category(category_name="Default", start=datetime.now(), 
-								  end=datetime(2020,9,16), sponsor="Default", 
+def create_quiz(quiz_name="Default", start=datetime.now(), 
+								  end=datetime(2020,9,16),
 								  is_challenge=True):
 	
-	category = Category.objects.create(name=category_name, start=start, end=end,
-									   sponsor=sponsor, is_challenge=is_challenge)
+	quiz = Quiz.objects.create(name=quiz_name, start=start, end=end, is_challenge=is_challenge)
 
-def create_questions_answers_from_csv(filename, category):
+def create_questions_answers_from_csv(filename, quiz):
 	with open('test.csv', encoding='utf-8') as f:
 		reader = csv.reader(f)
 		rownum = 0
 		for row in reader:
 			if rownum != 0:
-				question = Question.objects.create(text=row[0], category=category, 
+				question = Question.objects.create(text=row[0], quiz=quiz, 
 					                               created=datetime.now())
 				row = row[1:]
 				for answer in row:

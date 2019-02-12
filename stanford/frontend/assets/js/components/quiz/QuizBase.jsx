@@ -9,7 +9,7 @@ export class QuizBase extends React.Component {
 		this.quizID = this.props.match.params.quizId;
 		// console.log("QuizBase did mount.");
 		// console.log(this.quizID);
-		this.props.getCurrentQuestion(this.quizID);
+		this.props.startQuiz(this.quizID);
 		this.props.getCategoryData(this.quizID);
 		window.scroll(0, 0);
 	}
@@ -17,7 +17,8 @@ export class QuizBase extends React.Component {
 	render() {
 		return (
 			<div>
-			{!this.props.complete ? <QuizQuestion categoryId={this.quizID}
+			{!this.props.complete ? <QuizQuestion
+										categoryId={this.quizID}
 										text={this.props.currentQuestion.text}
 										answers={this.props.currentQuestion.answers}
 										name={this.props.categoryName}
@@ -62,6 +63,7 @@ QuizBase.propTypes = {
     getCategoryData: PropTypes.func,
     answerQuestion: PropTypes.func,
     getResults: PropTypes.func,
+    startQuiz: PropTypes.func,
 	submitFeedback: PropTypes.func,
 	selectAnswer: PropTypes.func
 };

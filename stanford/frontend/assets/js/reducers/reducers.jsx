@@ -1,5 +1,5 @@
 import { UPDATE_CATEGORY_DATA, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_RESULTS, UPDATE_FEEDBACK_SUMMARY, SELECT_ANSWER, CHANGE_PAGE } from "../actions/Actions"
-import { UPDATE_LEADERBOARD, UPDATE_TIMER } from "../actions/Actions"
+import { UPDATE_LEADERBOARD, UPDATE_TIMER, UPDATE_CONSENT, UPDATE_DEMOSURVEY} from "../actions/Actions"
 import { UPDATE_STUDENT, UPDATE_STUDENTS } from "../actions/LoadUserActions"
 import { UPDATE_DATA } from "../actions/DataActions"
 import { ADD_MESSAGE } from "../actions/UIActions";
@@ -31,7 +31,6 @@ const initialState = {
     ui: {
         currentTime: Math.floor((new Date).getTime()/1000),
         page: 'dashboard',
-        categoryId: -1,
         timeStarted: Math.floor((new Date).getTime()/1000),
         maxTime: 300,
         categoryId: -1,
@@ -106,6 +105,8 @@ export function stanfordApp(state = initialState, action) {
             break;
         case (SELECT_CATEGORY):
             newState.ui.categoryId = action.categoryId;
+            newState.ui.complete = initialState.ui.complete;
+            newState.ui.outoftime = initialState.ui.outoftime;
             break;
         case (UPDATE_CURRENT_QUESTION):
             newState.ui.currentQuestion = action.currentQuestion;

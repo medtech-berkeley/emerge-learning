@@ -1,4 +1,5 @@
 import 'whatwg-fetch';
+import { refreshStudent } from "./LoadUserActions.jsx";
 
 export const UPDATE_USERS = 'UPDATE_USERS';
 export const UPDATE_CATEGORIES = 'UPDATE_CATEGORIES';
@@ -14,6 +15,8 @@ export const UPDATE_TIMER = 'UPDATE_TIMER';
 export const UPDATE_FEEDBACK_SUMMARY = 'UPDATE_FEEDBACK_SUMMARY';
 export const SELECT_ANSWER = 'SELECT_ANSWER';
 export const CHANGE_PAGE = 'CHANGE_PAGE';
+export const UPDATE_CONSENT = 'UPDATE_CONSENT';
+export const UPDATE_DEMOSURVEY = 'UPDATE_DEMOSURVEY';
 
 export function changePage(page) {
 	return {
@@ -51,7 +54,7 @@ export function updateTimer(time) {
 
 
 export function getCategories() {
-	return dispatch => fetch("/api/categories", window.getHeader)
+	return dispatch => fetch("/api/quizzes", window.getHeader)
 		.then(r => r.json().then(categories => {
 			dispatch(updateCategories(categories))
 		}));
@@ -96,7 +99,7 @@ export function updateCategoryData(name, maxTime, timeStarted, timeCompleted) {
 }
 
 export function getCurrentQuestion(categoryId) {
-	return dispatch => fetch("/quiz/question?category="+categoryId, window.getHeader)
+	return dispatch => fetch("/quiz/question?quiz="+categoryId, window.getHeader)
 		.then(r => r.json().then(question => {
 			// console.debug(question);
 			if (question.completed) {
@@ -109,10 +112,17 @@ export function getCurrentQuestion(categoryId) {
 		}));
 }
 
+export function startQuiz(categoryId) {
+	return dispatch => fetch("/quiz/start?quiz="+categoryId, window.getHeader)
+		.then(r => r.json().then(quiz => {
+			dispatch(getCurrentQuestion(categoryId));
+		}));
+}
+
 export function getCategoryData(categoryId) {
-	return dispatch => fetch("/api/categoryuserdata/" + categoryId, window.getHeader)
+	return dispatch => fetch("/api/quizuserdata/" + categoryId, window.getHeader)
 		.then(r => r.json().then(categoryUserData => {
-			fetch("/api/categories/" + categoryId, window.getHeader)
+			fetch("/api/quizzes/" + categoryId, window.getHeader)
 			.then(r => r.json().then(category => {
 				var time = category.max_time.split(':');
 				let maxTime = (+time[0]) * 60 * 60 + (+time[1]) * 60 + (+time[2]);
@@ -145,6 +155,7 @@ export function answerQuestion(questionId, answerId, categoryId) {
     let data = new FormData();
     data.append("question", questionId);
     data.append("answer", answerId);
+    data.append("quiz", categoryId);
     headers.body = data;
 	return dispatch => fetch("/quiz/answer", headers)
 		.then(r => r.json().then(answer => {
@@ -175,7 +186,7 @@ export function updateCategoryCompleted(categoryId, num_attempted, num_correct, 
 }
 
 export function getResults(categoryId) {
-	return dispatch => fetch("/quiz/results?category=" + categoryId, window.getHeader)
+	return dispatch => fetch("/quiz/results?quiz=" + categoryId, window.getHeader)
 	.then(r => r.json().then(json => {
 	    // TODO: add check for accepted
 		dispatch(updateCategoryResults(json.results))
@@ -230,5 +241,55 @@ export function updateFeedbackSummary(feedback) {
 	return {
 		type: UPDATE_FEEDBACK_SUMMARY,
 		feedback
+	}
+}
+
+/* Handling for Consent form and Demographic survey */
+
+export function submitConsentForm(consent) {
+    let headers = Object.assign({}, window.postFormHeader);
+    let data = new FormData();
+    data.append("consent", consent);
+	headers.body = data;
+	return dispatch => fetch("/profile/consentsurvey", headers)
+		.then(r => {
+			console.log(r);
+			if (r.ok) {
+				console.debug("Consent submitted")
+				dispatch(updateConsentForm(r));
+				dispatch(refreshStudent());
+			} else {
+				console.debug("Consent submission failed")
+			}
+		});
+}
+
+export function updateConsentForm(consentResult) {
+	return {
+		type: UPDATE_CONSENT,
+		consentResult
+	}
+}
+
+export function submitDemographicSurvey(reference) {
+    let headers = Object.assign({}, window.postFormHeader);
+    let data = new FormData(reference);
+	headers.body = data;
+	return dispatch => fetch("/profile/demosurvey", headers)
+		.then(r => {
+			if (r.ok) {
+				console.debug("Demographic survey submitted")
+				dispatch(updateDemographicForm(r));
+				dispatch(refreshStudent());
+			} else {
+				console.debug("Demographic survey submission failed")
+			}
+		});
+}
+
+export function updateDemographicForm(demographicResult) {
+	return {
+		type: UPDATE_DEMOSURVEY,
+		demographicResult
 	}
 }
