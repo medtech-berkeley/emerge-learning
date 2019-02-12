@@ -48,7 +48,7 @@ def signup(request):
 
                     # Send Email
                     current_site = get_current_site(request)
-                    mail_subject = 'Activate your blog account.'
+                    mail_subject = 'Welcome to Emerge Learning!'
                     message = render_to_string('acc_active_email.html', {
                         'user': user,
                         'domain': current_site.domain,
@@ -61,7 +61,7 @@ def signup(request):
                     )
                     email.send()
 
-                    return redirect('dashboard')
+                    return render(request, 'accounts/login.html', {'error':'An account verification email has been sent!'})
                 except Exception as e:
                     print(str(type(e)) + ":", e)
                     return redirect(reverse('dashboard') + '?error=Unknown error has occurred...')
@@ -78,7 +78,10 @@ def logins(request):
             login(request, user)
             return redirect('dashboard')
         else:
-            return render(request, 'accounts/login.html', {'error':'Incorrect password or username'})
+            if not User.objects.get(username=request.POST['username']).is_active:
+                print("here")
+                return render(request, 'accounts/login.html', {'error':'Account not verified. Please check your email.'})
+            return render(request, 'accounts/login.html', {'error':'Incorrect username or password.'})
     else:
         return render(request, 'accounts/login.html')
 
