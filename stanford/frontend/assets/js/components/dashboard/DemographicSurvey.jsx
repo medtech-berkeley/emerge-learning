@@ -405,8 +405,8 @@ export class DemographicSurvey extends React.Component {
 			    <label for="">Completed Medical/Cardiovascular Refresher program (GVK EMRI Only)</label>
 				<select class="form-control" name="med_cardio_refresher">
 				  <option value="NA">N/A</option>
-				  <option value="Y">Male</option>
-				  <option value="N">Other</option>
+				  <option value="Y">Yes</option>
+				  <option value="N">No</option>
 				</select>			  
 			  </div>
 
