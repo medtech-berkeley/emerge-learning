@@ -15,7 +15,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ('id', 'user', 'name', 'location', 'description', 'image', 
-                  'consent_prompt_required', 'consent','completed_demographic_survey', 'profile_type')
+                  'consent_prompt_required', 'consent','completed_demographic_survey','num_required_quizzes', 'profile_type')
 
 class SmallStudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
