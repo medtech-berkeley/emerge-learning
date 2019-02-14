@@ -46,6 +46,12 @@ class Student(models.Model):
 
     profile_type = models.CharField(max_length=10, choices=PROFILE_CHOICES, default="STUD")
 
+    @property
+    def num_required_quizzes(self):
+        completed_quizzes = Quiz.objects.filter(quiz_data__student=self).exclude(quiz_data__time_completed=None)
+        required_quizzes = Quiz.objects.filter(required=True).difference(completed_quizzes)
+        return required_quizzes.count()
+
     def __str__(self):
         return self.user.username
 
