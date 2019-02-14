@@ -42,7 +42,6 @@
     <h5 class="card-title">Log In</h5>
         <form method = "POST" action = "{% url 'login_real' %}">
         {% csrf_token %}
-
         <div class="form-group">
           <input type="text" name="username"class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Username">
         </div>
@@ -54,12 +53,12 @@
       </div>
         </form>
 
+        <a href="{% url 'password_reset_real' %}"> Forgot password?</a>
         
-        
-        <form method = "POST" action="{% url 'password_reset_real' %}">
+        <!-- <form method = "POST" action="{% url 'password_reset_real' %}">
           {% csrf_token %}
           <button class="btn btn-success btn-block" type="submit">Reset Password</button>
-        </form>
+        </form> -->
   </div>
 </div>
 </div>
