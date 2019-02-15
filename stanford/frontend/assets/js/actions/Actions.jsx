@@ -115,6 +115,7 @@ export function getCurrentQuestion(categoryId) {
 export function startQuiz(categoryId) {
 	return dispatch => fetch("/quiz/start?quiz="+categoryId, window.getHeader)
 		.then(r => r.json().then(quiz => {
+			dispatch(getCategoryData(categoryId));
 			dispatch(getCurrentQuestion(categoryId));
 		}));
 }

@@ -10,7 +10,6 @@ export class QuizBase extends React.Component {
 		// console.log("QuizBase did mount.");
 		// console.log(this.quizID);
 		this.props.startQuiz(this.quizID);
-		this.props.getCategoryData(this.quizID);
 		window.scroll(0, 0);
 	}
 
