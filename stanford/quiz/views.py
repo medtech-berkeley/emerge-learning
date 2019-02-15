@@ -205,8 +205,8 @@ def start_quiz(request):
             
             # check if there are any required quizzes left to do
             if not quiz.required:
-                completed_quizzes = Quiz.objects.filter(quiz_data__student=student).exclude(quiz_data__time_completed=None)
-                required_quizzes = Quiz.objects.filter(required=True).difference(completed_quizzes)
+                completed_quizzes = set(q.quiz for q in QuizUserData.objects.filter(student=student) if q.is_done())
+                required_quizzes = set(Quiz.objects.filter(required=True)) - completed_quizzes
                 if required_quizzes.count() > 0:
                     return JsonResponse({'accepted': False, 'reason': 'Missing one or more required tests.'}, status=400)
 
