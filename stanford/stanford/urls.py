@@ -7,7 +7,7 @@ from quiz.views import submit_consent_form
 from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, upload_quizzes, submit_feedback, start_quiz
 from django.conf import settings
 from django.conf.urls.static import static
-from accounts.views import signup, logins, activate
+from accounts.views import signup, logins, activate, resend_verification
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 
@@ -49,8 +49,8 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'), name='password_reset_confirm'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'), name='password_reset_done'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'), name='password_reset_complete'),
-    # path('password_change/', auth_views.PasswordChangeView.as_view(template_name='password_change.html'), name='password_change'),
     path('instructor/uploadquizzes/', upload_quizzes),
+    path('resend_verification', resend_verification, name='resend_verification'),
     re_path(r'^dashboard/.*$', dashboard, name='dashboard')
 ]
 

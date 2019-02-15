@@ -37,6 +37,13 @@
         <span aria-hidden="true">&times;</span>
       </button>
       <strong> {{error}} </strong>
+      {% if user %}
+      <form method = "POST" action = "{% url 'resend_verification' %}" id="resend">
+          {% csrf_token %}
+          <input type="hidden" name="user" value={{user}} />
+          <a style="color: blue; " onclick="document.getElementById('resend').submit()"> Resend Verification</a>
+        </form>
+        {% endif %}
     </div>
   {% endif %}
 <div class="card login-card">
@@ -56,13 +63,8 @@
         </form>
 
         <a href="{% url 'password_reset_real' %}"> Forgot password?</a>
-        
-        <!-- <form method = "POST" action="{% url 'password_reset_real' %}">
-          {% csrf_token %}
-          <button class="btn btn-success btn-block" type="submit">Reset Password</button>
-        </form> -->
+    </div>
   </div>
-</div>
 </div>
 </body>
 </html>
