@@ -48,7 +48,7 @@ class Student(models.Model):
 
     @property
     def num_required_quizzes(self):
-        completed_quizzes = set(q.quiz for q in QuizUserData.objects.filter(student=student) if q.is_done())
+        completed_quizzes = set(q.quiz for q in QuizUserData.objects.filter(student=self) if q.is_done())
         required_quizzes = set(Quiz.objects.filter(required=True)) - completed_quizzes
         return len(required_quizzes)
 
