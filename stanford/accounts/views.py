@@ -78,8 +78,8 @@ def logins(request):
             login(request, user)
             return redirect('dashboard')
         else:
-            if not User.objects.get(username=request.POST['username']).is_active:
-                print("here")
+            user = User.objects.filter(username=request.POST['username'])
+            if user.exists() and not user.first().is_active:
                 return render(request, 'accounts/login.html', {'error':'Account not verified. Please check your email.'})
             return render(request, 'accounts/login.html', {'error':'Incorrect username or password.'})
     else:
