@@ -28,13 +28,22 @@ pipeline {
         cobertura(autoUpdateHealth: true, failNoReports: true, failUnstable: true, coberturaReportFile: 'reports/coverage.xml')
       }
     }
-    stage('Publish Changes') {
+    stage('Publish Live') {
       when {
         branch 'master'
       }
       steps {
         sh 'docker tag builder.pernixsoft.ml:5000/stanford-quiz:$ID builder.pernixsoft.ml:5000/stanford-quiz:latest'
         sh 'docker push builder.pernixsoft.ml:5000/stanford-quiz:latest'
+      }
+    }
+    stage('Publish to Development Server') {
+      when {
+        branch 'dev'
+      }
+      steps {
+        sh 'docker tag builder.pernixsoft.ml:5000/stanford-quiz:$ID builder.pernixsoft.ml:5000/stanford-quiz:dev'
+        sh 'docker push builder.pernixsoft.ml:5000/stanford-quiz:dev'
       }
     }
   }
