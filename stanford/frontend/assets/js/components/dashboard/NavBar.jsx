@@ -29,7 +29,7 @@ export class NavBar extends React.Component {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav ml-auto">
+{/*            <ul className="navbar-nav ml-auto">
             <li className={this.getClassListNavItem('/dashboard')}>
               <Link className="nav-link" to="/dashboard">Dashboard<span className="sr-only"></span></Link>
             </li>
@@ -44,7 +44,7 @@ export class NavBar extends React.Component {
               <li className={this.getClassListNavItem('/dashboard/instructor')}>
                 <Link className="nav-link" to="/dashboard/instructor/">Instructor</Link>
               </li> : null}          
-              </ul>
+              </ul>*/}
           </div>
           <form method="post" action="/logout/" className="navbar-right form-inline my-2 my-lg-0">
               <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get("csrftoken")} />
