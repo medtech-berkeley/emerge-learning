@@ -1,10 +1,12 @@
+import os
+
 from django.shortcuts import render, redirect
 from quiz.models import Student
 from django.http import HttpResponse, JsonResponse
 
 
 def index(request):
-    info = {}
+    info = {'logged_in': request.user.is_authenticated}
     if request.GET.get('error'):
         info = {'error': request.GET.get('error')}
     return render(request, 'index.html', info)
@@ -12,7 +14,9 @@ def index(request):
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('index')
-    return render(request, 'dashboard.html')
+    
+    info = {'coming_soon': os.getenv('COMING_SOON', 'false')}
+    return render(request, 'dashboard.html', info)
 
 
 def change_user_info(request):
