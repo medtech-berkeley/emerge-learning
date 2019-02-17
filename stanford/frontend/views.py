@@ -4,17 +4,15 @@ from django.http import HttpResponse, JsonResponse
 
 
 def index(request):
-    if not request.user.is_authenticated:
-        info = {}
-        if request.GET.get('error'):
-            info = {'error': request.GET.get('error')}
-        return render(request, 'index.html', info)
-    return redirect('dashboard')
+    info = {}
+    if request.GET.get('error'):
+        info = {'error': request.GET.get('error')}
+    return render(request, 'index.html', info)
 
 def dashboard(request):
-    if request.user.is_authenticated:
-        return render(request, 'dashboard.html')
-    return redirect('index')
+    if not request.user.is_authenticated:
+        return redirect('index')
+    return render(request, 'dashboard.html')
 
 
 def change_user_info(request):
