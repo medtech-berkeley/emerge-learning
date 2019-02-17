@@ -31,7 +31,7 @@ export class App extends React.Component {
                         <div>
                         <NavBarApi/>
                             <div className="content-area">
-                                <Route exact={true} path="/dashboard" component={ComingSoon}/>
+                                <Route exact={true} path="/dashboard" component={MainDashboardApi}/>
                                 <Route path="/dashboard/profile" component={UserDashboardApi}/>
                                 <Route path="/dashboard/settings" component={Settings}/>
                                 <Route path="/dashboard/instructor" component={Instructor}/>
