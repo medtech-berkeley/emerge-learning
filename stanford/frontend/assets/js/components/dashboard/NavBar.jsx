@@ -20,6 +20,28 @@ export class NavBar extends React.Component {
       }
     }
 
+    getNavElement() {
+      if (this.props.showNav) {
+        return (<ul className="navbar-nav ml-auto">
+          <li className={this.getClassListNavItem('/dashboard')}>
+            <Link className="nav-link" to="/dashboard">Dashboard<span className="sr-only"></span></Link>
+          </li>
+          <li className={this.getClassListNavItem('/dashboard/profile')}>
+          
+            <Link className="nav-link" to="/dashboard/profile">Profile</Link>
+          </li>
+          <li className={this.getClassListNavItem('/dashboard/settings')}>
+            <Link className="nav-link" to="/dashboard/settings">Settings</Link>
+          </li>
+          {this.props.user.profile_type != 'STUD' ? 
+            <li className={this.getClassListNavItem('/dashboard/instructor')}>
+              <Link className="nav-link" to="/dashboard/instructor/">Instructor</Link>
+            </li> : null}          
+        </ul>);
+      }
+      return null;
+    }
+
     render() {
         return (
           <div>
@@ -29,22 +51,7 @@ export class NavBar extends React.Component {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-{/*            <ul className="navbar-nav ml-auto">
-            <li className={this.getClassListNavItem('/dashboard')}>
-              <Link className="nav-link" to="/dashboard">Dashboard<span className="sr-only"></span></Link>
-            </li>
-            <li className={this.getClassListNavItem('/dashboard/profile')}>
-            
-              <Link className="nav-link" to="/dashboard/profile">Profile</Link>
-            </li>
-            <li className={this.getClassListNavItem('/dashboard/settings')}>
-              <Link className="nav-link" to="/dashboard/settings">Settings</Link>
-            </li>
-            {this.props.user.profile_type != 'STUD' ? 
-              <li className={this.getClassListNavItem('/dashboard/instructor')}>
-                <Link className="nav-link" to="/dashboard/instructor/">Instructor</Link>
-              </li> : null}          
-              </ul>*/}
+            {this.getNavElement()}
           </div>
           <form method="post" action="/logout/" className="navbar-right form-inline my-2 my-lg-0">
               <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get("csrftoken")} />
@@ -59,5 +66,6 @@ NavBar.propTypes = {
   user: PropTypes.object,
   refreshStudent: PropTypes.func,
   changePage: PropTypes.func,
+  showNav: PropTypes.bool,
   page: PropTypes.string
 };

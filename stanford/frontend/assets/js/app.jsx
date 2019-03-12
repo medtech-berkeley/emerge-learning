@@ -29,7 +29,7 @@ export class App extends React.Component {
         return (<div>
                     <Router history={history}>
                         <div>
-                        <NavBarApi/>
+                        <NavBarApi showNav={!window.coming_soon}/>
                             <div className="content-area">
                                 <Route exact={true} path="/dashboard" component={window.coming_soon ? ComingSoon : MainDashboardApi}/>
                                 <Route path="/dashboard/profile" component={UserDashboardApi}/>
