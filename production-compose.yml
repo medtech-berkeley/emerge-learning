@@ -1,6 +1,7 @@
 version: '3.4'
 services:
   nginx:
+    restart: always
     image: nginx:latest
     depends_on:
       - interfaceserver
@@ -20,6 +21,7 @@ services:
     environment:
       - STANFORD_HOST
   interfaceserver:
+    restart: always
     environment:
       - DJANGO_SSL=TRUE
     volumes:
@@ -28,6 +30,14 @@ services:
   database:
     volumes:
       - db_data:/var/lib/postgresql/data
+    restart: always
+  watchtower:
+    image: v2tec/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.docker/config.json:/config.json
+    command: --interval 30
 volumes:
   db_data:
   nginx_logs:

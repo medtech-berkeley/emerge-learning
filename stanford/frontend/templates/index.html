@@ -15,11 +15,17 @@
   </head>
   <body>
     	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		    <ul class="navbar-nav mr-auto">
-				</ul>
-		    <form action="/login" class="navbar-right form-inline my-2 my-lg-0">
-		      <button type="submit" class="btn btn-outline-primary login-button">Log In</button>
-				</form>
+        {% if not logged_in %}
+          <form action="/login" class="login-button">
+            <button type="submit" class="btn btn-outline-primary">Log In</button>
+          </form>
+        {% else %}
+        <form action="/logout/" method="POST" class="login-button">
+          <button type="submit" class="btn btn-outline-danger">Log Out</button>
+          <a href="/dashboard" class="btn btn-outline-primary">Go to Dashboard</a>
+          {% csrf_token %}  
+        </form>
+        {% endif %}
 		    </nav>
         <div class="landing-content">
             <h1 class="landing-header">Emerge Learning</h1>

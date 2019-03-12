@@ -45,7 +45,7 @@ def signup(request):
 
                     # Send Email
                     current_site = get_current_site(request)
-                    mail_subject = 'Welcome to Emerge Learning!'
+                    mail_subject = 'Please activate your Emerge Learning account'
                     message = render_to_string('acc_active_email.html', {
                         'user': user,
                         'domain': current_site.domain,
@@ -98,6 +98,15 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
+
+        mail_subject = 'Welcome to Emerge Learning!'
+        message = render_to_string('acc_verified_email.html', {
+            'user': user
+        })
+        email = EmailMessage(
+                    mail_subject, message, to=[user.email]
+        )
+        email.send()        
         return redirect('dashboard')
     else:
         return HttpResponse('Activation link is invalid!')

@@ -5,7 +5,11 @@ upstream stanford_server {
   # to return a good HTTP response (in case the Unicorn master nukes a
   # single worker for timing out).
   ip_hash;
-  server interfaceserver:8000;
+  server stanford_interfaceserver_1:8000;
+  server stanford_interfaceserver_2:8000;
+  server stanford_interfaceserver_3:8000;
+  server stanford_interfaceserver_4:8000;
+  server stanford_interfaceserver_5:8000;
 }
 
 server {
@@ -95,3 +99,4 @@ server {
         root /static/;
     }
 }
+
