@@ -30,7 +30,6 @@ def signup(request):
                     user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
                     user.is_active = False
                     user.save()
-                    logger.info("created user")
                     # login(request, user)
                     student = Student.objects.get(user=user)
                     student.name = request.POST['username']
@@ -43,8 +42,6 @@ def signup(request):
                         img_temp.flush()
                         student.image.save("image.jpg", File(img_temp), save=True)
                     student.save()
-
-                    logger.info("saved student")
 
                     # Send Email
                     current_site = get_current_site(request)
@@ -61,7 +58,7 @@ def signup(request):
                     )
                     email.send()
 
-                    return render(request, 'accounts/login.html', {'error':'An account verification email has been sent!'})
+                    return render(request, 'accounts/login.html', {'error':'An account verification email has been sent!', 'username': user.username})
                 except Exception as e:
                     print(str(type(e)) + ":", e)
                     return redirect(reverse('dashboard') + '?error=Unknown error has occurred...')
@@ -80,7 +77,8 @@ def logins(request):
         else:
             user = User.objects.filter(username=request.POST['username'])
             if user.exists() and not user.first().is_active:
-                return render(request, 'accounts/login.html', {'error':'Account not verified. Please check your email.'})
+                print(request.POST['username'])
+                return render(request, 'accounts/login.html', {'error':'Account not verified. Please check your email.', 'username':request.POST['username']})
             return render(request, 'accounts/login.html', {'error':'Incorrect username or password.'})
     else:
         return render(request, 'accounts/login.html')
@@ -112,3 +110,22 @@ def activate(request, uidb64, token):
         return redirect('dashboard')
     else:
         return HttpResponse('Activation link is invalid!')
+
+def resend_verification(request): 
+    print(request.POST['user'])
+    user = User.objects.get(username=request.POST['user'])
+    current_site = get_current_site(request)
+    mail_subject = 'Emerge Learning: Verification Resent'
+    message = render_to_string('acc_active_email.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+        'token':account_activation_token.make_token(user),
+    })
+    to_email = user.email
+    email = EmailMessage(
+                mail_subject, message, to=[to_email]
+    )
+    email.send()
+    return render(request, 'accounts/login.html', {'error':'An account verification email has been sent!', 'resend': 'Resend Verification'})
+

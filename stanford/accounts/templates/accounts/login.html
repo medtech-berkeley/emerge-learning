@@ -7,6 +7,9 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     {% load static %}
     <link href="{% static 'accounts/accounts.css' %}" rel="stylesheet">
     <link href="{% static 'dashboard/index.css' %}" rel="stylesheet">
@@ -34,7 +37,13 @@
         <span aria-hidden="true">&times;</span>
       </button>
       <strong> {{error}} </strong>
-
+      {% if user %}
+      <form method = "POST" action = "{% url 'resend_verification' %}" id="resend">
+          {% csrf_token %}
+          <input type="hidden" name="user" value={{user}} />
+          <a style="color: blue; " onclick="document.getElementById('resend').submit()"> Resend Verification</a>
+        </form>
+        {% endif %}
     </div>
   {% endif %}
 <div class="card login-card">
@@ -54,13 +63,8 @@
         </form>
 
         <a href="{% url 'password_reset_real' %}"> Forgot password?</a>
-        
-        <!-- <form method = "POST" action="{% url 'password_reset_real' %}">
-          {% csrf_token %}
-          <button class="btn btn-success btn-block" type="submit">Reset Password</button>
-        </form> -->
+    </div>
   </div>
-</div>
 </div>
 </body>
 </html>

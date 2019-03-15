@@ -35,7 +35,7 @@ export class QuestionFeedback extends React.Component {
                         <form onSubmit={this.handleSubmit.bind(this)}>
                             <CSRFToken />
                             <div className="form-group">
-                              <input type="text" className="form-control" placeholder="Was this question confusing? Disagree with our answers? Let us know!" value={this.state.feedback} onChange={this.handleChange.bind(this)}/>
+                              <input type="text" className="form-control" placeholder="Give us feedback!" value={this.state.feedback} onChange={this.handleChange.bind(this)}/>
                             </div>
                             <button type="submit" className="btn btn-success">Submit Feedback</button>
                         </form>
