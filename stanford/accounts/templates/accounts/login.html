@@ -37,7 +37,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
       <strong> {{error}} </strong>
-      {% if user %}
+      {% if resend %}
       <form method = "POST" action = "{% url 'resend_verification' %}" id="resend">
           {% csrf_token %}
           <input type="hidden" name="user" value={{user}} />
