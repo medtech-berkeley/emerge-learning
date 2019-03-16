@@ -327,6 +327,15 @@ th {
     margin-bottom: 10px;
 }
 
+.screenshots {
+    border: 1px solid gray;
+    border-radius: 5px;
+    display:block; 
+    margin:auto;
+    width:280px;
+    padding-bottom: 10px;
+}
+
 html.nontouch .card-answer:hover, .card-answer.selected  {
     border-color: green;
 }

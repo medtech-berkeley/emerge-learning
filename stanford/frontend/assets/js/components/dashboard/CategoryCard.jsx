@@ -14,7 +14,7 @@ export class CategoryCard extends React.Component {
 
 	getButtonText() {
 		if (this.props.is_completed && !this.props.can_retake) {
-			return "Review Answers";
+			return "Review";
 		} else if (this.props.num_required_quizzes > 0) {
 			return "Locked"
 		} else if (this.props.is_challenge) {
