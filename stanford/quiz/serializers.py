@@ -28,7 +28,7 @@ class QuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Quiz
-        fields = ('id', 'name', 'start', 'end', 'is_challenge', 'max_time', 'image', 'is_completed', 'can_retake', 'required')
+        fields = ('id', 'name', 'start', 'end', 'is_challenge', 'max_time', 'image', 'is_completed', 'can_retake', 'required', 'tags')
 
     def get_is_completed(self, instance):
         try:
