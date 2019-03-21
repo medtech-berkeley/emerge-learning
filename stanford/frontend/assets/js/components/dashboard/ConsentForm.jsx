@@ -50,11 +50,12 @@ export class ConsentForm extends React.Component {
 			As part of registering for this game and competing for weekly quizzes, you agree to allow your participation and performance to be part of a research study. 
 			Your contact information, registration and performance will not be available to your employers. 
 			The information obtained will simply help researches evaluate the effectiveness of this game in order to improve education.
+      Please do not use personal identifiable information in your username. If you’d like to change your username after signing up for the game, please do so.
 			</p> 
 
 			<p>
 			<b>RISKS AND BENEFITS: </b> There are no risks to participate in this study. 
-			The benefit of participating in this study is that you will learn important concepts of emergency care through examination questions, and compete for prizes. 
+			The benefit of participating in this study is that you will learn important concepts of emergency care through examination questions. 
 			Your responses are confidential. Your decision whether or not to participate in this study will not affect your employment. 
 			We cannot and do not guarantee or promise that you will receive any benefits from this study.
 			</p>
