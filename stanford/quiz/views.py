@@ -169,9 +169,7 @@ class QuestionFeedbackViewSet(ViewSet):
             for i in QuestionUserData.objects.filter(question__id=q['question__id'], feedback__isnull=False):
                 q['question__feedback'].append({'text': i.feedback.text, 'time': i.feedback.time, 'student': i.student.name})
 
-        print(feedback)
         serializer = QuestionFeedbackSerializer(instance=feedback, many=True)
-        print(serializer.data)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
@@ -366,6 +364,9 @@ def get_quiz_results(request):
         
         outoftime = quiz_data.is_out_of_time()
 
+        if 'pretest' in [tag.text for tag in quiz.tags.all()]:
+            return JsonResponse({'accepted': True, 'results': [], 'outoftime': outoftime})
+
         result = []
         user_data = QuestionUserData.objects.filter(quiz_userdata=quiz_data, student=student)
         for qud in user_data:
@@ -399,7 +400,6 @@ def get_stats(request):
             tags = request.GET.getlist('tags')
             difficulties = request.GET.getlist('difficulties')
         except KeyError as e:
-            print(e)
             return JsonResponse({'accepted': False, 'reason': 'Missing or invalid tags or difficulties in request'}, status=400)
 
         query_set = QuestionUserData.objects
@@ -438,23 +438,17 @@ def submit_demographics_form(request):
     
     student = request.user.student
     if student:
-        print(student.completed_demographic_survey)
         if not student.completed_demographic_survey:
             required_fields = ['birth_year', 'gender', 'job', 'education_level', 'country', 'state', 'years_of_experience', 'organization']
             optional_fields = ["med_cardio_refresher", "med_cardio_date", "obgyn_refresher", "obgyn_date", "trauma_refresher", "trauma_date",
                                "pediatrics_refresher", "pediatrics_date", "pediatrics_refresher", "pediatrics_date", "leadership_refresher",
                                "leadership_date", "most_used_device", "internet_reliability", "work_device_hours", "personal_device_hours"]
 
-            print("before hang loose")
             for field in required_fields:
                 if field not in request.POST:
-                    print(request.POST)
-                    print(field)
                     return HttpResponse(status=400)
                 setattr(student, field, request.POST[field])
             
-            print("hang loose")
-            print(request.POST['birth_year'])
             student.completed_demographic_survey = True
             
             if student.organization == 'GVK':
