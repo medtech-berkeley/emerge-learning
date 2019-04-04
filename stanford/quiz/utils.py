@@ -52,6 +52,9 @@ def get_stats_student(student, date=None, query_set=QuestionUserData.objects):
     stats['num_incorrect'] = stats['questions_answered'] - stats['num_correct']
     stats['performance'] = get_performance_stats(student, date)
     stats['score'] = stats['num_correct']
+    studentQuiz = [quiz.is_done() for quiz in QuizUserData.objects.filter(student = student).all()]
+    stats['num_completed'] = sum(studentQuiz)
+
     return stats
 
 def get_performance_stats(student, date=None):
@@ -177,7 +180,7 @@ def end_quiz(quiz_userdata: QuizUserData):
 
     for question in question_set:
         if n_answered < quiz.num_questions:
-            qud = QuestionUserData.objects.filter(student=student, 
+            qud = QuestionUserData.objects.filter(student=student,
                                                   question=question,
                                                   quiz_userdata=quiz_userdata)
 
@@ -188,7 +191,7 @@ def end_quiz(quiz_userdata: QuizUserData):
             else:
                 question_data = QuestionUserData.objects.create(student=student,
                                                                 question=question,
-                                                                quiz_userdata=quiz_userdata, 
+                                                                quiz_userdata=quiz_userdata,
                                                                 time_completed=timezone.now())
 
             n_answered += 1
@@ -196,3 +199,6 @@ def end_quiz(quiz_userdata: QuizUserData):
     if quiz_userdata.time_completed is None:
         quiz_userdata.time_completed = timezone.now()
         quiz_userdata.save()
+    grant_badges(student)
+
+from .badges import grant_badges
