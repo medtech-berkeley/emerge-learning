@@ -44,19 +44,25 @@ def signup(request):
                     student.save()
 
                     # Send Email
-                    current_site = get_current_site(request)
-                    mail_subject = 'Please activate your Emerge Learning account'
-                    message = render_to_string('acc_active_email.html', {
-                        'user': user,
-                        'domain': current_site.domain,
-                        'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-                        'token':account_activation_token.make_token(user),
-                    })
-                    to_email = request.POST['email']
-                    email = EmailMessage(
-                                mail_subject, message, to=[to_email]
-                    )
-                    email.send()
+                    if not settings.DEBUG:
+                        current_site = get_current_site(request)
+                        mail_subject = 'Please activate your Emerge Learning account'
+                        message = render_to_string('acc_active_email.html', {
+                            'user': user,
+                            'domain': current_site.domain,
+                            'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                            'token':account_activation_token.make_token(user),
+                        })
+                        to_email = request.POST['email']
+                        email = EmailMessage(
+                                    mail_subject, message, to=[to_email]
+                        )
+                        email.send()
+                    else:
+                        user.is_active = True
+                        user.save()
+                        login(request, user)
+                        return redirect('dashboard')
 
                     return render(request, 'accounts/login.html', {'error':'An account verification email has been sent!', 'username': user.username})
                 except Exception as e:
