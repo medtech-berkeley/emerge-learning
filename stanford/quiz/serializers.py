@@ -100,6 +100,7 @@ class StudentStatsSerializer(serializers.Serializer):
     num_incorrect = serializers.IntegerField(read_only=True)
     subjects = serializers.DictField()
     performance = serializers.DictField()
+    num_completed = serializers.IntegerField(read_only=True)
 
     @staticmethod
     def student_to_stat(student, date):

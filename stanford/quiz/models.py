@@ -64,7 +64,7 @@ class Student(models.Model):
 class Badge(models.Model):
     name = models.CharField(max_length=64, primary_key=True)
     description = models.TextField()
-    image = models.ImageField(upload_to="badges")
+    image = models.ImageField(upload_to="badges", null=True)
     students = models.ManyToManyField(Student, related_name = "badges")
 
 
