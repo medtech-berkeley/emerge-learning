@@ -61,6 +61,13 @@ class Student(models.Model):
             student = Student.objects.create(user=instance)
             student.save()
 
+class Badge(models.Model):
+    name = models.CharField(max_length=64, primary_key=True)
+    description = models.TextField()
+    image = models.ImageField(upload_to="badges", null=True)
+    students = models.ManyToManyField(Student, related_name = "badges")
+
+
 class Tag(models.Model):
     text = models.CharField(max_length=64, primary_key=True)
 
@@ -261,4 +268,3 @@ class GVK_EMRI_Demographics(models.Model):
 
     work_device_hours = models.DecimalField(max_digits=4, decimal_places=2)
     personal_device_hours = models.DecimalField(max_digits=4, decimal_places=2)
-

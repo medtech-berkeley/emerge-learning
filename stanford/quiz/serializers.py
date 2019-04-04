@@ -3,25 +3,32 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 from .utils import get_stats_student
-from .models import Question, QuestionUserData, Quiz, QuizUserData, Answer, Student, QuestionMedia, Feedback
+from .models import Question, QuestionUserData, Quiz, QuizUserData, Answer, Student, QuestionMedia, Feedback, Badge
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email')
 
+class BadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Badge
+        fields = ('name', 'description', 'image')
+
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer(allow_null=True)
+    badges = BadgeSerializer(many=True)
     class Meta:
         model = Student
-        fields = ('id', 'user', 'name', 'location', 'description', 'image', 
-                  'consent_prompt_required', 'consent','completed_demographic_survey','num_required_quizzes', 'profile_type')
+        fields = ('id', 'user', 'name', 'location', 'description', 'image',
+                  'consent_prompt_required', 'consent','completed_demographic_survey','num_required_quizzes', 'profile_type', 'badges')
 
 class SmallStudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = Student
         fields = ('user', 'profile_type')
+
 
 class QuizSerializer(serializers.ModelSerializer):
     is_completed = serializers.SerializerMethodField()
@@ -93,6 +100,7 @@ class StudentStatsSerializer(serializers.Serializer):
     num_incorrect = serializers.IntegerField(read_only=True)
     subjects = serializers.DictField()
     performance = serializers.DictField()
+    num_completed = serializers.IntegerField(read_only=True)
 
     @staticmethod
     def student_to_stat(student, date):
@@ -107,7 +115,7 @@ class LeaderboardStatSerializer(serializers.Serializer):
     location = serializers.CharField()
     image = serializers.ImageField()
     score = serializers.IntegerField(read_only=True)
-    
+
 
 
 class QuestionFeedbackSerializer(serializers.Serializer):
