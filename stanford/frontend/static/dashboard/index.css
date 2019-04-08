@@ -45,6 +45,9 @@ html {
     position:static;
 }
 
+.surveyModal {
+    max-width:80vw;
+}
 
 .login-card {
     border-radius: 6px;

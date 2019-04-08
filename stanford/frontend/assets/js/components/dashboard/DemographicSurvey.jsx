@@ -58,7 +58,7 @@ export class DemographicSurvey extends React.Component {
   	const { orgShow } = this.state;
     return (
       <div>
-		<Modal isOpen={this.props.demographic_survey_required} className={this.props.className}>
+		<Modal isOpen={this.props.demographic_survey_required} className="surveyModal">
         <form onSubmit={this.handleSubmit}>
 
           <ModalHeader>
