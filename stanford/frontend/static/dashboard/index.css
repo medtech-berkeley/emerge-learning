@@ -251,10 +251,44 @@ th {
     height: auto;
 }
 
+#profilePicContainer {
+    width: 100%;
+    padding-top: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+#profilePic {
+    position: absolute;
+    height: auto;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 .Badges {
     width: 100%;
-    margin-right: 20px;
-    margin-left: 20px;
+    margin-right: 3rem;
+}
+
+.badgeImageContainer {
+    width: 100%;
+    padding-top: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+
+.badgeImage {
+    position: absolute;
+    height: auto;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .PointsHeader {

@@ -27,7 +27,7 @@ export class UserDashboard extends React.Component {
 						</Row>
 						<br/>
 						<Row>
-							<Badges/>
+							<Badges user={this.props.user}/>
 						</Row>						
 					</Col>
 					<Col s="12" md="9">
