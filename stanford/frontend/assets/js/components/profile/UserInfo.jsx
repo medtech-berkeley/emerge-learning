@@ -13,7 +13,9 @@ export class UserInfo extends React.Component {
     render() {
         return (
             <div className="UserInfo">
-                <img src={this.props.user.image}/>
+                <div id="profilePicContainer">
+                <img id="profilePic" src={this.props.user.image}/>
+                </div>
                 <br/>
                 <br/>
                 <Card>

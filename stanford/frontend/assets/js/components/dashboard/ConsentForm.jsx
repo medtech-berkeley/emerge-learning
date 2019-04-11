@@ -26,7 +26,7 @@ export class ConsentForm extends React.Component {
   render() {
     return (
       <div>
-        <Modal isOpen={this.props.consent_prompt_required} className={this.props.className}>
+        <Modal isOpen={this.props.consent_prompt_required} className="surveyModal">
           <ModalHeader>
           	Informed Consent Waiver
 
