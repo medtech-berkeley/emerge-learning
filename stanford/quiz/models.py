@@ -11,6 +11,12 @@ from os import path
 from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_CHOICES, \
                              ORG_CHOICES, DEVICE_CHOICES, INTERNET_CHOICES, PROFILE_CHOICES
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
+
+upload_storage = FileSystemStorage(location=settings.STATIC_ROOT, base_url='/static/badges')                             
+
 def on_transaction_commit(func):
     def inner(*args, **kwargs):
         transaction.on_commit(lambda: func(*args, **kwargs))
@@ -64,7 +70,7 @@ class Student(models.Model):
 class Badge(models.Model):
     name = models.CharField(max_length=64, primary_key=True)
     description = models.TextField()
-    image = models.ImageField(upload_to="badges", null=True)
+    image = models.ImageField(upload_to="badges", null=True, storage=upload_storage)
     students = models.ManyToManyField(Student, related_name = "badges")
 
 
