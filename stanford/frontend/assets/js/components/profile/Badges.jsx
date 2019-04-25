@@ -7,11 +7,10 @@ function Badge(badge) {
         <div className="Badge">
             <Card>
             <div className="badgeImageContainer">
-            <CardImg className="badgeImage" top width="100%" src={badge.image}/>
+            <CardImg className="badgeImage" top width="50px" src={badge.image}/>
             </div>
             <CardBody>
-                <CardTitle className="text-center">{badge.name}</CardTitle>
-                <CardSubtitle>{badge.description}</CardSubtitle>
+                <CardTitle className="text-center">{badge.description}</CardTitle>
             </CardBody>
             </Card>
         </div>
@@ -32,10 +31,24 @@ export class Badges extends React.Component {
         }
         return (
             <div className="Badges">
-                <Card style={{maxHeight: '50vh', overflow: 'auto', marginBottom: '10vh'}}>
+                <Card >
                 <CardBody>
                 <CardTitle >Badges</CardTitle>
-                    {badges.map(badge => Badge(badge))}
+                    
+                    {badges.map(
+                       function(badge){
+                        return (
+                        <tr style={{height: "50px"}}>
+                          <td>
+                            <img src={badge.image} className="icon-img img-circle" width="40" height="40"/>
+                          </td>
+                          <td>
+                            {badge.description}
+                          </td>
+                       </tr>
+                       )
+                     }
+                    )} 
                 </CardBody>
                 </Card>
             </div>);
