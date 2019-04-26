@@ -33,7 +33,8 @@ JOB_CHOICES = [
     ('EMTA', "EMT A"),
     ('EMTB', "EMT B"),
     ('PARA', "Paramedic"),
-    ('PHYS', "Physcian"),
+    ('PHYS', "Physician"),
+    ('NUR', "Nurse"),
     ('STU', 'Student'),
     ('OTH', 'Other'),
 ]
@@ -44,7 +45,8 @@ EDUCATION_CHOICES = [
     ('G10', "Grade 10 or Equivalent"),
     ('G12', "HSCE or Grade 12"),
     ('UND', "University Degree"),
-    ('GRD', "Post-Graduate Degree")
+    ('GRD', "Post-Graduate Degree"),
+    ('OTH', "Other")
 ]
 
 ORG_CHOICES = [
