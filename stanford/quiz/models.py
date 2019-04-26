@@ -43,6 +43,9 @@ class Student(models.Model):
     image = models.ImageField(upload_to='profile_images', default="/static/accounts/default_profile.jpg", blank=True)
     birth_year = models.IntegerField(choices=YEAR_CHOICES, default=timezone.now().year)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='U')
+
+    #TODO: free text option for job, education, and organization fields
+
     job = models.CharField(max_length=4, choices=JOB_CHOICES, default='OTH')
     education_level = models.CharField(max_length=3, default="LPS")
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='AX')
