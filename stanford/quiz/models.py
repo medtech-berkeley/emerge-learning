@@ -9,7 +9,7 @@ from django.dispatch import receiver
 from os import path
 
 from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_CHOICES, \
-                             ORG_CHOICES, DEVICE_CHOICES, INTERNET_CHOICES, PROFILE_CHOICES
+                             ORG_CHOICES, DEVICE_CHOICES, INTERNET_CHOICES, PROFILE_CHOICES, EDUCATION_CHOICES
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -43,8 +43,11 @@ class Student(models.Model):
     image = models.ImageField(upload_to='profile_images', default="/static/accounts/default_profile.jpg", blank=True)
     birth_year = models.IntegerField(choices=YEAR_CHOICES, default=timezone.now().year)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='U')
+
+    #TODO: free text option for job, education, and organization fields
+
     job = models.CharField(max_length=4, choices=JOB_CHOICES, default='OTH')
-    education_level = models.CharField(max_length=3, default="LPS")
+    education_level = models.CharField(max_length=3, choices=EDUCATION_CHOICES, default="LPS")
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='AX')
     state = models.CharField(max_length=20, default="Denial")
     years_of_experience = models.DecimalField(max_digits=4, decimal_places=2, default=0)
