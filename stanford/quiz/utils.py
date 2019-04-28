@@ -3,6 +3,9 @@ from .models import Student, Question, Quiz, Answer, QuestionUserData, QuizUserD
 from django.utils import timezone
 from django.http import Http404
 from django.shortcuts import _get_queryset
+import logging
+
+logger = logging.getLogger(__name__)
 
 def get_latest_object_or_404(klass, *args, **kwargs):
     """
@@ -39,7 +42,7 @@ def get_earliest_object_or_404(klass, *args, **kwargs):
         raise Http404('No %s matches the given query.' % queryset.model._meta.object_name)
 
 
-def get_stats_student(student, date=None, query_set=QuestionUserData.objects):
+def get_stats_student(student, date=None, query_set=QuestionUserData.objects.all()):
     stats = {}
     stats['name'] = student.name
     stats['subjects'] = get_subject_stats(student, date, query_set=query_set)
@@ -77,10 +80,10 @@ def get_performance_stats(student, date=None):
     return performance_stats
 
 
-def get_subject_stats(student, date=None, query_set=QuestionUserData.objects):
+def get_subject_stats(student, date=None, query_set=QuestionUserData.objects.all()):
     subject_stats = {}
 
-    subjects = [(tag.text, int(get_subject_stat(student, query_set, tag.text, date)['percent_correct'])) for tag in Tag.objects.all()]
+    subjects = [(tag.text, int(get_subject_stat(student, tag.text, query_set, date)['percent_correct'])) for tag in Tag.objects.all()]
     subjects = sorted(subjects, key=lambda x: -x[1])
 
     for subject, accuracy in subjects[:4]:
@@ -88,10 +91,14 @@ def get_subject_stats(student, date=None, query_set=QuestionUserData.objects):
 
     return subject_stats
 
-def get_subject_stat(student, query_set, subject, date=None):
+def get_subject_stat(student, subject, query_set=QuestionUserData.objects.all(), date=None):
     if date is None:
         date = timezone.now()
+
     qud = query_set.filter(student=student, time_completed__lte=date, quiz_userdata__quiz__tags=subject)
+
+    logger.info(qud)
+    logger.info(qud.count())
 
     stat = {}
     total = qud.count()

@@ -246,7 +246,8 @@ th {
 }
 
 .UserInfo {
-    margin-right: 3rem;
+    margin-right: auto;
+    width:100%;
 }
 
 .UserInfo img {
@@ -272,8 +273,11 @@ th {
 }
 
 .Badges {
-    width: 100%;
-    margin-right: 3rem;
+    margin:auto;
+}
+
+.Badge {
+    height: 100px;
 }
 
 .badgeImageContainer {
@@ -517,5 +521,6 @@ html.nontouch .card-answer:hover, .card-answer.selected  {
 @media (max-width: 600px) {
     .UserInfo {
         margin: auto;
+        width:80%;
     }
 }

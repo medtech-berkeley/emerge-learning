@@ -6,7 +6,9 @@ export class DemographicSurvey extends React.Component {
   constructor(props) {
     super(props);
     this.handleSubmit= this.handleSubmit.bind(this);
-    this.checkFreeText = this.checkFreeText.bind(this);
+    this.jobFreeText = this.jobFreeText.bind(this);
+    this.edFreeText = this.edFreeText.bind(this);    
+    this.orgFreeText = this.orgFreeText.bind(this);    
 
     this.state = {
       modal: this.props.demographic_survey_required,
@@ -31,25 +33,31 @@ export class DemographicSurvey extends React.Component {
     }));
   }
 
-  checkFreeText(event) {
+  jobFreeText(event) {
   	console.log(event.target.value);
   	var val = event.target.value;
 
-  	if (val === "jobFreeText") {
+  	if (val === "OTH") {
   		this.setState({job: "text"});
-  	} else if (val === "jobOption") {
+  	} else {
   		this.setState({job: "hidden"});
   	}
+  }
 
-  	if (val === "edFreeText") {
+  edFreeText(event) {
+  	var val = event.target.value;
+	 if (val === "OTH") {
   		this.setState({ed: "text"});
-  	} else if (val === "edOption") {
+  	} else {
 		this.setState({ed: "hidden"});
   	}
+  }
 
-  	if (val === "orgFreeText") {
+  orgFreeText(event) {
+  	var val = event.target.value;
+  	if (val === "OTH") {
   		this.setState({org: "text", orgShow:false});
-  	} else if (val === "orgOption") {
+  	} else {
   		this.setState({org: "hidden", orgShow:true});
   	}
   }
@@ -58,7 +66,7 @@ export class DemographicSurvey extends React.Component {
   	const { orgShow } = this.state;
     return (
       <div>
-		<Modal isOpen={this.props.demographic_survey_required} className="surveyModal">
+		<Modal isOpen={this.props.demographic_survey_required} className={this.props.className}>
         <form onSubmit={this.handleSubmit}>
 
           <ModalHeader>
@@ -99,30 +107,30 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 			    <label for="">Job</label>
-				<select class="form-control" name="job" onChange={this.checkFreeText}>
-				  <option value="jobOption">EMT B</option>
-				  <option value="jobOption">EMT A</option>
-				  <option value="jobOption">Paramedic</option>
-				  <option value="jobOption">Physician</option>
-				  <option value="jobOption">Nurse</option>
-				  <option value="jobOption">Student</option>
-				  <option value="jobFreeText">Other</option>
+				<select class="form-control" name="job" onChange={this.jobFreeText}>
+				  <option value="EMTB">EMT B</option>
+				  <option value="EMTA">EMT A</option>
+				  <option value="PARA">Paramedic</option>
+				  <option value="PHYS">Physician</option>
+				  <option value="NUR">Nurse</option>
+				  <option value="STU">Student</option>
+				  <option value="OTH">Other</option>
 				</select>			  
-				<input class="form-control" type={this.state.job} placeholder="Job Title" name="jobFreeText" id="jobFreeText"/>
+				<input class="form-control" type={this.state.job} placeholder="Job Title" name="job" id="job"/>
 			  </div>
 
 			  <div class="form-group">
 			    <label for="">Education</label>
-				<select class="form-control" name="education_level" onChange={this.checkFreeText}>
-				  <option value="edOption">Lower Primary School</option>
-				  <option value="edOption">Upper Primary School</option>
-				  <option value="edOption">Grade 10 (or equivalent)</option>
-				  <option value="edOption">Higher Secondary School Certificate or grade 12</option>
-				  <option value="edOption">University Degree (BSc or equivalent)</option>
-				  <option value="edOption">Post-Graduate Degree (MSc/MA, etc.)</option>
-				  <option value="edFreeText">Other</option>
+				<select class="form-control" name="education_level" onChange={this.edFreeText}>
+				  <option value="LPS">Lower Primary School</option>
+				  <option value="UPS">Upper Primary School</option>
+				  <option value="G10">Grade 10 (or equivalent)</option>
+				  <option value="G12">Higher Secondary School Certificate or grade 12</option>
+				  <option value="UND">University Degree (BSc or equivalent)</option>
+				  <option value="GRD">Post-Graduate Degree (MSc/MA, etc.)</option>
+				  <option value="OTH">Other</option>
 				</select>			  
-				<input class="form-control" type={this.state.ed} placeholder="Education Level" name="edFreeText" id="edFreeText"/>
+				<input class="form-control" type={this.state.ed} placeholder="Education Level" name="education_level" id="education_level"/>
 			  </div>
 
 			  <div class="form-group">
@@ -429,11 +437,11 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 			    <label for="">Organization</label>
-				<select class="form-control" name="organization" onChange={this.checkFreeText}>
-				  <option value="orgOption">GVK EMRI</option>
-				  <option value="orgFreeText">Other</option>
+				<select class="form-control" name="organization" onChange={this.orgFreeText}>
+				  <option value="GVK">GVK EMRI</option>
+				  <option value="OTH">Other</option>
 				</select>			  
-				<input class="form-control" type={this.state.org} placeholder="Organization Name" name="orgFreeText" id="orgFreeText"/>
+				<input class="form-control" type={this.state.org} placeholder="Organization Name" name="organization" id="organization"/>
 			  </div>
 
 			  { orgShow 
