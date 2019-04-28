@@ -21,10 +21,20 @@ export class QuizComplete extends React.Component {
 		  elementCount: 127,
 		  decay: 0.91
 		};
+		 
+		if (this.intervalId) {
+			this.clearInterval(this.intervalId);
+		}
 
-		setInterval(
+		this.intervalId = setInterval(
 			() => this.shouldShowConfetti(), 1000
 		);
+	}
+
+	componentWillUnmount() {
+		if (this.intervalId) {
+			this.clearInterval(this.intervalId);
+		}
 	}
 
 	shouldShowConfetti() {
@@ -33,6 +43,9 @@ export class QuizComplete extends React.Component {
 		});
 	}
 
+	clearInterval(number) {
+		clearInterval(number);
+	}
 
 	render() {
 		return (
@@ -40,7 +53,7 @@ export class QuizComplete extends React.Component {
 				<div className="card text-center">
 				  <div className="card-header" style={{"height": "5.5rem"}}>
 				  	<h3>
-				  		<div className="floating" style={{"display": "inline-block", "margin-right": "20px"}}>
+				  		<div className="floating" style={{"display": "inline-block", "marginRight": "20px"}}>
 				  			<Planet size={60} mood="lovestruck" color="#70D7A3"/>
 				  		</div>
 				  		<div style={{"display": "inline-block", "transform": "translateY(-20px)"}}>

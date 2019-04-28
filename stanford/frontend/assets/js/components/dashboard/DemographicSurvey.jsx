@@ -67,7 +67,7 @@ export class DemographicSurvey extends React.Component {
           	<div className="floating" 
           		 style=
           		 {
-          			{"display": "inline-block", "margin-right": "20px", "position": "absolute", "top": "1rem", "right": "1rem"}
+          			{"display": "inline-block", "marginRight": "20px", "position": "absolute", "top": "1rem", "right": "1rem"}
           		 }>
 				<Planet size={30} mood="excited" color="#70D7A3"/>
 			</div>

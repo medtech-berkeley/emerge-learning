@@ -59,7 +59,7 @@ export class QuizQuestion extends React.Component {
 
 		return (
 			<div>
-			<i className="fa fa-clock-o" style={{"padding-right": "5px"}} aria-hidden="true"></i>
+			<i className="fa fa-clock-o" style={{"paddingRight": "5px"}} aria-hidden="true"></i>
 			Time Remaining: {this.minutes()}:{this.seconds()}</div>
 		);
 	}
