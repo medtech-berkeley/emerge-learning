@@ -33,7 +33,7 @@ export class MainDashboard extends React.Component {
                                 is_challenge_section={true} 
                                 categories={this.props.categories}
                                 selectCategory = {this.props.selectCategory}
-                                num_required_quizzes = {0}
+                                num_required_quizzes = {this.props.user.num_required_quizzes}
                             />
                             <p className="section-text">PRACTICE</p>
                             <hr />

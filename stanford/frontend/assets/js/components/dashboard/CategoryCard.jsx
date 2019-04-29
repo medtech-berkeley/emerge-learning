@@ -15,12 +15,31 @@ export class CategoryCard extends React.Component {
 	getButtonText() {
 		if (this.props.is_completed && !this.props.can_retake) {
 			return "Review";
-		} else if (this.props.num_required_quizzes > 0) {
+		} else if (this.props.num_required_quizzes > 0 && !this.props.required) {
 			return "Locked"
 		} else if (this.props.is_challenge) {
 			return "Start Challenge";
 		} else {
 			return "Start Practice";
+		}
+	}
+
+	getButton() {
+		if (this.props.num_required_quizzes == 0 || this.props.required) {
+			return (
+				<Link 
+	        		to={"/dashboard/quiz/" + this.props.id} 
+	        		className="btn btn-outline-success" 
+	        		onClick={() => this.props.selectCategory(this.props.id)}>
+					<div>{this.getButtonText()}</div>
+	        	</Link>
+			)
+		} else {
+			return (
+				<div className="btn btn-outline-secondary">
+					<div>{this.getButtonText()}</div>
+	        	</div>
+			)
 		}
 	}
 
@@ -41,19 +60,7 @@ export class CategoryCard extends React.Component {
 			                    </CardTitle>
 			                    <CardText className="section-text">{this.props.sponsor}</CardText>
 			                    <Row className="buttons">
-			                        {this.props.num_required_quizzes == 0 &&
-			                    	<Link 
-			                    		to={"/dashboard/quiz/" + this.props.id} 
-			                    		className="btn btn-outline-success" 
-			                    		onClick={() => this.props.selectCategory(this.props.id)}>
-										<div>{this.getButtonText()}</div>
-			                    	</Link>
-			                        }
-			                        {this.props.num_required_quizzes > 0 &&
-			                    	<div className="btn btn-outline-secondary">
-										<div>{this.getButtonText()}</div>
-			                    	</div>
-			                        }
+			                        {this.getButton()}
 									<a href="#" className="btn btn-outline-primary">Info</a>
 			                   	</Row>
 			                </CardBody>
