@@ -1,6 +1,6 @@
 import React from "react";
 import {Card, CardBody, CardImg, CardTitle, CardSubtitle, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Button, Container} from "reactstrap";
-
+import {Planet, Cat} from 'react-kawaii';
 
 function Badge(badge) {
     const element = (
@@ -22,10 +22,30 @@ export class Badges extends React.Component {
     render() {
         const badges = this.props.user.badges; 
         //const badges = [1,1,2];
-        if (!badges) {
+        console.log(badges);
+        if (badges === undefined || badges.length == 0) {
+            console.log("YUG YT");
+        }
+        if (badges === undefined || badges.length == 0) {
             return (
-                <div className="Badges">
-                    <p> You can earn badges by completing quizzes. </p>
+                <div className="Badges text-center">
+                <Card >
+                <CardBody>
+                <div class="text-center">
+                <CardTitle >Badges</CardTitle>
+                </div>
+
+                <div className="floating" 
+                     style=
+                     {
+                        {"display": "inline-block", "marginRight": "10px", "position": "absolute", "top": "1.2rem", "right": "1rem"}
+                     }>
+                    <Planet size={30} mood="happy" color="#70D7A3"/>
+                </div>
+                    <p> You can earn badges by completing quizzes! </p>
+
+                </CardBody>
+                </Card>
                 </div>
             );
         }
