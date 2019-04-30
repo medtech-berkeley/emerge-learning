@@ -5,7 +5,7 @@ import NavBarApi from "./containers/NavBarApi";
 import history from "./history";
 import {Router, Route, Switch} from "react-router-dom";
 import UserDashboardApi from "./containers/UserDashboardApi";
-import Quiz from "./containers/Quiz";
+import Quiz from "./containers/quiz/Quiz";
 import Settings from "./containers/SettingsContainer";
 import {startTime, changePage} from "./actions/Actions";
 import Instructor from "./containers/InstructorContainer"

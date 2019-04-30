@@ -1,5 +1,6 @@
 import 'whatwg-fetch';
 import { refreshStudent } from "./LoadUserActions.jsx";
+import { setLoadingStatus, incLoadingStatus } from './UIActions.jsx';
 
 export const UPDATE_USERS = 'UPDATE_USERS';
 export const UPDATE_CATEGORIES = 'UPDATE_CATEGORIES';
@@ -109,15 +110,19 @@ export function getCurrentQuestion(categoryId) {
 				// console.debug("dispatch update current question.");
 				dispatch(updateCurrentQuestion(question))
 			}
+			dispatch(incLoadingStatus("quiz-" + categoryId));
 		}));
 }
 
 export function startQuiz(categoryId) {
-	return dispatch => fetch("/quiz/start?quiz="+categoryId, window.getHeader)
-		.then(r => r.json().then(quiz => {
-			dispatch(getCategoryData(categoryId));
-			dispatch(getCurrentQuestion(categoryId));
-		}));
+	return dispatch => {
+		    dispatch(setLoadingStatus("quiz-" + categoryId, 0));
+			fetch("/quiz/start?quiz="+categoryId, window.getHeader)
+			.then(r => r.json().then(quiz => {
+				dispatch(getCategoryData(categoryId));
+				dispatch(getCurrentQuestion(categoryId));
+			}));
+	}
 }
 
 export function getCategoryData(categoryId) {
@@ -133,6 +138,7 @@ export function getCategoryData(categoryId) {
 					timeCompleted = Math.floor(Date.parse(categoryUserData.time_completed) / 1000);
 				}
 				dispatch(updateCategoryData(category.name, maxTime, timeStarted, timeCompleted));
+				dispatch(incLoadingStatus("quiz-" + categoryId));
 			}));
 		}));
 }
@@ -158,7 +164,8 @@ export function answerQuestion(questionId, answerId, categoryId) {
     data.append("answer", answerId);
     data.append("quiz", categoryId);
     headers.body = data;
-	return dispatch => fetch("/quiz/answer", headers)
+	return dispatch => {
+		fetch("/quiz/answer", headers)
 		.then(r => r.json().then(answer => {
 			if (answer.accepted) {
 				dispatch(getCurrentQuestion(categoryId))
@@ -167,6 +174,7 @@ export function answerQuestion(questionId, answerId, categoryId) {
 				dispatch(updateSubmitError(answer.reason));
 			}
 		}));
+	}
 }
 
 export function updateSubmitError(reason) {

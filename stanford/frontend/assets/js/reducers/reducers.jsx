@@ -2,7 +2,7 @@ import { UPDATE_CATEGORY_DATA, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SEL
 import { UPDATE_LEADERBOARD, UPDATE_TIMER, UPDATE_CONSENT, UPDATE_DEMOSURVEY} from "../actions/Actions"
 import { UPDATE_STUDENT, UPDATE_STUDENTS } from "../actions/LoadUserActions"
 import { UPDATE_DATA } from "../actions/DataActions"
-import { ADD_MESSAGE } from "../actions/UIActions";
+import { ADD_MESSAGE, SET_LOAD_STATUS, INC_LOAD_STATUS } from "../actions/UIActions";
 
 const initialState = {
     api: {
@@ -48,7 +48,8 @@ const initialState = {
         num_correct: 0,
         num_attempted: 0,
         results: [],
-        messages: {}
+        loaded: {},
+        messages: {},
     },
 };
 
@@ -71,6 +72,12 @@ export function stanfordApp(state = initialState, action) {
     switch (action.type) {
         case (UPDATE_TIMER):
             newState.ui.currentTime = action.time;
+            break;
+        case SET_LOAD_STATUS:
+            newState.ui.loaded[action.id] = action.status;
+            break;
+        case INC_LOAD_STATUS:
+            newState.ui.loaded[action.id]++;
             break;
         case (CHANGE_PAGE):
             newState.ui.page = action.page

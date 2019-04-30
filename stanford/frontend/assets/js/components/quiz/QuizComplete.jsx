@@ -9,10 +9,11 @@ import { SuppressErrorBoundary } from "../errors/SuppressErrorBoundary";
 export class QuizComplete extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {showConfetti: false};
+		this.state = {showConfetti: false, isLoading: true};
 	}
 
 	componentDidMount() {
+		this.setState({isLoading: true});
 		this.props.getResults(this.props.categoryId);
 
 		this.config = {

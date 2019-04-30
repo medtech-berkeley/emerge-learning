@@ -31,7 +31,7 @@ export class Badges extends React.Component {
                 <div className="Badges text-center">
                 <Card >
                 <CardBody>
-                <div class="text-center">
+                <div className="text-center">
                 <CardTitle >Badges</CardTitle>
                 </div>
 
@@ -53,7 +53,7 @@ export class Badges extends React.Component {
             <div className="Badges">
                 <Card >
                 <CardBody>
-                <div class="text-center">
+                <div className="text-center">
                 <CardTitle >Badges</CardTitle>
                 </div>                    
                     {badges.map(

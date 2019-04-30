@@ -6,44 +6,53 @@ import { QuizComplete } from "./QuizComplete";
 import { SuppressErrorBoundary } from "../errors/SuppressErrorBoundary";
 
 export class QuizBase extends React.Component {
-	componentDidMount() {
+	componentWillMount() {
 		this.quizID = this.props.match.params.quizId;
-		// console.log("QuizBase did mount.");
-		// console.log(this.quizID);
+	}
+
+	componentDidMount() {
 		this.props.startQuiz(this.quizID);
 		window.scroll(0, 0);
+	}
+
+	isLoaded() {
+		return this.props.loaded["quiz-" + this.quizID] >= 2;
+	}
+	
+	showQuiz() {
+		if (!this.props.complete) {
+			return <QuizQuestion
+				categoryId={this.quizID}
+				text={this.props.currentQuestion.text}
+				answers={this.props.currentQuestion.answers}
+				name={this.props.categoryName}
+				id={this.props.currentQuestion.id}
+				answerQuestion={this.props.answerQuestion}
+				media={this.props.currentQuestion.media}
+				currentTime={this.props.currentTime}
+				timeStarted={this.props.timeStarted}
+				maxTime={this.props.maxTime}
+				selectedAnswer={this.props.currentQuestion.selectedAnswer}
+				selectAnswer={this.props.selectAnswer}
+				endQuiz={() => this.props.getCurrentQuestion(this.quizID)}
+			/>;
+		} else {
+			return <QuizComplete getResults={this.props.getResults}
+				name={this.props.categoryName}
+				categoryId={this.quizID}
+				num_attempted={this.props.num_attempted}
+				num_correct={this.props.num_correct}
+				results={ this.props.results }
+				submitFeedback={ this.props.submitFeedback}
+				outoftime={ this.props.outoftime }
+			/>;
+		}
 	}
 
 	render() {
 		return (
 			<SuppressErrorBoundary>
-			{!this.props.complete ? <QuizQuestion
-										categoryId={this.quizID}
-										text={this.props.currentQuestion.text}
-										answers={this.props.currentQuestion.answers}
-										name={this.props.categoryName}
-										id={this.props.currentQuestion.id}
-										answerQuestion={this.props.answerQuestion}
-										media={this.props.currentQuestion.media}
-										currentTime={this.props.currentTime}
-										timeStarted={this.props.timeStarted}
-										maxTime={this.props.maxTime}
-										selectedAnswer={this.props.currentQuestion.selectedAnswer}
-										selectAnswer={this.props.selectAnswer}
-										endQuiz={() => this.props.getCurrentQuestion(this.quizID)}
-									/>
-									:
-									<QuizComplete getResults={this.props.getResults}
-										name={this.props.categoryName}
-										categoryId={this.quizID}
-										num_attempted={this.props.num_attempted}
-										num_correct={this.props.num_correct}
-										results={ this.props.results }
-										submitFeedback={ this.props.submitFeedback}
-										outoftime={ this.props.outoftime }
-									/>
-
-			}
+			{this.isLoaded() ? this.showQuiz() : null}
 			</SuppressErrorBoundary>
 		);
 	}
