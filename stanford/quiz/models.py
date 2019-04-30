@@ -46,12 +46,12 @@ class Student(models.Model):
 
     #TODO: free text option for job, education, and organization fields
 
-    job = models.CharField(max_length=4, choices=JOB_CHOICES, default='OTH')
-    education_level = models.CharField(max_length=3, choices=EDUCATION_CHOICES, default="LPS")
+    job = models.CharField(max_length=100, default='OTH')
+    education_level = models.CharField(max_length=100, default="LPS")
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='AX')
     state = models.CharField(max_length=20, default="Denial")
     years_of_experience = models.DecimalField(max_digits=4, decimal_places=2, default=0)
-    organization = models.CharField(max_length=3, choices=ORG_CHOICES, default='OTH')
+    organization = models.CharField(max_length=100, default='OTH')
 
     profile_type = models.CharField(max_length=10, choices=PROFILE_CHOICES, default="STUD")
 
