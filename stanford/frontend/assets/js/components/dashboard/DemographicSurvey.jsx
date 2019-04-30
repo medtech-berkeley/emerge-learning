@@ -585,12 +585,12 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 			    <label for="work_device_hours">How many hours/day do you use your phone or computer for work purposes?</label>
-			    <input type="number" step="0.25" class="form-control" name="work_device_hours" id="work_device_hours" aria-describedby="work_device_hours"/>
+			    <input type="number" step="0.25" class="form-control" name="work_device_hours" id="work_device_hours" aria-describedby="work_device_hours" required/>
 			  </div>
 
 			  <div class="form-group">
 			    <label for="personal_device_hours">How many hours/day do you use your phone or computer for personal purposes?</label>
-			    <input type="number" step="0.25" class="form-control" name="personal_device_hours" id="personal_device_hours" aria-describedby="personal_device_hours"/>
+			    <input type="number" step="0.25" class="form-control" name="personal_device_hours" id="personal_device_hours" aria-describedby="personal_device_hours" required/>
 			  </div>
           </ModalBody>
           <ModalFooter>
