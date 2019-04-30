@@ -24,6 +24,7 @@ export class DemographicSurvey extends React.Component {
 
   handleSubmit(event) {
   	event.preventDefault();
+  	console.log(event.target);
     this.props.submitDemographicSurvey(event.target);
   }
 
@@ -35,6 +36,13 @@ export class DemographicSurvey extends React.Component {
 
   jobFreeText(event) {
   	console.log(event.target.value);
+  	var job_text = document.getElementById("job_text");
+  	job_text.value = document.getElementById("job_select").value;
+
+  	if (job_text.value === "OTH") {
+  		job_text.value = "";
+  	}
+
   	var val = event.target.value;
 
   	if (val === "OTH") {
@@ -45,6 +53,13 @@ export class DemographicSurvey extends React.Component {
   }
 
   edFreeText(event) {
+  	var ed_text = document.getElementById("education_level_text");
+  	ed_text.value = document.getElementById("education_level_select").value;
+
+  	if (ed_text.value === "OTH") {
+  		ed_text.value = "";
+  	}
+
   	var val = event.target.value;
 	 if (val === "OTH") {
   		this.setState({ed: "text"});
@@ -54,6 +69,13 @@ export class DemographicSurvey extends React.Component {
   }
 
   orgFreeText(event) {
+  	var org_text = document.getElementById("organization_text");
+  	org_text.value = document.getElementById("organization_select").value;
+
+  	if (org_text.value === "OTH") {
+  		org_text.value = "";
+  	}
+
   	var val = event.target.value;
   	if (val === "OTH") {
   		this.setState({org: "text", orgShow:false});
@@ -93,7 +115,7 @@ export class DemographicSurvey extends React.Component {
           <br />
               <div class="form-group">
 			    <label for="birth_year">What year were you born in?</label>
-			    <input type="number" step="1" class="form-control" name="birth_year" id="birth_year" aria-describedby="inputAge"/>
+			    <input type="number" step="1" class="form-control" name="birth_year" id="birth_year" aria-describedby="inputAge" required/>
 			  </div>
 
 			  <div class="form-group">
@@ -107,7 +129,7 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 			    <label for="">Job</label>
-				<select class="form-control" name="job" onChange={this.jobFreeText}>
+				<select class="form-control" name="job" onChange={this.jobFreeText} id="job_select">
 				  <option value="EMTB">EMT B</option>
 				  <option value="EMTA">EMT A</option>
 				  <option value="PARA">Paramedic</option>
@@ -115,13 +137,14 @@ export class DemographicSurvey extends React.Component {
 				  <option value="NUR">Nurse</option>
 				  <option value="STU">Student</option>
 				  <option value="OTH">Other</option>
-				</select>			  
-				<input class="form-control" type={this.state.job} placeholder="Job Title" name="job" id="job"/>
+				</select>
+				<br />	  
+				<input class="form-control" type={this.state.job} placeholder="Job Title" name="job" id="job_text"/>
 			  </div>
 
 			  <div class="form-group">
 			    <label for="">Education</label>
-				<select class="form-control" name="education_level" onChange={this.edFreeText}>
+				<select class="form-control" name="education_level" onChange={this.edFreeText} id="education_level_select">
 				  <option value="LPS">Lower Primary School</option>
 				  <option value="UPS">Upper Primary School</option>
 				  <option value="G10">Grade 10 (or equivalent)</option>
@@ -130,7 +153,7 @@ export class DemographicSurvey extends React.Component {
 				  <option value="GRD">Post-Graduate Degree (MSc/MA, etc.)</option>
 				  <option value="OTH">Other</option>
 				</select>			  
-				<input class="form-control" type={this.state.ed} placeholder="Education Level" name="education_level" id="education_level"/>
+				<input class="form-control" type={this.state.ed} placeholder="Education Level" name="education_level" id="education_level_text"/>
 			  </div>
 
 			  <div class="form-group">
@@ -432,20 +455,22 @@ export class DemographicSurvey extends React.Component {
 
 			  <div class="form-group">
 			    <label for="years_of_experience">Years of Experience</label>
-			    <input type="number" step="0.25" class="form-control" name="years_of_experience" id="years_of_experience" aria-describedby="inputYOE"/>
+			    <input type="number" step="0.25" class="form-control" name="years_of_experience" id="years_of_experience" aria-describedby="inputYOE" required/>
 			  </div>
 
 			  <div class="form-group">
 			    <label for="">Organization</label>
-				<select class="form-control" name="organization" onChange={this.orgFreeText}>
+				<select class="form-control" name="organization" onChange={this.orgFreeText} id="organization_select">
 				  <option value="GVK">GVK EMRI</option>
 				  <option value="OTH">Other</option>
-				</select>			  
-				<input class="form-control" type={this.state.org} placeholder="Organization Name" name="organization" id="organization"/>
+				</select>
+				<br />
+				<input class="form-control" type={this.state.org} placeholder="Organization Name" name="organization" id="organization_text"/>
 			  </div>
 
 			  { orgShow 
 			  	?
+			  	<div>
 				<div class="form-group">
 			    <label for="">Completed Medical/Cardiovascular Refresher program (GVK EMRI Only)</label>
 				<select class="form-control" name="med_cardio_refresher">
@@ -454,16 +479,18 @@ export class DemographicSurvey extends React.Component {
 				  <option value="N">No</option>
 				</select>			  
 			  	</div>
+			  	<div class="form-group">
+					<label for="med_cardio_date">Date Completed?</label>
+			    	<input type="date" class="form-control" name="med_cardio_date" id="med_cardio_date" aria-describedby="inputCardioDate" placeholder="Enter Date"/>
+			 	</div>
+			 	</div>
 			  	: null
 			  }
 
-              <div class="form-group">
-				<label for="med_cardio_date">Date Completed?</label>
-			    <input type="date" class="form-control" name="med_cardio_date" id="med_cardio_date" aria-describedby="inputCardioDate" placeholder="Enter Date"/>
-			  </div>
 
 			  { orgShow 
 			  	?
+			  <div>
 			  <div class="form-group">
 			    <label for="">Completed OB/GYN Refresher Program (GVK EMRI Only)</label>
 				<select class="form-control" name="obgyn_refresher">
@@ -472,16 +499,18 @@ export class DemographicSurvey extends React.Component {
 				  <option value="N">No</option>
 				</select>			  
 			  </div>
-			  : null
-			  }
-
 			  <div class="form-group">
 				<label for="obgyn_date">Date Completed?</label>
 			    <input type="date" class="form-control" name="obgyn_date" id="obgyn_date" aria-describedby="inputPediatricsDate" placeholder="Enter Date"/>
 			  </div>
+			  </div>
+			  : null
+			  }
+
 
 			  { orgShow
 			  	?
+			  <div>
 			  <div class="form-group">
 			    <label for="">Completed Trauma Refresher Program (GVK EMRI Only)</label>
 				<select class="form-control" name="trauma_refresher">
@@ -490,16 +519,17 @@ export class DemographicSurvey extends React.Component {
 				  <option value="N">No</option>
 				</select>			  
 			  </div>
-			  : null
-			  }
-
 			  <div class="form-group">
 				<label for="inputDatePedatrics">Date Completed?</label>
 			    <input type="date" class="form-control" name="trauma_date" id="trauma_date" aria-describedby="inputTraumaDate" placeholder="Enter Date"/>
 			  </div>
+			  </div>
+			  : null
+			  }
 
 			  {orgShow
 			  	?
+			  <div>
 			  <div class="form-group">
 			    <label for="">Completed Pediatrics Refresher Program (GVK EMRI Only)</label>
 				<select class="form-control" name="pediatrics_refresher">
@@ -508,16 +538,17 @@ export class DemographicSurvey extends React.Component {
 				  <option value="N">No</option>
 				</select>			  
 			  </div>
-			  : null
-			  }
-
 			  <div class="form-group">
 				<label for="inputDatePedatrics">Date Completed?</label>
 			    <input type="date" class="form-control" name="pediatrics_date" id="pediatrics_date" aria-describedby="inputPediatricsDate" placeholder="Enter Date"/>
 			  </div>
+			  </div>
+			  : null
+			  }
 
 			  {orgShow
 			  	?
+			  <div>
 			  <div class="form-group">
 			    <label for="">Completed Leadership/Communication Refresher Program (GVK EMRI Only)</label>
 				<select class="form-control" name="leadership_refresher">
@@ -526,13 +557,13 @@ export class DemographicSurvey extends React.Component {
 				  <option value="N">No</option>
 				</select>			  
 			  </div>
-			  : null
-			  }
-
 			  <div class="form-group">
 				<label for="inputDatePedatrics">Date Completed?</label>
 			    <input type="date" class="form-control" name="leadership_date" id="leadership_date" aria-describedby="inputLeadershipDate" placeholder="Enter Date"/>
 			  </div>
+			  </div>
+			  : null
+			  }
 
 			  <div class="form-group">
 			    <label for="">What device do you use most often to access the internet?</label>
