@@ -3,6 +3,7 @@ import {Card, CardBody, CardHeader, Collapse, Container, Badge} from "reactstrap
 import PropTypes from "prop-types";
 import {QuizQuestion} from "./QuizQuestion";
 import {QuestionFeedback} from "../instructor/QuestionFeedback";
+import { SuppressErrorBoundary } from "../errors/SuppressErrorBoundary";
 
 export class QuizResults extends React.Component {
     constructor(props) {
@@ -23,6 +24,7 @@ export class QuizResults extends React.Component {
 
 	render() {
 		return (
+            <SuppressErrorBoundary>
 			<Container>
                 {this.props.results.map((result, i) => {
                     return (
@@ -40,6 +42,7 @@ export class QuizResults extends React.Component {
                     }
                 )}
 			</Container>
+            </SuppressErrorBoundary>
 		);
 	}
 }

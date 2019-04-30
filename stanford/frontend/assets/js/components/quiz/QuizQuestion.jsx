@@ -1,6 +1,7 @@
 import React from "react"
 import {Card, CardBody, CardHeader, CardFooter, Container, Row, Col, Button} from "reactstrap";
 import PropTypes from "prop-types"
+import { SuppressErrorBoundary } from "../errors/SuppressErrorBoundary";
 
 export class QuizQuestion extends React.Component {
 	IMAGE = "IMG";
@@ -66,6 +67,7 @@ export class QuizQuestion extends React.Component {
 
 	render() {
 		return (
+			<SuppressErrorBoundary>
 			<Container>
 				<Card className="question">
 				  <CardBody>
@@ -107,6 +109,7 @@ export class QuizQuestion extends React.Component {
 				  </CardBody>
 			  </Card>
 			</Container>
+			</SuppressErrorBoundary>
 		);
 	}
 }

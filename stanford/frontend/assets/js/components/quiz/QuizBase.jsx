@@ -3,6 +3,7 @@ import {Card, CardBody, CardHeader, CardFooter, Container, Row, Col} from "react
 import PropTypes from "prop-types";
 import { QuizQuestion } from "./QuizQuestion";
 import { QuizComplete } from "./QuizComplete";
+import { SuppressErrorBoundary } from "../errors/SuppressErrorBoundary";
 
 export class QuizBase extends React.Component {
 	componentDidMount() {
@@ -15,7 +16,7 @@ export class QuizBase extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<SuppressErrorBoundary>
 			{!this.props.complete ? <QuizQuestion
 										categoryId={this.quizID}
 										text={this.props.currentQuestion.text}
@@ -43,7 +44,7 @@ export class QuizBase extends React.Component {
 									/>
 
 			}
-			</div>
+			</SuppressErrorBoundary>
 		);
 	}
 }

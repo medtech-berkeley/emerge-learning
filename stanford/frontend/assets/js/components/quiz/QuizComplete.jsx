@@ -4,6 +4,7 @@ import {Card, CardBody, CardHeader, CardFooter, Container, Row} from "reactstrap
 import {QuizResults} from "./QuizResults";
 import {Planet} from 'react-kawaii';
 import PropTypes from "prop-types";
+import { SuppressErrorBoundary } from "../errors/SuppressErrorBoundary";
 
 export class QuizComplete extends React.Component {
 	constructor(props) {
@@ -49,6 +50,7 @@ export class QuizComplete extends React.Component {
 
 	render() {
 		return (
+			<SuppressErrorBoundary>
 			<Container>
 				<div className="card text-center">
 				  <div className="card-header" style={{"height": "5.5rem"}}>
@@ -74,6 +76,7 @@ export class QuizComplete extends React.Component {
 				  </div>
 				</div>
 			</Container>
+			</SuppressErrorBoundary>
 		);
 	}
 }
