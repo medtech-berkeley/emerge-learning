@@ -53,8 +53,9 @@ export class Badges extends React.Component {
             <div className="Badges">
                 <Card >
                 <CardBody>
+                <div class="text-center">
                 <CardTitle >Badges</CardTitle>
-                    
+                </div>                    
                     {badges.map(
                        function(badge){
                         return (
