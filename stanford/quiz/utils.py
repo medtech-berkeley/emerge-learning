@@ -97,8 +97,8 @@ def get_subject_stat(student, subject, query_set=QuestionUserData.objects.all(),
 
     qud = query_set.filter(student=student, time_completed__lte=date, quiz_userdata__quiz__tags=subject)
 
-    logger.info(qud)
-    logger.info(qud.count())
+    # logger.info(qud)
+    # logger.info(qud.count())
 
     stat = {}
     total = qud.count()

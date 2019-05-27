@@ -1,4 +1,5 @@
-from .models import Question, Quiz, Student, QuestionUserData, Answer, Tag, QuestionMedia, QuizUserData, Feedback, Category, Badge
+from .models import Question, Quiz, Student, QuestionUserData, Answer, Tag
+from .models import QuestionMedia, QuizUserData, Feedback, Category, Badge, Event, EventType
 from .utils import get_stats_student
 import logging
 
@@ -23,13 +24,19 @@ def grant_badges(student):
     student_stat = get_stats_student(student)
 
     quizzes_done = student_stat['num_completed']
+    badges_to_add = []
     if quizzes_done >= 1:
-        Badge.objects.get(name = '1Practice').students.add(student)
-        Badge.objects.get(name = '1Weekly').students.add(student)
+        badges_to_add.append(Badge.objects.get(name = '1Practice'))
+        badges_to_add.append(Badge.objects.get(name = '1Weekly'))
     if quizzes_done >= 5:
-        Badge.objects.get(name = '5Weekly').students.add(student)
+        badges_to_add.append(Badge.objects.get(name = '5Weekly'))
     if quizzes_done >= 10:
-        Badge.objects.get(name = '10Weekly').students.add(student)
+        badges_to_add.append(Badge.objects.get(name = '10Weekly'))
 
     if student.num_required_quizzes == 0:
-        Badge.objects.get(name = 'Pretest').students.add(student)
+        badges_to_add.append(Badge.objects.get(name = 'Pretest'))
+
+    for badge in badges_to_add:
+        if student not in badge.students.all():
+            Event.objects.create(student=student, event_type=EventType.BadgeEarn, badge=badge)
+            badge.students.add(student)
