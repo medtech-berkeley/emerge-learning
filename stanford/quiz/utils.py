@@ -1,4 +1,4 @@
-from .models import Student, Question, Quiz, Answer, QuestionUserData, QuizUserData, Tag
+from .models import Student, Question, Quiz, Answer, QuestionUserData, QuizUserData, Tag, Event, EventType
 
 from django.utils import timezone
 from django.http import Http404
@@ -191,21 +191,22 @@ def end_quiz(quiz_userdata: QuizUserData):
                                                   question=question,
                                                   quiz_userdata=quiz_userdata)
 
-            if qud.exists():
-                qud = qud.first()
-                qud.time_completed = timezone.now()
-                qud.save()
-            else:
+            # if qud.exists():
+            #     qud = qud.first()
+            #     qud.time_completed = timezone.now()
+            #     qud.save()
+            if not qud.exists():
                 question_data = QuestionUserData.objects.create(student=student,
                                                                 question=question,
                                                                 quiz_userdata=quiz_userdata,
                                                                 time_completed=timezone.now())
-
             n_answered += 1
 
     if quiz_userdata.time_completed is None:
         quiz_userdata.time_completed = timezone.now()
         quiz_userdata.save()
+    
+    Event.objects.create(event_type=EventType.QuizEnd.value, student=student, quiz_ud=quiz_userdata)
     grant_badges(student)
 
 from .badges import grant_badges

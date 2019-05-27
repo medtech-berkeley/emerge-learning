@@ -19,6 +19,7 @@ from rest_framework import permissions, generics, mixins
 from .utils import get_student_quiz_stats, get_latest_object_or_404
 from .utils import get_stats_student, end_quiz
 from .models import Question, QuestionUserData, Quiz, Student, Feedback
+from .models import Event, EventType
 from .models import Student, Quiz, Question, Answer, QuestionUserData, QuizUserData, GVK_EMRI_Demographics
 from .serializers import QuestionSerializer, QuestionUserDataSerializer, QuizSerializer, AnswerSerializer, LeaderboardStatSerializer
 from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, QuizUserDataSerializer, QuestionFeedbackSerializer
@@ -208,7 +209,8 @@ def start_quiz(request):
                 if len(required_quizzes) > 0:
                     return JsonResponse({'accepted': False, 'reason': 'Missing one or more required tests.'}, status=400)
 
-            QuizUserData.objects.create(student=student, quiz=quiz)
+            qud = QuizUserData.objects.create(student=student, quiz=quiz)
+            Event.objects.create(event_type=EventType.QuizStart.value, student=student, quiz_ud=qud)
             return JsonResponse({'accepted': True}, status=200)
 
 @never_cache
@@ -259,6 +261,7 @@ def get_question(request):
                 question = random.choice(question_set)
                 # create QuestionUserData as user has started to answer question
                 question_data = QuestionUserData.objects.create(student=student, question=question, quiz_userdata=quiz_data)
+                Event.objects.create(event_type=EventType.QuestionStart.value, student=student, question_ud=question_data)
 
             # strip out correctness indicators from answers
             question_json = QuestionSerializer(instance=question).data
@@ -327,6 +330,8 @@ def submit_answer(request):
                 user_data.answer = answer
                 user_data.time_completed = timezone.now()
                 user_data.save()
+
+                Event.object.create(event_type=EventType.QuestionEnd.value, student=student, question_ud=user_data)
 
                 if quiz_data.is_done():
                     end_quiz(quiz_data)

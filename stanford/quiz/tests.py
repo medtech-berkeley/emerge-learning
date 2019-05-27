@@ -14,6 +14,7 @@ from django.core.files.base import File
 
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
 from .models import Question, Category, Quiz, QuizUserData, QuestionUserData, Answer, Student, Tag, QuestionMedia
+from .models import Event, EventType
 from .utils import get_stats_student, get_stats_question_total, get_stats_quiz, end_quiz
 from .serializers import QuestionSerializer, AnswerSerializer, QuizSerializer, FeedbackSerializer
 from .serializers import QuestionUserDataSerializer, QuizUserDataSerializer, StudentSerializer
@@ -1384,7 +1385,7 @@ class BadgeTests(TestUtils, QuestionsMixin):
     def setUp(self):
         self.add_hardcoded_questions()
 
-    def test_start_quiz_after_required_completion(self):
+    def test_pretest_badge(self):
         self.quizzes[0].required = True
         self.quizzes[0].save()
 
@@ -1399,3 +1400,24 @@ class BadgeTests(TestUtils, QuestionsMixin):
         response = self.client.get("/quiz/start", {'quiz': self.quizzes[1].id})
 
         self.assertGreaterEqual(self.student.badges.count(), 1)
+
+class EventTests(TestUtils, QuestionsMixin):
+    def setUp(self):
+        self.add_hardcoded_questions()
+
+    def test_start_quiz_after_required_completion(self):
+        self.quizzes[0].required = True
+        self.quizzes[0].save()
+
+        self.client.get("/quiz/start", {'quiz': self.quizzes[0].id})
+        for i in range(3):
+            response = self.client.get("/quiz/question", {'quiz': self.quizzes[0].id})
+            question_id = response.json()['id']
+            question = Question.objects.get(id=question_id)
+            answer = question.answers.filter(is_correct=True).first()
+            self.client.post("/quiz/answer", {'quiz': self.quizzes[0].id, 'question': question_id, 'answer': answer.id})
+
+        response = self.client.get("/quiz/start", {'quiz': self.quizzes[1].id})
+
+        self.assertGreaterEqual(self.student.events.count(), 1)
+        self.assertTrue(self.student.events.filter(event_type=EventType.BadgeEarn.value).exists())

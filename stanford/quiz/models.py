@@ -36,6 +36,7 @@ class Student(models.Model):
     name = models.CharField(max_length=100, default="Enter Name")
     location = models.CharField(max_length=100, default="Enter location")
     description = models.CharField(max_length=500, default="Enter description")
+    last_activity = models.DateTimeField(auto_now_add=True)
 
     consent_prompt_required = models.BooleanField(default=True)
     consent = models.BooleanField(default=False)
@@ -76,6 +77,9 @@ class Badge(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to="badges", null=True, storage=upload_storage)
     students = models.ManyToManyField(Student, related_name = "badges")
+
+    def __str__(self):
+        return self.name
 
 
 class Tag(models.Model):
@@ -278,3 +282,39 @@ class GVK_EMRI_Demographics(models.Model):
 
     work_device_hours = models.DecimalField(max_digits=4, decimal_places=2)
     personal_device_hours = models.DecimalField(max_digits=4, decimal_places=2)
+
+
+class EventType(Enum):
+    QuizStart='QuizStart'
+    QuizEnd='QuizEnd'
+    QuestionStart='QuestionStart'
+    QuestionEnd='QuestionEnd'
+    BadgeEarn='BadgeEarn'
+    ProfileUpdate='ProfileUpdate'
+    Login='Login'
+
+
+class DeviceData(models.Model):
+    device_type = models.CharField(max_length=32, choices=[(tag.value, tag.value) for tag in EventType])
+    device_family = models.CharField(max_length=256)
+    browser_family = models.CharField(max_length=256)
+    browser_version = models.CharField(max_length=256)
+    os_family = models.CharField(max_length=256)
+    os_version = models.CharField(max_length=256)
+
+    def __str__(self):
+        return f"{self.device_type}/{self.os_family}{self.os_version} - {self.browser_family}{self.browser_version}"
+
+
+class Event(models.Model):
+    event_type = models.CharField(max_length=32, choices=[(tag.value, tag.value) for tag in EventType])
+    time = models.DateTimeField(auto_now_add=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="events")
+    quiz_ud = models.ForeignKey(QuizUserData, on_delete=models.CASCADE, related_name="events", null=True)
+    question_ud = models.ForeignKey(QuestionUserData, on_delete=models.CASCADE, related_name="events", null=True)
+    badge = models.ForeignKey(Badge, on_delete=models.CASCADE, null=True)
+    device_data = models.OneToOneField(DeviceData, on_delete=models.CASCADE, related_name="events", null=True)
+
+    def __str__(self):
+        return f"{self.event_type} - {self.student.name} ({self.id})"
+    

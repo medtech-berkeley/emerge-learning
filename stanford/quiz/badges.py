@@ -38,5 +38,5 @@ def grant_badges(student):
 
     for badge in badges_to_add:
         if student not in badge.students.all():
-            Event.objects.create(student=student, event_type=EventType.BadgeEarn, badge=badge)
+            Event.objects.create(student=student, event_type=EventType.BadgeEarn.value, badge=badge)
             badge.students.add(student)
