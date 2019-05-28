@@ -6,13 +6,15 @@ import css from 'react-tabs/style/react-tabs.css';
 
 export class Graphs extends React.Component {
 
-    getSubjectData() {
+    getSubjectData(predicate) {
       if (this.props.data.subjects) {
         // console.log(this.props.data.subjects);
         const subjectNames = Object.keys(this.props.data.subjects)
         var graphElements = []
         for (var name of subjectNames) {
-          graphElements.push({name: name, Accuracy: Number(this.props.data.subjects[name])})
+          if (predicate(name)) {
+            graphElements.push({name: name, Accuracy: Number(this.props.data.subjects[name])})
+          }
         }
         return (graphElements);
       } else {
@@ -21,10 +23,18 @@ export class Graphs extends React.Component {
           {name: '', Accuracy: 0},
           {name: '', Accuracy: 0},
           {name: '', Accuracy: 0},
+          {name: '', Accuracy: 0}
         ]);
       }
     }
 
+    getPracticePerformance() {
+      return this.getSubjectData(name=>name.includes("practice"))
+    }
+
+    getQuizPerformance() {
+      return this.getSubjectData(name=>!name.includes("practice"))
+    }
 
     render() {
 
@@ -135,11 +145,13 @@ export class Graphs extends React.Component {
                     <div className="card-body">
                     <Tabs>
                         <TabList>
-                          <Tab>Performance Breakdown</Tab>
+                          <Tab>Practice Performance</Tab>
+                          <Tab>Quiz Performance</Tab>
                         </TabList>
+
                         <TabPanel>
                           <ResponsiveContainer width='100%' height={350}>
-                            <BarChart layout="vertical" width={600} height={300} data={this.getSubjectData()} margin={{top: 20, right: 20, left: 50, bottom: 5}}>
+                            <BarChart layout="vertical" width={600} height={300} data={this.getPracticePerformance()} margin={{top: 20, right: 20, left: 50, bottom: 5}}>
                                <CartesianGrid strokeDasharray="3 3"/>
                                <XAxis type="number" domain={[0, 100]}/>
                                <YAxis dataKey="name" type="category"/>
@@ -149,6 +161,20 @@ export class Graphs extends React.Component {
                           </BarChart>
                         </ResponsiveContainer>
                         </TabPanel>
+
+                        <TabPanel>
+                          <ResponsiveContainer width='100%' height={350}>
+                            <BarChart layout="vertical" width={600} height={300} data={this.getQuizPerformance()} margin={{top: 20, right: 20, left: 50, bottom: 5}}>
+                               <CartesianGrid strokeDasharray="3 3"/>
+                               <XAxis type="number" domain={[0, 100]}/>
+                               <YAxis dataKey="name" type="category"/>
+                               <Tooltip/>
+                               <Legend />
+                               <Bar dataKey="Accuracy" fill="#8884d8" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                        </TabPanel>
+
                     </Tabs>
                     </div>
                 </Card>
