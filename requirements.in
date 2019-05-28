@@ -12,3 +12,5 @@ coverage
 django-extensions
 apiclient
 oauth2client
+django-user-agents
+
