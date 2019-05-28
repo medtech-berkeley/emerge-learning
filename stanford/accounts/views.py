@@ -19,6 +19,24 @@ from django.http import HttpResponse
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def send_login_event(student, request):
+    if request.user_agent.is_tablet:
+        device_type = 'tablet'
+    elif request.user_agent.is_mobile:
+        device_type = 'mobile'
+    else:
+        device_type = 'computer'
+    device_data = DeviceData.objects.create(
+        device_family=request.user_agent.device.family,
+        browser_family=request.user_agent.browser.family,
+        browser_version=request.user_agent.browser.version_string,
+        os_family=request.user_agent.os.family,
+        os_version=request.user_agent.os.version_string,
+        device_type=device_type
+    )
+    return Event.objects.create(event_type=EventType.Login.value, student=student, device_data=device_data)
+
+
 def signup(request):
     if request.method == 'POST':
         if request.POST['password'] == request.POST['password_confirm']:
@@ -61,6 +79,7 @@ def signup(request):
                     else:
                         user.is_active = True
                         user.save()
+                        send_login_event(user.student, request)
                         login(request, user)
                         return redirect('dashboard')
 
@@ -78,6 +97,7 @@ def logins(request):
     if request.method == 'POST':
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is not None:
+            send_login_event(user.student, request)
             login(request, user)
             return redirect('dashboard')
         else:
