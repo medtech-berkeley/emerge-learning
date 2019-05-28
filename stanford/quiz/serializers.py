@@ -1,9 +1,42 @@
 from rest_framework import serializers
+from rest_framework.fields import SkipField
+
 from django.contrib.auth.models import User
 from django.utils import timezone
 
 from .utils import get_stats_student
-from .models import Question, QuestionUserData, Quiz, QuizUserData, Answer, Student, QuestionMedia, Feedback, Badge
+from .models import Question, QuestionUserData, Quiz, Event, DeviceData
+from .models import QuizUserData, Answer, Student, QuestionMedia, Feedback, Badge
+
+from collections import OrderedDict
+
+
+class NonNullSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        """
+        Object instance -> Dict of primitive datatypes.
+        """
+        ret = OrderedDict()
+        fields = [field for field in self.fields.values() if not field.write_only]
+
+        for field in fields:
+            try:
+                attribute = field.get_attribute(instance)
+            except SkipField:
+                continue
+
+            if attribute is not None:
+                represenation = field.to_representation(attribute)
+                if represenation is None:
+                    # Do not seralize empty objects
+                    continue
+                if isinstance(represenation, list) and not represenation:
+                   # Do not serialize empty lists
+                   continue
+                ret[field.field_name] = represenation
+
+        return ret
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -90,6 +123,19 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = ('id', 'text', 'answers', 'created', 'media', 'tags')
 
+class DeviceDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviceData
+        fields = ('device_type', 'device_family', 'browser_family', 'browser_version', 'os_family', 'os_version')
+
+class EventSerializer(NonNullSerializer):
+    quiz_ud = QuizUserDataSerializer()
+    question_ud = QuestionUserDataSerializer()
+    badge = BadgeSerializer()
+    device_data = DeviceDataSerializer()
+    class Meta:
+        model = Event
+        fields = ('event_type', 'time', 'student', 'quiz_ud', 'question_ud', 'badge', 'device_data')
 
 class StudentStatsSerializer(serializers.Serializer):
     name = serializers.CharField()
@@ -109,14 +155,11 @@ class StudentStatsSerializer(serializers.Serializer):
         stats['image'] = student.image
         return stats
 
-
 class LeaderboardStatSerializer(serializers.Serializer):
     name = serializers.CharField()
     location = serializers.CharField()
     image = serializers.ImageField()
     score = serializers.IntegerField(read_only=True)
-
-
 
 class QuestionFeedbackSerializer(serializers.Serializer):
     question__text = serializers.CharField()

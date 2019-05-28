@@ -21,8 +21,10 @@ from .utils import get_stats_student, end_quiz
 from .models import Question, QuestionUserData, Quiz, Student, Feedback
 from .models import Event, EventType
 from .models import Student, Quiz, Question, Answer, QuestionUserData, QuizUserData, GVK_EMRI_Demographics
-from .serializers import QuestionSerializer, QuestionUserDataSerializer, QuizSerializer, AnswerSerializer, LeaderboardStatSerializer
-from .serializers import StudentSerializer, UserSerializer, StudentStatsSerializer, QuizUserDataSerializer, QuestionFeedbackSerializer
+from .serializers import QuestionSerializer, QuestionUserDataSerializer, QuizSerializer
+from .serializers import AnswerSerializer, LeaderboardStatSerializer, StudentSerializer
+from .serializers import UserSerializer, StudentStatsSerializer, QuizUserDataSerializer, QuestionFeedbackSerializer
+from .serializers import EventSerializer
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
 
 
@@ -68,6 +70,11 @@ class QuestionViewSet(ModelViewSet):
 class AnswerViewSet(ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
+    permission_classes = [IsInstructor]
+
+class EventViewSet(ModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
     permission_classes = [IsInstructor]
 
 

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from frontend.views import index, change_user_info, dashboard
 from rest_framework import routers
-from quiz.views import QuestionViewSet, AnswerViewSet, QuizViewSet, QuestionUserDataViewSet, StudentViewSet, StudentStatsViewSet, QuizUserDataViewSet, QuestionFeedbackViewSet, LeaderboardStatViewSet
+from quiz.views import QuestionViewSet, AnswerViewSet, QuizViewSet, QuestionUserDataViewSet, StudentViewSet, StudentStatsViewSet, QuizUserDataViewSet, QuestionFeedbackViewSet, LeaderboardStatViewSet, EventViewSet
 from quiz.views import submit_consent_form
 from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, upload_quizzes, submit_feedback, start_quiz
 from django.conf import settings
@@ -23,6 +23,7 @@ router.register(r'students', StudentViewSet, 'Student')
 router.register(r'leaderboard', LeaderboardStatViewSet, 'Student')
 router.register(r'studentstats', StudentStatsViewSet, 'StudentStats')
 router.register(r'feedback', QuestionFeedbackViewSet, 'QuestionFeedback')
+router.register(r'events', EventViewSet, 'Events')
 
 
 urlpatterns = [

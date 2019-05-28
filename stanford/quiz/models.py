@@ -310,10 +310,10 @@ class Event(models.Model):
     event_type = models.CharField(max_length=32, choices=[(tag.value, tag.value) for tag in EventType])
     time = models.DateTimeField(auto_now_add=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="events")
-    quiz_ud = models.ForeignKey(QuizUserData, on_delete=models.CASCADE, related_name="events", null=True)
-    question_ud = models.ForeignKey(QuestionUserData, on_delete=models.CASCADE, related_name="events", null=True)
-    badge = models.ForeignKey(Badge, on_delete=models.CASCADE, null=True)
-    device_data = models.OneToOneField(DeviceData, on_delete=models.CASCADE, related_name="events", null=True)
+    quiz_ud = models.ForeignKey(QuizUserData, on_delete=models.CASCADE, related_name="events", null=True, blank=True)
+    question_ud = models.ForeignKey(QuestionUserData, on_delete=models.CASCADE, related_name="events", null=True, blank=True)
+    badge = models.ForeignKey(Badge, on_delete=models.CASCADE, null=True, blank=True)
+    device_data = models.OneToOneField(DeviceData, on_delete=models.CASCADE, related_name="events", null=True, blank=True)
 
     def __str__(self):
         return f"{self.event_type} - {self.student.name} ({self.id})"
