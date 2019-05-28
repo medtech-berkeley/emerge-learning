@@ -452,7 +452,7 @@ def submit_demographics_form(request):
             student.completed_demographic_survey = True
             
             if student.organization == 'GVK':
-                gvk_fields = {field:request.Post[field] for field in optional_fields}
+                gvk_fields = {field:request.POST[field] for field in optional_fields}
                 extra_info = GVK_EMRI_Demographics(student=student, **gvk_fields)
                 extra_info.save()
                 

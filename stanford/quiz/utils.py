@@ -82,11 +82,19 @@ def get_performance_stats(student, date=None):
 
 def get_subject_stats(student, date=None, query_set=QuestionUserData.objects.all()):
     subject_stats = {}
+    if date is None:
+        date = timezone.now()
 
-    subjects = [(tag.text, int(get_subject_stat(student, tag.text, query_set, date)['percent_correct'])) for tag in Tag.objects.all()]
+    subjects = []
+    for tag in Tag.objects.all():
+        qud = query_set.filter(student=student, time_completed__lte=date, quiz_userdata__quiz__tags=tag.text)
+        total = qud.count()
+        if total > 0:
+            subjects.append((tag.text, int(get_subject_stat(student, tag.text, query_set, date)['percent_correct'])))
+
     subjects = sorted(subjects, key=lambda x: -x[1])
 
-    for subject, accuracy in subjects[:4]:
+    for subject, accuracy in subjects:
         subject_stats[subject] = accuracy
 
     return subject_stats

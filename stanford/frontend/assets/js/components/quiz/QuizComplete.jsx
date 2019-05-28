@@ -31,6 +31,8 @@ export class QuizComplete extends React.Component {
 		this.intervalId = setInterval(
 			() => this.shouldShowConfetti(), 1000
 		);
+
+		this.completionText = this.getCompletionText();
 	}
 
 	componentWillUnmount() {
@@ -44,6 +46,47 @@ export class QuizComplete extends React.Component {
 			showConfetti: this.props.num_correct / this.props.num_attempted >= 0.7
 		});
 	}
+
+	getRandomInt(min, max) {
+	    min = Math.ceil(min);
+	    max = Math.floor(max);
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+	getCompletionText() {
+		let score =  this.props.num_correct / this.props.num_attempted;
+		console.log(score);
+		var text70to100 = ["Golden touch!",
+							"Marvelous work!",
+							"Fabulous work!",
+							"Brilliant work!",
+							"Top notch!",
+							"Epic EMT performance!"]
+
+		var text40to69 = ["Super!",
+						   "Awesome work!",
+						   "Well done!"]
+        
+        var text0to39 = ["Great work!",
+        				  "Good effort!",
+        				  "Great job!"]
+
+        if (score >= 70 && score <= 100) {
+        	let index = this.getRandomInt(0, text70to100.length - 1);
+        	return text70to100[index];
+        }
+
+		if (score >= 40 && score <= 69) {
+        	let index = this.getRandomInt(0, text40to69.length - 1);
+        	return text40to69[index];
+        }
+
+		if (score >= 0 && score <= 39) {
+        	let index = this.getRandomInt(0, text0to39.length - 1);
+        	return text0to39[index];
+        }
+	}
+
 
 	clearInterval(number) {
 		clearInterval(number);
@@ -60,7 +103,7 @@ export class QuizComplete extends React.Component {
 				  			<Planet size={60} mood="lovestruck" color="#70D7A3"/>
 				  		</div>
 				  		<div style={{"display": "inline-block", "transform": "translateY(-20px)"}}>
-				    		Great Work!
+				    		{this.completionText}
 				    	</div>
 				    </h3>
 				  </div>
