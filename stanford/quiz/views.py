@@ -338,7 +338,7 @@ def submit_answer(request):
                 user_data.time_completed = timezone.now()
                 user_data.save()
 
-                Event.object.create(event_type=EventType.QuestionEnd.value, student=student, question_ud=user_data)
+                Event.objects.create(event_type=EventType.QuestionEnd.value, student=student, question_ud=user_data)
 
                 if quiz_data.is_done():
                     end_quiz(quiz_data)
