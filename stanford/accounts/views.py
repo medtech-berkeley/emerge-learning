@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from quiz.models import Student
+from quiz.models import Student, Event, EventType, DeviceData
 import requests
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
