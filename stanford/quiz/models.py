@@ -15,8 +15,7 @@ from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
-
-upload_storage = FileSystemStorage(location=settings.STATIC_ROOT, base_url='/static/badges')                             
+static_storage = FileSystemStorage(location=settings.STATIC_ROOT, base_url='/static/')
 
 def on_transaction_commit(func):
     def inner(*args, **kwargs):
@@ -75,7 +74,7 @@ class Student(models.Model):
 class Badge(models.Model):
     name = models.CharField(max_length=64, primary_key=True)
     description = models.TextField()
-    image = models.ImageField(upload_to="badges", null=True, storage=upload_storage)
+    image = models.ImageField(upload_to="badges", null=True, storage=static_storage)
     students = models.ManyToManyField(Student, related_name = "badges")
 
     def __str__(self):

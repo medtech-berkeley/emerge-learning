@@ -1,7 +1,9 @@
 from .models import Question, Quiz, Student, QuestionUserData, Answer, Tag
 from .models import QuestionMedia, QuizUserData, Feedback, Category, Badge, Event, EventType
 from .utils import get_stats_student
+
 import logging
+import os
 
 BADGE_DICT = {
     'Pretest':'Complete Pretest',
@@ -18,7 +20,7 @@ logger = logging.getLogger(__name__)
 def grant_badges(student):
     for badge in BADGE_DICT:
         if not Badge.objects.filter(name = badge).exists():
-            Badge.objects.create(name = badge, description = BADGE_DICT[badge], image = badge+'.png')
+            Badge.objects.create(name = badge, description = BADGE_DICT[badge], image = os.path.join("badges", f"{badge}.png"))
 
     # student_stat = get_stats_student(student, QuestionUserData.objects.filter(quiz_userdata__quiz__is_challenge=True))
     student_stat = get_stats_student(student)
