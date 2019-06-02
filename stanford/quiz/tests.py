@@ -21,11 +21,21 @@ from .serializers import QuestionUserDataSerializer, QuizUserDataSerializer, Stu
 from .serializers import StudentStatsSerializer
 
 class QuestionsMixin:
+    def quiz_from_category(self, cat):
+        practice_tag = Tag.objects.create(text=cat.name + "-practice")
+        quiz = Quiz.objects.create(name=' '.join([cat.name, "Practice"]),
+                                    can_retake=True,
+                                    num_questions=10)
+        quiz.tags.add(practice_tag)
+        cat.practice_quiz = quiz
+        cat.save()
+        return quiz
+
     def add_hardcoded_questions(self):
         self.questions = []
 
         cat1 = Category.objects.create(name="cat1")
-        quiz1 = cat1.practice_quiz
+        quiz1 = self.quiz_from_category(cat1)
         quiz1.can_retake = False
         quiz1.save()
 
@@ -48,7 +58,7 @@ class QuestionsMixin:
         Answer.objects.create(num=4, text="a4", question=c1_q3, is_correct=True)
 
         cat2 = Category.objects.create(name="cat2")
-        quiz2 = cat2.practice_quiz
+        quiz2 = self.quiz_from_category(cat2)
 
         c2_q1 = Question.objects.create(text="c2_q1", category=cat2)
         Answer.objects.create(num=1, text="a1", question=c2_q1, is_correct=True)
@@ -67,7 +77,7 @@ class QuestionsMixin:
         Answer.objects.create(num=4, text="a4", question=c2_q3, is_correct=True)
 
         cat3 = Category.objects.create(name="cat3")
-        quiz3 = cat3.practice_quiz
+        quiz3 = self.quiz_from_category(cat3)
 
         c3_q1 = Question.objects.create(text="c3_q1", category=cat3)
         Answer.objects.create(num=1, text="a1", question=c3_q1, is_correct=True)
@@ -80,7 +90,7 @@ class QuestionsMixin:
         Answer.objects.create(num=2, text="a4", question=c3_q2, is_correct=False)
 
         cat4 = Category.objects.create(name="cat4")
-        quiz4 = cat4.practice_quiz
+        quiz4 = self.quiz_from_category(cat4)
 
         c4_q1 = Question.objects.create(text="c4_q1", category=cat4, difficulty=Question.INTERMEDIATE)
         Answer.objects.create(num=1, text="a1", question=c4_q1, is_correct=True)
@@ -95,14 +105,13 @@ class QuestionsMixin:
         Answer.objects.create(num=4, text="a4", question=c4_q2, is_correct=False)
 
         cat5 = Category.objects.create(name="cat5")
-        quiz5 = cat5.practice_quiz
+        quiz5 = self.quiz_from_category(cat5)
 
         c5_q1 = Question.objects.create(text="c5_q1", category=cat5, difficulty=Question.EXPERT)
         Answer.objects.create(num=1, text="a1", question=c5_q1, is_correct=True)
         Answer.objects.create(num=2, text="a2", question=c5_q1, is_correct=False)
         Answer.objects.create(num=3, text="a3", question=c5_q1, is_correct=True)
         Answer.objects.create(num=4, text="a4", question=c5_q1, is_correct=False)
-
 
         c5_q2 = Question.objects.create(text="c5_q2",category=cat5, difficulty=Question.EXPERT)
         Answer.objects.create(num=1, text="a1", question=c5_q2, is_correct=True)
@@ -111,7 +120,7 @@ class QuestionsMixin:
         Answer.objects.create(num=4, text="a4", question=c5_q2, is_correct=False)
 
         cat6 = Category.objects.create(name="cat6")
-        quiz6 = cat6.practice_quiz
+        quiz6 = self.quiz_from_category(cat6)
 
         c6_q1 = Question.objects.create(text="c6_q1", category=cat6, difficulty=Question.EXPERT)
         Answer.objects.create(num=1, text="a1", question=c6_q1, is_correct=True)
@@ -120,7 +129,7 @@ class QuestionsMixin:
         Answer.objects.create(num=4, text="a4", question=c6_q1, is_correct=False)
 
         cat7 = Category.objects.create(name="cat7")
-        quiz7 = cat7.practice_quiz
+        quiz7 = self.quiz_from_category(cat7)
         for i in range(11):
             question = Question.objects.create(text=f"c7_q{i + 1}", category=cat7, difficulty=Question.EXPERT)
             Answer.objects.create(num=1, text="a1", question=question, is_correct=True)
@@ -168,7 +177,7 @@ class TestSheetReading(TestCase):
         questions = Question.objects.all()
         self.assertEqual(Question.objects.count(), 3)
         self.assertEqual(QuestionMedia.objects.count(), 1)
-        self.assertEqual(Tag.objects.count(), 6)
+        self.assertEqual(Tag.objects.count(), 4)
         self.assertEqual(Category.objects.count(), 2)
         self.assertEqual(Question.objects.get(id=1001).tags.count(), 2)
 
@@ -190,9 +199,17 @@ class TestUtils(TestCase):
 
     @staticmethod
     def _create_quiz():
-        return Category.objects.create(
+        cat = Category.objects.create(
             name=token_hex(16)
-        ).practice_quiz
+        )
+        practice_tag = Tag.objects.create(text=cat.name + "-practice")
+        quiz = Quiz.objects.create(name=' '.join([cat.name, "Practice"]),
+                                    can_retake=True,
+                                    num_questions=10)
+        quiz.tags.add(practice_tag)
+        cat.practice_quiz = quiz
+        cat.save()
+        return quiz
 
     @staticmethod
     def _create_question(quiz, n_answers):
