@@ -21,11 +21,7 @@ function Badge(badge) {
 export class Badges extends React.Component {
     render() {
         const badges = this.props.user.badges; 
-        //const badges = [1,1,2];
-        console.log(badges);
-        if (badges === undefined || badges.length == 0) {
-            console.log("YUG YT");
-        }
+
         if (badges === undefined || badges.length == 0) {
             return (
                 <div className="Badges text-center">
@@ -54,7 +50,7 @@ export class Badges extends React.Component {
                 <Card >
                 <CardBody>
                 <div className="text-center">
-                <CardTitle >Badges</CardTitle>
+                <CardTitle>Badges</CardTitle>
                 </div>                    
                     {badges.map(
                        function(badge){

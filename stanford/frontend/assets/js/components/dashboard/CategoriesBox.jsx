@@ -11,7 +11,13 @@ export class CategoriesBox extends React.Component {
 			<SuppressErrorBoundary>
 				<Container>
 					<Row>
-						{this.props.categories.map((category) => (this.props.is_challenge_section === category.is_challenge) && <CategoryCard num_required_quizzes={this.props.num_required_quizzes} selectCategory={this.props.selectCategory} key={category.name} {...category} />)}
+						{
+							this.props.categories.map((category) => {
+								if(this.props.is_challenge_section === category.is_challenge) {
+									return <CategoryCard num_required_quizzes={this.props.num_required_quizzes} selectCategory={this.props.selectCategory} key={category.id} {...category} />
+								}
+							})
+						}
 					</Row>
 				</Container>
 			</SuppressErrorBoundary>
