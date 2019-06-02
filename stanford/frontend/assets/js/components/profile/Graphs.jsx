@@ -13,7 +13,10 @@ export class Graphs extends React.Component {
         var graphElements = []
         for (var name of subjectNames) {
           if (predicate(name)) {
-            graphElements.push({name: name, Accuracy: Number(this.props.data.subjects[name])})
+            var properName = name.replace("practice", "");
+            properName = properName.replace("-", " ");
+            properName = properName.toProperCase();
+            graphElements.push({name: properName, Accuracy: Number(this.props.data.subjects[name])});
           }
         }
         return (graphElements);
@@ -154,7 +157,7 @@ export class Graphs extends React.Component {
                             <BarChart layout="vertical" width={600} height={300} data={this.getPracticePerformance()} margin={{top: 20, right: 20, left: 50, bottom: 5}}>
                                <CartesianGrid strokeDasharray="3 3"/>
                                <XAxis type="number" domain={[0, 100]}/>
-                               <YAxis dataKey="name" type="category"/>
+                               <YAxis dataKey="name" type="category" width={80}/>
                                <Tooltip/>
                                <Legend />
                                <Bar dataKey="Accuracy" fill="#8884d8" />
@@ -167,7 +170,7 @@ export class Graphs extends React.Component {
                             <BarChart layout="vertical" width={600} height={300} data={this.getQuizPerformance()} margin={{top: 20, right: 20, left: 50, bottom: 5}}>
                                <CartesianGrid strokeDasharray="3 3"/>
                                <XAxis type="number" domain={[0, 100]}/>
-                               <YAxis dataKey="name" type="category"/>
+                               <YAxis dataKey="name" type="category" width={80}/>
                                <Tooltip/>
                                <Legend />
                                <Bar dataKey="Accuracy" fill="#8884d8" />

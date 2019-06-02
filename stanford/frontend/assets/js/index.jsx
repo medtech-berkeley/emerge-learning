@@ -16,6 +16,10 @@ if (!touchsupport){ // browser doesn't support touch
     document.documentElement.className += " non-touch"
 }
 
+String.prototype.toProperCase = function () {
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
+
 window.getHeader = {
     method: 'get',
     credentials: "same-origin",
