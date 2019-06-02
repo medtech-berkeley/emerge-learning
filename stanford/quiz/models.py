@@ -32,9 +32,9 @@ class AddTagMixin:
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, default="Enter Name")
-    location = models.CharField(max_length=100, default="Enter location")
-    description = models.CharField(max_length=500, default="Enter description")
+    name = models.CharField(max_length=100, default="")
+    location = models.CharField(max_length=100, default="")
+    description = models.CharField(max_length=500, default="")
     last_activity = models.DateTimeField(auto_now_add=True)
 
     consent_prompt_required = models.BooleanField(default=True)
