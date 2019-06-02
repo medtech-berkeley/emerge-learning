@@ -111,17 +111,6 @@ class Category(models.Model):
     name = models.CharField(max_length=256, primary_key=True)
     practice_quiz = models.ForeignKey(Quiz, related_name="practice_category", on_delete=models.SET_NULL, null=True, blank=True)
 
-    # @receiver(post_save, sender='quiz.Category')
-    # def create_category(sender, instance, created, **kwargs):
-    #     if created:
-    #         practice_tag = Tag.objects.create(text=instance.name + "-practice")
-    #         quiz = Quiz.objects.create(name=' '.join([instance.name, "Practice"]),
-    #                                    can_retake=True,
-    #                                    num_questions=10)
-    #         quiz.tags.add(practice_tag)
-    #         instance.practice_quiz = quiz
-    #         instance.save()
-
     @property
     def practice_tag(self) -> Tag:
         return self.practice_quiz.tags.get(text=self.name + "-practice")
