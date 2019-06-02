@@ -13,6 +13,9 @@ import csv
 import datetime
 import pytz
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 # try:
 #     import argparse
@@ -97,8 +100,8 @@ def LoadFromCSV(file):
                     q.add_tag(tag_text)
                     if tag_text == 'pretest' or re.match('week-[0-9]+', tag_text):
                         practice == False
-                if practice:
-                    q.tags.add(c.practice_tag)
+                # if practice:
+                #     q.tags.add(c.practice_tag)
                 q.save()
                 
                 answers = [int(x.strip()) for x in question_answer.split(',')]
@@ -118,7 +121,7 @@ def LoadFromCSV(file):
                 for answer in Answer.objects.filter(num__gte=remainder, question=q):
                     answer.delete()
             except Exception as e:
-                print(e)
+                logger.exception(e)
 
 def LoadQuizFromCSV(file):
     with file.open("rt") as f:

@@ -66,9 +66,11 @@ class Student(models.Model):
         return self.user.username
 
     @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
+    def create_user_profile(sender, instance: User, created, **kwargs):
         if created:
             student = Student.objects.create(user=instance)
+            if instance.is_superuser:
+                student.profile_type = 'ADMN'
             student.save()
 
 class Badge(models.Model):
@@ -79,7 +81,6 @@ class Badge(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Tag(models.Model):
     text = models.CharField(max_length=64, primary_key=True)
@@ -92,7 +93,7 @@ class Quiz(models.Model, AddTagMixin):
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(default=timezone.datetime(9999, 1, 1, tzinfo=timezone.utc))
     is_challenge = models.BooleanField(default=False)
-    image = models.ImageField(upload_to="quiz_images", default='default.jpg')
+    image = models.ImageField(upload_to="quiz_images", null=True, storage=static_storage, default='category/default.jpg')
     max_time = models.DurationField(default=datetime.timedelta(minutes=10))
     tags = models.ManyToManyField(Tag, related_name="quizzes")
     can_retake = models.BooleanField(default=False)
@@ -110,16 +111,16 @@ class Category(models.Model):
     name = models.CharField(max_length=256, primary_key=True)
     practice_quiz = models.ForeignKey(Quiz, related_name="practice_category", on_delete=models.SET_NULL, null=True, blank=True)
 
-    @receiver(post_save, sender='quiz.Category')
-    def create_category(sender, instance, created, **kwargs):
-        if created:
-            practice_tag = Tag.objects.create(text=instance.name + "-practice")
-            quiz = Quiz.objects.create(name=' '.join([instance.name, "Practice"]),
-                                       can_retake=True,
-                                       num_questions=10)
-            quiz.tags.add(practice_tag)
-            instance.practice_quiz = quiz
-            instance.save()
+    # @receiver(post_save, sender='quiz.Category')
+    # def create_category(sender, instance, created, **kwargs):
+    #     if created:
+    #         practice_tag = Tag.objects.create(text=instance.name + "-practice")
+    #         quiz = Quiz.objects.create(name=' '.join([instance.name, "Practice"]),
+    #                                    can_retake=True,
+    #                                    num_questions=10)
+    #         quiz.tags.add(practice_tag)
+    #         instance.practice_quiz = quiz
+    #         instance.save()
 
     @property
     def practice_tag(self) -> Tag:
@@ -173,7 +174,7 @@ class QuestionMedia(models.Model):
         (AUDIO, 'Audio')
     )
 
-    media_file = models.FileField(upload_to="questions/")
+    media_file = models.FileField(upload_to="questions/", storage=static_storage)
     media_type = models.CharField(max_length=3, choices=MEDIA_CHOICES)
 
     def __str__(self):
