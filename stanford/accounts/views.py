@@ -48,17 +48,11 @@ def signup(request):
                     user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
                     user.is_active = False
                     user.save()
-                    # login(request, user)
+
                     student = Student.objects.get(user=user)
                     student.name = request.POST['username']
                     if 'image' in request.FILES:
                         student.image = request.FILES['image']
-                    else:
-                        r = requests.get("http://dismagazine.com/uploads/2011/08/notw_silhouette-1.jpg")
-                        img_temp = NamedTemporaryFile(delete=True)
-                        img_temp.write(r.content)
-                        img_temp.flush()
-                        student.image.save("image.jpg", File(img_temp), save=True)
                     student.save()
 
                     # Send Email

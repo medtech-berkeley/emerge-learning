@@ -41,7 +41,7 @@ class Student(models.Model):
     consent = models.BooleanField(default=False)
     completed_demographic_survey = models.BooleanField(default=False)
 
-    image = models.ImageField(upload_to='profile_images', default="/static/accounts/default_profile.jpg", blank=True)
+    image = models.ImageField(upload_to='profile_images', default="../static/accounts/profile.png", blank=True)
     birth_year = models.IntegerField(choices=YEAR_CHOICES, default=timezone.now().year)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='U')
 
