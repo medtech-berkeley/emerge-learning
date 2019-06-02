@@ -16,7 +16,7 @@ export class Graphs extends React.Component {
             var properName = name.replace("practice", "");
             properName = properName.replace("-", " ");
             properName = properName.toProperCase();
-            graphElements.push({name: properName, Accuracy: Number(this.props.data.subjects[name])});
+            graphElements.push({name: properName, Accuracy: Number(this.props.data.subjects[name]) / 100.0});
           }
         }
         return (graphElements);
@@ -156,7 +156,7 @@ export class Graphs extends React.Component {
                           <ResponsiveContainer width='100%' height={350}>
                             <BarChart layout="vertical" width={600} height={300} data={this.getPracticePerformance()} margin={{top: 20, right: 20, left: 50, bottom: 5}}>
                                <CartesianGrid strokeDasharray="3 3"/>
-                               <XAxis type="number" domain={[0, 100]}/>
+                               <XAxis type="number" domain={[0, 1]}/>
                                <YAxis dataKey="name" type="category" width={80}/>
                                <Tooltip/>
                                <Legend />
@@ -169,7 +169,7 @@ export class Graphs extends React.Component {
                           <ResponsiveContainer width='100%' height={350}>
                             <BarChart layout="vertical" width={600} height={300} data={this.getQuizPerformance()} margin={{top: 20, right: 20, left: 50, bottom: 5}}>
                                <CartesianGrid strokeDasharray="3 3"/>
-                               <XAxis type="number" domain={[0, 100]}/>
+                               <XAxis type="number" domain={[0, 1]}/>
                                <YAxis dataKey="name" type="category" width={80}/>
                                <Tooltip/>
                                <Legend />
