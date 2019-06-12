@@ -124,6 +124,12 @@ class QuestionUserDataViewSet(ModelViewSet):
 class StudentStatsViewSet(ViewSet):
     serializer_class = StudentStatsSerializer
 
+    def sorted(self, student_stats):
+        return student_stats
+    
+    def filtered(self, student_stats):
+        return student_stats
+
     def get_queryset(self):
         user = self.request.user
         if is_instructor(user):
@@ -144,6 +150,7 @@ class StudentStatsViewSet(ViewSet):
         for student in self.get_queryset():
             students_stats.append(StudentStatsSerializer.student_to_stat(student, date))
 
+        students_stats = self.filtered(self.sorted(students_stats))
         serializer = self.serializer_class(instance=students_stats, many=True)
         return Response(serializer.data)
 
@@ -161,6 +168,12 @@ class StudentStatsViewSet(ViewSet):
 
 class LeaderboardStatViewSet(StudentStatsViewSet):
     serializer_class = LeaderboardStatSerializer
+
+    def filtered(self, students_stats):
+        return students_stats[:10]
+    
+    def sorted(self, students_stats):
+        return sorted(students_stats, key=lambda s: -s['score'])
 
     def get_queryset(self):
         return Student.objects.all()
