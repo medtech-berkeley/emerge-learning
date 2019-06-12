@@ -4,10 +4,12 @@ import datetime
 
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.shortcuts import redirect
-from django.db.models import Count, F
+from django.db.models import Count, F, Value, CharField
+from django.db.models.functions import Concat
 from django.core.files.base import File, ContentFile
 from django.contrib.auth.models import User
 from django.views.decorators.cache import never_cache
@@ -179,7 +181,7 @@ class LeaderboardStatViewSet(ViewSet):
         student_stats = \
             QuestionUserData.objects.values(name=F('student__name'), 
                                         location=F('student__location'),
-                                        image=F('student__image')) \
+                                        image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
                                 .filter(answer__is_correct=True) \
                                 .annotate(score=Count('student__name'))[:10]
 
