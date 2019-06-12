@@ -179,11 +179,12 @@ class LeaderboardStatViewSet(ViewSet):
 
     def list(self, request):
         student_stats = \
-            QuestionUserData.objects.values(name=F('student__name'), 
-                                        location=F('student__location'),
-                                        image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
-                                .filter(answer__is_correct=True) \
-                                .annotate(score=Count('student__name'))[:10]
+        QuestionUserData.objects.values(name=F('student__name'), 
+                                    location=F('student__location'),
+                                    image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
+                            .filter(answer__is_correct=True) \
+                            .annotate(score=Count('student__name'))\
+                            .order_by('-score')[:10]
 
         serializer = self.serializer_class(instance=student_stats.all(), many=True)
         return Response(serializer.data)
