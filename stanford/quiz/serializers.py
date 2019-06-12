@@ -158,7 +158,7 @@ class StudentStatsSerializer(serializers.Serializer):
 class LeaderboardStatSerializer(serializers.Serializer):
     name = serializers.CharField()
     location = serializers.CharField()
-    image = serializers.ImageField()
+    image = serializers.ImageField(use_url=True)
     score = serializers.IntegerField(read_only=True)
 
 class QuestionFeedbackSerializer(serializers.Serializer):
