@@ -4,10 +4,12 @@ import datetime
 
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.shortcuts import redirect
-from django.db.models import Count
+from django.db.models import Count, F, Value, CharField
+from django.db.models.functions import Concat
 from django.core.files.base import File, ContentFile
 from django.contrib.auth.models import User
 from django.views.decorators.cache import never_cache
@@ -166,17 +168,36 @@ class StudentStatsViewSet(ViewSet):
         return Response(serializer.data)
 
 
-class LeaderboardStatViewSet(StudentStatsViewSet):
+class LeaderboardStatViewSet(ViewSet):
     serializer_class = LeaderboardStatSerializer
 
-    def filtered(self, students_stats):
-        return students_stats[:10]
-    
-    def sorted(self, students_stats):
-        return sorted(students_stats, key=lambda s: -s['score'])
+    def get_date(self):
+        date = self.request.GET.get('date', None)
+        if date is not None:
+            date = timezone.datetime.strptime(date, '%Y-%m-%d').astimezone(pytz.utc)
+        return date
 
-    def get_queryset(self):
-        return Student.objects.all()
+    def list(self, request):
+        student_stats = \
+            QuestionUserData.objects.values(name=F('student__name'), 
+                                        location=F('student__location'),
+                                        image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
+                                .filter(answer__is_correct=True) \
+                                .annotate(score=Count('student__name'))[:10]
+
+        serializer = self.serializer_class(instance=student_stats.all(), many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        if pk == 'self':
+            pk = request.user.student.pk
+
+        date = self.get_date()
+        student = get_object_or_404(Student.objects.all(), pk=pk)
+        stat = StudentStatsSerializer.student_to_stat(student, date)
+
+        serializer = self.serializer_class(instance=stat)
+        return Response(serializer.data)
 
 
 class QuestionFeedbackViewSet(ViewSet):
