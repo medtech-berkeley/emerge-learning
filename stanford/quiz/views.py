@@ -85,7 +85,7 @@ class QuizViewSet(ModelViewSet):
 
     def get_queryset(self):
         in_time = Quiz.objects.filter(start__lte=timezone.now(), end__gte=timezone.now())        
-        quiz_uds = QuizUserData.objects.filter(student=self.request.student)
+        quiz_uds = QuizUserData.objects.filter(student=self.request.user.student)
         completed = Quiz.objects.filter(id__in=quiz_uds.values('quiz_id'))
 
         return in_time | completed
