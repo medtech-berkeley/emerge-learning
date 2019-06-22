@@ -8,7 +8,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.shortcuts import redirect
-from django.db.models import Count, F, Value, CharField
+from django.db.models import Count, F, Q, Value, CharField
 from django.db.models.functions import Concat
 from django.core.files.base import File, ContentFile
 from django.contrib.auth.models import User
@@ -84,7 +84,11 @@ class QuizViewSet(ModelViewSet):
     serializer_class = QuizSerializer
 
     def get_queryset(self):
-        return Quiz.objects.filter(start__lte=timezone.now())
+        in_time = Quiz.objects.filter(start__lte=timezone.now(), end__gte=timezone.now())        
+        quiz_uds = QuizUserData.objects.filter(student=self.request.student)
+        completed = Quiz.objects.filter(id__in=quiz_uds.values('quiz_id'))
+
+        return in_time | completed
 
 
 class QuizUserDataViewSet(ModelViewSet):
