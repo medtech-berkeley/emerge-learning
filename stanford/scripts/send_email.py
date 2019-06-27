@@ -4,12 +4,14 @@ from django.core.mail import EmailMessage
 
 def run():
     mail_subject = input("Enter mail_subject: ") 
-    message = input("Enter mail_message: ")
     recipient = input("Enter recipient: ")
+
     # emails = User.objects.values_list('email', flat=True)
 
     # HACK: Testing only
     emails = ['arjunsv@berkeley.edu', "sean@dooher.net"]
+    
+    message = input("Enter mail_message: ")
 
     send_email(mail_subject, message, recipient, emails)
 
