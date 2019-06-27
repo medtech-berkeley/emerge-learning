@@ -10,8 +10,8 @@ def run():
 
     # HACK: Testing only
     emails = ['arjunsv@berkeley.edu', "sean@dooher.net"]
-    
-    message = input("Enter mail_message: ")
+
+    message = read_multiline_input("Enter mail_message: ")
 
     send_email(mail_subject, message, recipient, emails)
 
@@ -20,3 +20,16 @@ def send_email(subject, message, recipient, bcc_list):
     """
     email = EmailMessage(subject, message, to=[recipient], bcc=bcc_list)
     email.send()
+
+def read_multiline_input(prompt):
+    """ Reads multiline input. Returns string.
+    """
+    lines = []
+    while True:
+        line = input(prompt)
+        if line:
+            lines.append(line)
+        else:
+            break
+    text = '\n'.join(lines)
+    return text
