@@ -180,15 +180,17 @@ class LeaderboardStatViewSet(ViewSet):
         if date is not None:
             date = timezone.datetime.strptime(date, '%Y-%m-%d').astimezone(pytz.utc)
         return date
+    
+    def get_student_stats(self):
+        return QuestionUserData.objects.values(name=F('student__name'), 
+                                               location=F('student__location'),
+                                               image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
+                                        .filter(answer__is_correct=True) \
+                                        .annotate(score=Count('student__name'))\
+                                        .order_by('-score')[:10]
 
     def list(self, request):
-        student_stats = \
-        QuestionUserData.objects.values(name=F('student__name'), 
-                                    location=F('student__location'),
-                                    image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
-                            .filter(answer__is_correct=True) \
-                            .annotate(score=Count('student__name'))\
-                            .order_by('-score')[:10]
+        student_stats = self.get_student_stats()
 
         serializer = self.serializer_class(instance=student_stats.all(), many=True)
         return Response(serializer.data)
