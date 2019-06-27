@@ -4,7 +4,7 @@ from frontend.views import index, change_user_info, dashboard
 from rest_framework import routers
 from quiz.views import QuestionViewSet, AnswerViewSet, QuizViewSet, QuestionUserDataViewSet, StudentViewSet, StudentStatsViewSet, QuizUserDataViewSet, QuestionFeedbackViewSet, LeaderboardStatViewSet, EventViewSet
 from quiz.views import submit_consent_form
-from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, upload_quizzes, submit_feedback, start_quiz
+from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, send_email_view, upload_quizzes, submit_feedback, start_quiz
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import signup, logins, activate, resend_verification
@@ -46,6 +46,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
     path('stats/', get_stats, name='stats'),
     path('instructor/uploadquestions/', upload_questions),
+    path('instructor/send_email/', send_email_view),
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='password_reset_form.html'), name='password_reset_real'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'), name='password_reset_confirm'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'), name='password_reset_done'),

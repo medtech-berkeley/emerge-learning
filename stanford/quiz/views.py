@@ -531,6 +531,24 @@ def upload_quizzes(request):
         LoadQuizFromCSV(quiz_file)
     return redirect('dashboard')
 
+@user_passes_test(is_admin)
+def send_email_view(request):
+    mail_subject = request.POST['subject']
+    recipient = request.POST['recipient']
+    message = request.POST['message']
+    # emails = User.objects.values_list('email', flat=True)
+
+    # HACK: Testing only
+    emails = ['arjunsv@berkeley.edu', "sean@dooher.net"]
+
+    send_email(mail_subject, message, recipient, emails)
+
+def send_email(subject, message, recipient, bcc_list):
+    """ Sends email with message to recipient, bcc all emails in bcc (list).
+    """
+    email = EmailMessage(subject, message, to=[recipient], bcc=bcc_list)
+    email.send()
+
 @login_required
 def submit_feedback(request):
     if request.method == 'POST':
