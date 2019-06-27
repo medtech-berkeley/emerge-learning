@@ -14,6 +14,7 @@ from django.core.files.base import File, ContentFile
 from django.contrib.auth.models import User
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import user_passes_test
+from django.core.mail import EmailMessage
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
 from rest_framework import permissions, generics, mixins
