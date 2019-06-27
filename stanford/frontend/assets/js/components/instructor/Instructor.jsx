@@ -5,6 +5,7 @@ import { FeedbackSummary } from "./FeedbackSummary";
 import { QuestionUpload } from "./QuestionUpload";
 import { Container } from "reactstrap";
 import UserManagementAPI from '../../containers/instructor/UserManagementAPI';
+import { EmailSender } from './EmailSender';
 
 export class Instructor extends React.Component {
 
@@ -16,6 +17,7 @@ export class Instructor extends React.Component {
                         <Tab>Upload Questions</Tab>
                         <Tab>View Feedback</Tab>
                         <Tab>User Management</Tab>
+                        <Tab>Send Email</Tab>
                     </TabList>
                     <TabPanel>
                         <Container>
@@ -30,6 +32,11 @@ export class Instructor extends React.Component {
                     <TabPanel>
                         <Container>
                             <UserManagementAPI />
+                        </Container>
+                    </TabPanel>
+                    <TabPanel>
+                        <Container>
+                            <EmailSender />
                         </Container>
                     </TabPanel>
                 </Tabs>
