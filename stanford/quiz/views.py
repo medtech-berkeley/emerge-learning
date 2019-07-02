@@ -537,7 +537,11 @@ def send_email_view(request):
     mail_subject = request.POST['subject']
     recipient = request.POST['recipient']
     message = request.POST['message']
-    emails = User.objects.values_list('email', flat=True)
+
+    if recipient == 'test@emergelearning.org':
+        emails = ['sean@dooher.net', 'arjunsv@berkeley.edu']
+    else:
+        emails = User.objects.values_list('email', flat=True)
 
     send_email(mail_subject, message, recipient, emails)
 

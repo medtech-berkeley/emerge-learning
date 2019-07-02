@@ -22,7 +22,10 @@ export class EmailSender extends React.Component {
                         <br/>
                         Recipient:
                         <br/>
-                        <input name="recipient" type="text"/>
+                        <select>
+                            <option>players@emergelearning.org</option>
+                            <option>test@emergelearning.org</option>
+                        </select>
                         <br/>
                         Message: 
                         <br/>
