@@ -14,7 +14,9 @@ from django.core.files.base import File, ContentFile
 from django.contrib.auth.models import User
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import user_passes_test
-from django.core.mail import EmailMessage
+from django.utils.html import strip_tags
+from django.core.mail import EmailMultiAlternatives
+
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
 from rest_framework import permissions, generics, mixins
@@ -538,10 +540,11 @@ def send_email_view(request):
     recipient = request.POST['recipient']
     message = request.POST['message']
 
-    if recipient == 'test@emergelearning.org':
+    if recipient.strip() == 'test@emergelearning.org'.strip():
         emails = ['sean@dooher.net', 'arjunsv@berkeley.edu']
     else:
-        emails = User.objects.values_list('email', flat=True)
+        emails = []
+        # emails = User.objects.values_list('email', flat=True)
 
     send_email(mail_subject, message, recipient, emails)
 
@@ -550,8 +553,13 @@ def send_email_view(request):
 def send_email(subject, message, recipient, bcc_list):
     """ Sends email with message to recipient, bcc all emails in bcc (list).
     """
-    email = EmailMessage(subject, message, to=[recipient], bcc=bcc_list)
-    email.send()
+    txt_message = strip_tags(message)
+
+
+    
+    msg = EmailMultiAlternatives(subject, txt_message, to=[recipient], bcc=bcc_list)
+    msg.attach_alternative(message, "text/html")
+    msg.send()
 
 @login_required
 def submit_feedback(request):
