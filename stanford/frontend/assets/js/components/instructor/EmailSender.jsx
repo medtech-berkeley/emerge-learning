@@ -23,8 +23,8 @@ export class EmailSender extends React.Component {
                         Recipient:
                         <br/>
                         <select>
-                            <option>players@emergelearning.org</option>
-                            <option>test@emergelearning.org</option>
+                            <option value="players@emergelearning.org">players@emergelearning.org</option>
+                            <option value="test@emergelearning.org">test@emergelearning.org</option>
                         </select>
                         <br/>
                         Message: 
