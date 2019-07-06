@@ -543,8 +543,7 @@ def send_email_view(request):
     if recipient.strip() == 'test@emergelearning.org'.strip():
         emails = ['sean@dooher.net', 'arjunsv@berkeley.edu']
     else:
-        emails = []
-        # emails = User.objects.values_list('email', flat=True)
+        emails = User.objects.values_list('email', flat=True)
 
     send_email(mail_subject, message, recipient, emails)
 
