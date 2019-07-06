@@ -2,7 +2,7 @@ version: '3.4'
 services:
   interfaceserver:
     build: .
-    image: builder.pernixsoft.ml:5000/stanford-quiz:${ID:-latest}
+    image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
     command: sh /entry/entrypoint-interface.sh
     user: stanford
     working_dir: /stanford
