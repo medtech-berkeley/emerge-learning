@@ -33,8 +33,8 @@ pipeline {
         branch 'master'
       }
       steps {
-        sh 'docker tag builder.pernixsoft.ml:5000/stanford-quiz:$ID builder.pernixsoft.ml:5000/stanford-quiz:latest'
-        sh 'docker push builder.pernixsoft.ml:5000/stanford-quiz:latest'
+        sh 'docker tag builder.mtab.ml:5000/stanford-quiz:$ID builder.mtab.ml:5000/stanford-quiz:latest'
+        sh 'docker push builder.mtab.ml:5000/stanford-quiz:latest'
       }
     }
     stage('Publish to Development Server') {
@@ -42,8 +42,8 @@ pipeline {
         branch 'dev'
       }
       steps {
-        sh 'docker tag builder.pernixsoft.ml:5000/stanford-quiz:$ID builder.pernixsoft.ml:5000/stanford-quiz:dev'
-        sh 'docker push builder.pernixsoft.ml:5000/stanford-quiz:dev'
+        sh 'docker tag builder.mtab.ml:5000/stanford-quiz:$ID builder.mtab.ml:5000/stanford-quiz:dev'
+        sh 'docker push builder.mtab.ml:5000/stanford-quiz:dev'
       }
     }
   }
@@ -52,7 +52,7 @@ pipeline {
       sh 'docker-compose -f docker-compose.yml -f testing.yml down -v'
       sh 'docker stop $(docker ps -qf "name=.*$ID.*") || true'
       sh 'docker container prune -f'
-      sh 'docker rmi -f builder.pernixsoft.ml:5000/stanford-quiz:$ID'
+      sh 'docker rmi -f builder.mtab.ml:5000/stanford-quiz:$ID'
       sh 'docker image prune -f'
       sh 'docker volume prune -f'
       sh 'docker network prune -f'
