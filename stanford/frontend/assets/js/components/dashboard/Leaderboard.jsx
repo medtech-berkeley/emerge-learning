@@ -19,6 +19,7 @@ export class Leaderboard extends React.Component {
           </tr>
       </thead>
       <tbody>
+            {console.log(this.props)}
             {this.props.leaderboardResult.map(
                function(student, index){
                 return (
