@@ -585,7 +585,7 @@ def send_weekly_email(subject, message, recipient, bcc_list, tag, last_tag):
         if not stud.exists():
             continue
         stud = stud.first()
-        students.append({'name': stud.name, 'score': current_studs.get(stud.name, 0), 'last_score': last_week_studs.get(stud.name, 0)})
+        students.append({'email': email, 'name': stud.name, 'score': current_studs.get(stud.name, 0), 'last_score': last_week_studs.get(stud.name, 0)})
 
     leaderboard_info = SpecificQuizLeaderboardStatViewSet()
     leaderboard_info.tag = tag
