@@ -11,7 +11,10 @@ export const UPDATE_SUBMIT_ERROR = 'DISPLAY_SUBMIT_ERROR';
 export const UPDATE_CATEGORY_COMPLETED = 'DISPLAY_CATEGORY_COMPLETED';
 export const UPDATE_CATEGORY_RESULTS = 'UPDATE_CATEGORY_RESULTS';
 export const UPDATE_CATEGORY_DATA = 'UPDATE_CATEGORY_DATA';
-export const UPDATE_LEADERBOARD = 'UPDATE_LEADERBOARD';
+export const UPDATE_PRACTICE_LEADERBOARD = 'UPDATE_PRACTICE_LEADERBOARD';
+export const UPDATE_QUIZ_LEADERBOARD = 'UPDATE_QUIZ_LEADERBOARD';
+export const UPDATE_WEEKLY_LEADERBOARD = 'UPDATE_WEEKLY_LEADERBOARD'
+export const UPDATE_PREVIOUS_LEADERBOARD = 'UPDATE_PREVIOUS_LEADERBOARD';
 export const UPDATE_TIMER = 'UPDATE_TIMER';
 export const UPDATE_FEEDBACK_SUMMARY = 'UPDATE_FEEDBACK_SUMMARY';
 export const SELECT_ANSWER = 'SELECT_ANSWER';
@@ -209,17 +212,59 @@ export function updateCategoryResults(results) {
 	}
 }
 
-export function updateLeaderboard(leaderboardResult) {
+export function updatePracticeLeaderboard(leaderboardResult) {
 	return {
-		type: UPDATE_LEADERBOARD,
+		type: UPDATE_PRACTICE_LEADERBOARD,
 		leaderboardResult
 	}
 }
 
-export function getLeaderboard() {
+export function updateQuizLeaderboard(leaderboardResult) {
+	return {
+		type: UPDATE_QUIZ_LEADERBOARD,
+		leaderboardResult
+	}
+}
+
+export function updateWeeklyLeaderboard(leaderboardResult) {
+	return {
+		type: UPDATE_WEEKLY_LEADERBOARD,
+		leaderboardResult
+	}
+}
+
+export function updatePreviousLeaderboard(leaderboardResult) {
+	return {
+		type: UPDATE_PREVIOUS_LEADERBOARD,
+		leaderboardResult
+	}
+}
+
+export function getPracticeLeaderboard() {
 	return dispatch => fetch("/api/practiceleaderboard", window.getHeader)
 	.then(r => r.json().then(json => {
-		dispatch(updateLeaderboard(json))
+		dispatch(updatePracticeLeaderboard(json))
+	}));
+}
+
+export function getQuizLeaderboard() {
+	return dispatch => fetch("/api/quizleaderboard", window.getHeader)
+	.then(r => r.json().then(json => {
+		dispatch(updateQuizLeaderboard(json))
+	}));
+}
+
+export function getWeeklyLeaderboard() {
+	return dispatch => fetch("/api/weeklyleaderboard", window.getHeader)
+	.then(r => r.json().then(json => {
+		dispatch(updateWeeklyLeaderboard(json))
+	}));
+}
+
+export function getPreviousLeaderboard() {
+	return dispatch => fetch("/api/previousleaderboard", window.getHeader)
+	.then(r => r.json().then(json => {
+		dispatch(updatePreviousLeaderboard(json))
 	}));
 }
 

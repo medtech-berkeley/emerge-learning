@@ -1,5 +1,6 @@
 import { UPDATE_CATEGORY_DATA, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_RESULTS, UPDATE_FEEDBACK_SUMMARY, SELECT_ANSWER, CHANGE_PAGE } from "../actions/Actions"
-import { UPDATE_LEADERBOARD, UPDATE_TIMER, UPDATE_CONSENT, UPDATE_DEMOSURVEY} from "../actions/Actions"
+import { UPDATE_TIMER, UPDATE_CONSENT, UPDATE_DEMOSURVEY} from "../actions/Actions"
+import { UPDATE_PRACTICE_LEADERBOARD, UPDATE_QUIZ_LEADERBOARD, UPDATE_WEEKLY_LEADERBOARD, UPDATE_PREVIOUS_LEADERBOARD } from "../actions/Actions"
 import { UPDATE_STUDENT, UPDATE_STUDENTS } from "../actions/LoadUserActions"
 import { UPDATE_DATA } from "../actions/DataActions"
 import { ADD_MESSAGE, SET_LOAD_STATUS, INC_LOAD_STATUS } from "../actions/UIActions";
@@ -19,7 +20,10 @@ const initialState = {
             "profile_type": "STUD"
         },
         students: [],
-        leaderboardResult: [],
+        practiceLeaderboardResult: [],
+        quizLeaderboardResult: [],
+        weeklyLeaderboardResult: [],
+        previousLeaderboardResult: [],
         questionUserData: [],
         data: [],
         question: {
@@ -142,11 +146,29 @@ export function stanfordApp(state = initialState, action) {
         case (UPDATE_CATEGORY_RESULTS):
             newState.ui.results = action.results;
             break;
-        case (UPDATE_LEADERBOARD):
-            let leaderboardResultSorted = action.leaderboardResult.sort(function(a, b) {
+        case (UPDATE_PRACTICE_LEADERBOARD):
+            let practiceLeaderboardResultSorted = action.leaderboardResult.sort(function(a, b) {
                 return parseFloat(b.score) - parseFloat(a.score);
             });
-            newState.api.leaderboardResult = leaderboardResultSorted;
+            newState.api.practiceLeaderboardResult = practiceLeaderboardResultSorted;
+            break;
+        case (UPDATE_QUIZ_LEADERBOARD):
+            let quizLeaderboardResultSorted = action.leaderboardResult.sort(function(a, b) {
+                return parseFloat(b.score) - parseFloat(a.score);
+            });
+            newState.api.quizLeaderboardResult = quizLeaderboardResultSorted;
+            break;
+        case (UPDATE_WEEKLY_LEADERBOARD):
+            let weeklyLeaderboardResultSorted = action.leaderboardResult.sort(function(a, b) {
+                return parseFloat(b.score) - parseFloat(a.score);
+            });
+            newState.api.weeklyLeaderboardResult = weeklyLeaderboardResultSorted;
+            break;
+        case (UPDATE_PREVIOUS_LEADERBOARD):
+            let previousLeaderboardResultSorted = action.leaderboardResult.sort(function(a, b) {
+                return parseFloat(b.score) - parseFloat(a.score);
+            });
+            newState.api.previousLeaderboardResult = previousLeaderboardResultSorted;
             break;
         case (UPDATE_CATEGORY_DATA):
             newState.ui.maxTime = action.maxTime;

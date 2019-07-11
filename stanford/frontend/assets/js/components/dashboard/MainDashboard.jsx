@@ -13,7 +13,10 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 export class MainDashboard extends React.Component {
     componentDidMount() {
         this.props.getCategories();
-        this.props.getLeaderboard();
+        this.props.getPracticeLeaderboard();
+        this.props.getQuizLeaderboard();
+        this.props.getWeeklyLeaderboard();
+        this.props.getPreviousLeaderboard();
         this.props.refreshStudent();
     }
 
@@ -21,6 +24,7 @@ export class MainDashboard extends React.Component {
 		return (
 		    <div>
                 <Container>
+                    {console.log(this.props)}
                     <div id="dashboard">
                     {<ConsentForm submitConsentForm={this.props.submitConsentForm}
                                   consent_prompt_required={this.props.user.consent_prompt_required}
@@ -56,22 +60,22 @@ export class MainDashboard extends React.Component {
                                     </TabList>
                                     <TabPanel>
                                         <Container>
-                                            <Leaderboard leaderboardResult={this.props.leaderboardResult} />
+                                            <Leaderboard leaderboardResult={this.props.weeklyLeaderboardResult} />
                                         </Container>
                                     </TabPanel>
                                     <TabPanel>
                                         <Container>
-                                            <Leaderboard leaderboardResult={this.props.leaderboardResult} />
+                                            <Leaderboard leaderboardResult={this.props.previousLeaderboardResult} />
                                         </Container>
                                     </TabPanel>
                                     <TabPanel>
                                         <Container>
-                                            <Leaderboard leaderboardResult={this.props.leaderboardResult} />
+                                            <Leaderboard leaderboardResult={this.props.quizLeaderboardResult} />
                                         </Container>
                                     </TabPanel>
                                     <TabPanel>
                                         <Container>
-                                            <Leaderboard leaderboardResult={this.props.leaderboardResult} />
+                                            <Leaderboard leaderboardResult={this.props.practiceLeaderboardResult} />
                                         </Container>
                                     </TabPanel>
                                 </Tabs>
