@@ -14,4 +14,4 @@ apiclient
 oauth2client
 django-user-agents
 django-rq
-
+rq-scheduler

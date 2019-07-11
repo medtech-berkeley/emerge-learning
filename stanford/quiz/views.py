@@ -16,6 +16,7 @@ from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
+from django_rq import job
 
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
@@ -545,10 +546,11 @@ def send_email_view(request):
     else:
         emails = User.objects.values_list('email', flat=True)
 
-    send_email(mail_subject, message, recipient, emails)
+    send_email.delay(mail_subject, message, recipient, emails)
 
     return redirect('dashboard')
 
+@job
 def send_email(subject, message, recipient, bcc_list):
     """ Sends email with message to recipient, bcc all emails in bcc (list).
     """
