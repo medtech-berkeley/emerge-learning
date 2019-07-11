@@ -179,15 +179,15 @@ th {
 }
 
 
-.leaderboard-rank-0, .row-0 {
+.leaderboard-rank-0 {
     color: #e8b923;
 }
 
-.leaderboard-rank-1, .row-1 {
-    color: #8ca4bd;
+.leaderboard-rank-1 {
+    color: #C0C0C0;
 }
 
-.leaderboard-rank-2, .row-2 {
+.leaderboard-rank-2 {
     color: #CD7F32;
 }
 
