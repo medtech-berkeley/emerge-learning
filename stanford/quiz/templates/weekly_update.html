@@ -14,12 +14,14 @@
 
         Hi {{ username }},
         <br>
+        <br>
         {{ body_text |safe }}
-
-        <hr>
+        <br>
+        <br>
         <b style="text-align: center">Weekly Stats:</b>
         <br>
         You had a <b>{{ current_accuracy }}% accuracy this week</b>. Last week you had an accuracy of <b>{{ last_accuracy }}%</b>. Keep up the great work!
+        <br>
         <br>
         <b style="text-align: center">Weekly Leaderboard:</b>
         <hr>
@@ -37,8 +39,7 @@
                     <tr>
                         <td><b>{{ row.num }}</b></td>
                         <td>
-                            <img src="https://emergelearning.org{{ row.image }}" class="icon-img img-circle" width="30"height="30">
-                                {{ row.name }}
+                            {{ row.name }}
                         </td>
                         <td class="leaderboard-score">{{ row.score }}</td>
                         <td>{{ row.location }}</td>
