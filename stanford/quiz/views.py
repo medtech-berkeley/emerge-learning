@@ -568,7 +568,7 @@ def get_students_scores_and_emails(tag):
     qud = QuestionUserData.objects.filter(answer__is_correct=True, quiz_userdata__quiz__tags=tag)
     return qud.values(name=F('student__name'), 
                         location=F('student__location'),
-                        email=F('student__email'),
+                        email=F('student__user__email'),
                         image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
                 .annotate(score=Count('student__name'))\
                 .order_by('-score')[:10]
