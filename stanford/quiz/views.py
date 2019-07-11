@@ -184,11 +184,23 @@ class LeaderboardStatViewSet(ViewSet):
         if date is not None:
             date = timezone.datetime.strptime(date, '%Y-%m-%d').astimezone(pytz.utc)
         return date
+
+    def get_tag_names(self):
+        return ['all']
+
+    def get_start_date(self):
+        return timezone.datetime(1970, 1, 1, tzinfo=timezone.utc)
+
+    def get_end_date(self):
+        return timezone.now()
     
     def get_student_stats(self):
-        return QuestionUserData.objects.values(name=F('student__name'), 
-                                               location=F('student__location'),
-                                               image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
+        return QuestionUserData.objects.filter(time_completed__gte=self.get_start_date(),
+                                                time_completed__lte=self.get_end_date()) \
+                                        .filter(quiz_userdata__quiz__tags=self.get_tag_names()) \
+                                        .values(name=F('student__name'), 
+                                                location=F('student__location'),
+                                                image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
                                         .filter(answer__is_correct=True) \
                                         .annotate(score=Count('student__name'))\
                                         .order_by('-score')[:10]
@@ -209,7 +221,6 @@ class LeaderboardStatViewSet(ViewSet):
 
         serializer = self.serializer_class(instance=stat)
         return Response(serializer.data)
-
 
 class QuestionFeedbackViewSet(ViewSet):
     serializer_class = QuestionFeedbackSerializer
