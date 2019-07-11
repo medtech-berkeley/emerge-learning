@@ -132,17 +132,6 @@ RQ_QUEUES = {
     }
 }
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "asgi_redis.RedisChannelLayer",
-        "ROUTING": "stanford.routing.channel_routing",
-        "CONFIG": {
-            "hosts": [(REDIS_HOST, 6379)],
-        },
-    }
-}
-
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',

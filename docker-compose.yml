@@ -14,7 +14,6 @@ services:
       - database
       - redis
   rqworker:
-    build: .
     image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
     command: /entry/entrypoint-rqworker.sh
     user: stanford
@@ -27,7 +26,6 @@ services:
       - database
       - redis
   scheduler:
-    build: .
     image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
     command: /entry/entrypoint-rqscheduler.sh
     user: stanford
