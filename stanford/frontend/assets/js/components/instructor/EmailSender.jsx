@@ -32,6 +32,10 @@ export class EmailSender extends React.Component {
                         <textarea name="message" rows="15" columns="150">
                         </textarea>
                         <br/>
+                        Weekly Email: 
+                        <input type="checkbox" name="weekly" value="true" />
+                        Week Number (if weekly):
+                        <input type="number" name="week"/>
                         <input className="btn btn-success"  type="submit" />
                     </form>
                 </Container>

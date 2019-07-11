@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'django_jenkins',
     'django_extensions',
+    'django_rq',
     'quiz',
     'frontend',
-    "django_rq",
     'accounts'
 ]
 

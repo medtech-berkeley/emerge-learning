@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.db.models import Count, F, Q, Value, CharField
 from django.db.models.functions import Concat
 from django.core.files.base import File, ContentFile
@@ -250,6 +251,10 @@ class PreviousWeeklyQuizLeaderboardStatViewSet(LeaderboardStatViewSet):
     def get_include_tags(self):
         return [get_previous_week_tag()]
 
+class SpecificQuizLeaderboardStatViewSet(LeaderboardStatViewSet):
+    tag = "week-1"
+    def get_include_tags(self):
+        return [self.tag]
 
 class QuestionFeedbackViewSet(ViewSet):
     serializer_class = QuestionFeedbackSerializer
@@ -559,6 +564,40 @@ def submit_demographics_form(request):
     else:
         return HttpResponse(status=403)
 
+def get_students_scores_and_emails(tag):
+    qud = QuestionUserData.objects.filter(answer__is_correct=True, quiz_userdata__quiz__tags=tag)
+    return qud.values(name=F('student__name'), 
+                        location=F('student__location'),
+                        email=F('student__email'),
+                        image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
+                .annotate(score=Count('student__name'))\
+                .order_by('-score')[:10]
+
+@job
+def send_weekly_email(subject, message, recipient, bcc_list, tag, last_tag):
+    students = get_students_scores_and_emails(tag)
+    last_week = get_students_scores_and_emails(last_tag)
+    last_week_studs = {last['name']:last['score'] for last in last_week}
+
+    students = [{**student, **{'last_score': last_week_studs[student['name']]}} for student in students]
+    leaderboard_info = SpecificQuizLeaderboardStatViewSet()
+    leaderboard_info.tag = tag
+    leaderboard_rows = [{**{'num': i + 1}, **stat} for i, stat in enumerate(leaderboard_info.get_student_stats())]
+    for student in students:
+        info = {
+            'username': student['name'],
+            'leaderboard_rows': leaderboard_rows,
+            'current_accuracy': student['score'] * 10,
+            'last_accuracy': student['last_score'] * 10,
+            'body_text': message,
+        }
+        
+        if student['email'] in bcc_list:
+            html_message = render_to_string('weekly_update.html', info)
+            txt_message = strip_tags(html_message)
+            msg = EmailMultiAlternatives(subject, txt_message, to=[recipient], bcc=[student['email']])
+            msg.attach_alternative(html_message, "text/html")
+            msg.send()
 
 # TODO: add better error reporting, statuses
 @user_passes_test(is_admin)
@@ -586,7 +625,13 @@ def send_email_view(request):
     else:
         emails = User.objects.values_list('email', flat=True)
 
-    send_email.delay(mail_subject, message, recipient, emails)
+    if request.POST.get('weekly', None):
+        week = int(request.POST['week'])
+        tag = f"week-{week}"
+        last_tag = f"week-{week - 1}"
+        send_weekly_email.delay(mail_subject, message, recipient, set(emails), tag, last_tag)
+    else:
+        send_email.delay(mail_subject, message, recipient, emails)
 
     return redirect('dashboard')
 
@@ -595,8 +640,6 @@ def send_email(subject, message, recipient, bcc_list):
     """ Sends email with message to recipient, bcc all emails in bcc (list).
     """
     txt_message = strip_tags(message)
-
-
     
     msg = EmailMultiAlternatives(subject, txt_message, to=[recipient], bcc=bcc_list)
     msg.attach_alternative(message, "text/html")
