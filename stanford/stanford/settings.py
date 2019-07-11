@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'quiz',
     'frontend',
+    "django_rq",
     'accounts'
 ]
 

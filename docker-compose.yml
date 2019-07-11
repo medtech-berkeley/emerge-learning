@@ -12,6 +12,35 @@ services:
       - docker/docker.env
     depends_on:
       - database
+      - redis
+  rqworker:
+    build: .
+    image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
+    command: /entry/entrypoint-rqworker.sh
+    user: stanford
+    working_dir: /stanford
+    expose:
+      - "8000"
+    env_file:
+      - docker/docker.env
+    depends_on:
+      - database
+      - redis
+  scheduler:
+    build: .
+    image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
+    command: /entry/entrypoint-rqscheduler.sh
+    user: stanford
+    working_dir: /stanford
+    expose:
+      - "8000"
+    env_file:
+      - docker/docker.env
+    depends_on:
+      - database
+      - redis
+  redis:
+    image: redis:3.0-alpine
   database:
     image: postgres:9.5
 
