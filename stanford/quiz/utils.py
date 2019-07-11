@@ -217,4 +217,18 @@ def end_quiz(quiz_userdata: QuizUserData):
     Event.objects.create(event_type=EventType.QuizEnd.value, student=student, quiz_ud=quiz_userdata)
     grant_badges(student)
 
+def get_all_weekly_tags():
+    return [f'week-{i + 1}' for i in range(12)]
+
+def get_current_week_tag():
+    return Quiz.objects.filter(tags__in=get_all_weekly_tags(),
+                                start__lte=timezone.now()) \
+                        .order_by('-start').first().tags.first().text
+
+def get_previous_week_tag():
+    return Quiz.objects.filter(tags__in=get_all_weekly_tags(),
+                            start__lte=timezone.now()) \
+                    .order_by('-start').all()[1].tags.first().text
+
+
 from .badges import grant_badges

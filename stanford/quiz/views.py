@@ -24,6 +24,7 @@ from rest_framework import permissions, generics, mixins
 
 from .utils import get_student_quiz_stats, get_latest_object_or_404
 from .utils import get_stats_student, end_quiz
+from .utils import get_all_weekly_tags, get_current_week_tag, get_previous_week_tag
 from .models import Question, QuestionUserData, Quiz, Student, Feedback
 from .models import Event, EventType
 from .models import Student, Quiz, Question, Answer, QuestionUserData, QuizUserData, GVK_EMRI_Demographics
@@ -185,7 +186,10 @@ class LeaderboardStatViewSet(ViewSet):
             date = timezone.datetime.strptime(date, '%Y-%m-%d').astimezone(pytz.utc)
         return date
 
-    def get_tag_names(self):
+    def get_include_tags(self):
+        return []
+
+    def get_exclude_tags(self):
         return []
 
     def get_start_date(self):
@@ -199,11 +203,13 @@ class LeaderboardStatViewSet(ViewSet):
                                               time_completed__lte=self.get_end_date(),
                                               answer__is_correct=True)
 
-        tags = self.get_tag_names()
-        if len(tags) > 0:
-            qud = qud.filter(quiz_userdata__quiz__tags__in=tags)
-
-        print(tags, qud)
+        include_tags = self.get_include_tags()
+        if len(include_tags) > 0:
+            qud = qud.filter(quiz_userdata__quiz__tags__in=include_tags)
+        
+        exclude_tags = self.get_exclude_tags()
+        if len(exclude_tags) > 0:
+            qud = qud.exclude(quiz_userdata__quiz__tags__in=exclude_tags)
 
         return qud.values(name=F('student__name'), 
                           location=F('student__location'),
@@ -227,6 +233,23 @@ class LeaderboardStatViewSet(ViewSet):
 
         serializer = self.serializer_class(instance=stat)
         return Response(serializer.data)
+
+class OverallPracticeLeaderboardStatViewSet(LeaderboardStatViewSet):
+    def get_exclude_tags(self):
+        return get_all_weekly_tags()
+
+class OverallQuizLeaderboardStatViewSet(LeaderboardStatViewSet):
+    def get_include_tags(self):
+        return get_all_weekly_tags()
+
+class CurrentWeeklyQuizLeaderboardStatViewSet(LeaderboardStatViewSet):
+    def get_include_tags(self):
+        return [get_current_week_tag()]
+
+class PreviousWeeklyQuizLeaderboardStatViewSet(LeaderboardStatViewSet):
+    def get_include_tags(self):
+        return [get_previous_week_tag()]
+
 
 class QuestionFeedbackViewSet(ViewSet):
     serializer_class = QuestionFeedbackSerializer

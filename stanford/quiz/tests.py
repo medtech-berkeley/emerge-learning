@@ -803,13 +803,13 @@ class StudentStatsTest(APITest):
 
 class LeaderboardStatsTest(APITest):
     def test_leaderboard_self(self):
-        response = self.client.get('/api/leaderboard/self/')
+        response = self.client.get('/api/practiceleaderboard/self/')
         self.assertEqual(response.status_code, 200)
 
     def test_leaderboard_list_smoke(self):
         s = [self.student] + [User.objects.create_user(f"sean{i}", "nah").student for i in range(50)]
-        request = self.factory.get('/api/leaderboard/')
-        response = self.client.get('/api/leaderboard/')
+        request = self.factory.get('/api/practiceleaderboard/')
+        response = self.client.get('/api/practiceleaderboard/')
 
         self.assertEqual(response.status_code, 200)
         # self.assertEqual(len(response.json()), 10)
@@ -819,7 +819,7 @@ class LeaderboardStatsTest(APITest):
         self.student.save()
 
         s = [self.student] + [User.objects.create_user(f"sean{i}", "nah").student for i in range(50)]
-        response = self.client.get(f'/api/leaderboard/{s[3].id}/')
+        response = self.client.get(f'/api/practiceleaderboard/{s[3].id}/')
 
         self.assertEqual(response.status_code, 200)
 
@@ -828,8 +828,8 @@ class LeaderboardStatsTest(APITest):
         self.student.save()
 
         s = [self.student] + [User.objects.create_user(f"sean{i}", "nah").student for i in range(50)]
-        request = self.factory.get('/api/leaderboard/')
-        response = self.client.get('/api/leaderboard/')
+        request = self.factory.get('/api/practiceleaderboard/')
+        response = self.client.get('/api/practiceleaderboard/')
 
         self.assertEqual(response.status_code, 200)
         # self.assertEqual(len(response.json()), 10)
