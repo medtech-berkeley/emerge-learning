@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Emerge Learning</title>
+    <meta charset="UTF-8">
+    {% load static %}
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'dashboard/index.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+
+        Hi {{ username }},
+        <br>
+        {{ body_text |safe }}
+
+        <hr>
+        <b style="text-align: center">Weekly Stats:</b>
+        <br>
+        You had a <b>{{ current_accuracy }}% accuracy this week</b>. Last week you had an accuracy of <b>{{ last_accuracy }}%</b>. Keep up the great work!
+        <br>
+        <b style="text-align: center">Weekly Leaderboard:</b>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in leaderboard_rows %}
+                    <tr>
+                        <td><b>{{ row.num }}</b></td>
+                        <td>
+                            <img src="https://emergelearning.org{{ row.image }}" class="icon-img img-circle" width="30"height="30">
+                                {{ row.name }}
+                        </td>
+                        <td class="leaderboard-score">{{ row.score }}</td>
+                        <td>{{ row.location }}</td>
+                    </tr>
+                {% endfor %}                    
+            </tbody>
+        </table>
+        <br>
+
+        Happy Learning!<br>
+        Emerge Learning
+
+    </div>
+</body>
+
+</html>
