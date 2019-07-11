@@ -178,8 +178,17 @@ th {
     color: #7F7F7F;
 }
 
-.leaderboard-rank-0, .leaderboard-rank-1, .leaderboard-rank-2 {
-    color: #5BC89A;
+
+.leaderboard-rank-0, .row-0 {
+    color: #e8b923;
+}
+
+.leaderboard-rank-1, .row-1 {
+    color: #8ca4bd;
+}
+
+.leaderboard-rank-2, .row-2 {
+    color: #CD7F32;
 }
 
 .row-0, .row-1, .row-2{

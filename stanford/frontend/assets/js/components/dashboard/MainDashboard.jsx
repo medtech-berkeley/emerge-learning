@@ -6,6 +6,7 @@ import {DemographicSurvey} from "./DemographicSurvey";
 import PropTypes from "prop-types"
 import {Container} from "reactstrap";
 import {Planet, Cat} from 'react-kawaii';
+import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 
 
 
@@ -44,8 +45,37 @@ export class MainDashboard extends React.Component {
                                 num_required_quizzes = {this.props.user.num_required_quizzes}
                             />
                             <br />
-                            <p className="section-text">LEADERBOARD</p>
-                            <Leaderboard leaderboardResult={this.props.leaderboardResult} />
+                            <p className="section-text">LEADERBOARDS</p>
+                                <Container>
+                                <Tabs>
+                                    <TabList>
+                                        <Tab>Current Weekly Quiz</Tab>
+                                        <Tab>Previous Weekly Quiz</Tab>
+                                        <Tab>All Quizzes</Tab>
+                                        <Tab>All Practice</Tab>
+                                    </TabList>
+                                    <TabPanel>
+                                        <Container>
+                                            <Leaderboard leaderboardResult={this.props.leaderboardResult} />
+                                        </Container>
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <Container>
+                                            <Leaderboard leaderboardResult={this.props.leaderboardResult} />
+                                        </Container>
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <Container>
+                                            <Leaderboard leaderboardResult={this.props.leaderboardResult} />
+                                        </Container>
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <Container>
+                                            <Leaderboard leaderboardResult={this.props.leaderboardResult} />
+                                        </Container>
+                                    </TabPanel>
+                                </Tabs>
+                                </Container>
                         </div>
                     </div>
                 </Container>
