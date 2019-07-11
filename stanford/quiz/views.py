@@ -570,16 +570,23 @@ def get_students_scores_and_emails(tag):
                         location=F('student__location'),
                         email=F('student__user__email'),
                         image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
-                .annotate(score=Count('student__name'))\
-                .order_by('-score')[:10]
+                .annotate(score=Count('student__name'))
 
 @job
 def send_weekly_email(subject, message, recipient, bcc_list, tag, last_tag):
-    students = get_students_scores_and_emails(tag)
+    current_week = get_students_scores_and_emails(tag)
     last_week = get_students_scores_and_emails(last_tag)
+    current_studs = {last['name']:last['score'] for last in current_week}
     last_week_studs = {last['name']:last['score'] for last in last_week}
 
-    students = [{**student, **{'last_score': last_week_studs[student['name']]}} for student in students]
+    students = []
+    for email in bcc_list:
+        stud = Student.objects.filter(user__email=email)
+        if not stud.exists():
+            continue
+        stud = stud.first()
+        students.append({'name': student.name, 'score': current_studs.get(student.name, 0), 'last_score': last_week_studs.get(student.name, 0)})
+
     leaderboard_info = SpecificQuizLeaderboardStatViewSet()
     leaderboard_info.tag = tag
     leaderboard_rows = [{**{'num': i + 1}, **stat} for i, stat in enumerate(leaderboard_info.get_student_stats())]
