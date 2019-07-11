@@ -221,14 +221,20 @@ def get_all_weekly_tags():
     return [f'week-{i + 1}' for i in range(12)]
 
 def get_current_week_tag():
-    return Quiz.objects.filter(tags__in=get_all_weekly_tags(),
-                                start__lte=timezone.now()) \
-                        .order_by('-start').first().tags.first().text
+    try:
+        return Quiz.objects.filter(tags__in=get_all_weekly_tags(),
+                                    start__lte=timezone.now()) \
+                            .order_by('-start').first().tags.first().text
+    except:
+        return ''
 
 def get_previous_week_tag():
-    return Quiz.objects.filter(tags__in=get_all_weekly_tags(),
+    try:
+        return Quiz.objects.filter(tags__in=get_all_weekly_tags(),
                             start__lte=timezone.now()) \
-                    .order_by('-start').all()[1].tags.first().text
+                            .order_by('-start').all()[1].tags.first().text
+    except:
+        return ''
 
 
 from .badges import grant_badges
