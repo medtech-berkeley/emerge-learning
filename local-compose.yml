@@ -9,7 +9,6 @@ services:
     working_dir: /stanford
     command: sh -c "npm install package.json; node react_server.js"
     volumes:
-      - ./stanford/webpack-stats.json:/stanford/webpack-stats.json
       - ./stanford/:/stanford/
   interfaceserver:
     ports:
