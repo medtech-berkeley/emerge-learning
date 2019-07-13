@@ -601,10 +601,7 @@ def send_weekly_email(subject, message, recipient, bcc_list, tag, last_tag):
         
         if student['email'] in bcc_list:
             html_message = render_to_string('weekly_update.html', info)
-            txt_message = strip_tags(html_message)
-            msg = EmailMultiAlternatives(subject, txt_message, to=[recipient], bcc=[student['email']])
-            msg.attach_alternative(html_message, "text/html")
-            msg.send()
+            send_email.delay(subject, message, student['email'])
 
 # TODO: add better error reporting, statuses
 @user_passes_test(is_admin)
@@ -643,7 +640,7 @@ def send_email_view(request):
     return redirect('dashboard')
 
 @job
-def send_email(subject, message, recipient, bcc_list):
+def send_email(subject, message, recipient, bcc_list=[]):
     """ Sends email with message to recipient, bcc all emails in bcc (list).
     """
     txt_message = strip_tags(message)
