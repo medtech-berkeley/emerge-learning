@@ -50,36 +50,26 @@ export class MainDashboard extends React.Component {
                             />
                             <br />
                             <p className="section-text">LEADERBOARDS</p>
-                                <Container>
                                 <Tabs>
                                     <TabList>
-                                        <Tab>Current Weekly Quiz</Tab>
-                                        <Tab>Previous Weekly Quiz</Tab>
+                                        <Tab>Current Week</Tab>
+                                        <Tab>Previous Week</Tab>
                                         <Tab>All Quizzes</Tab>
                                         <Tab>All Practice</Tab>
                                     </TabList>
                                     <TabPanel>
-                                        <Container>
-                                            <Leaderboard leaderboardResult={this.props.weeklyLeaderboardResult} />
-                                        </Container>
+                                        <Leaderboard leaderboardResult={this.props.weeklyLeaderboardResult} />
                                     </TabPanel>
                                     <TabPanel>
-                                        <Container>
-                                            <Leaderboard leaderboardResult={this.props.previousLeaderboardResult} />
-                                        </Container>
+                                        <Leaderboard leaderboardResult={this.props.previousLeaderboardResult} />
                                     </TabPanel>
                                     <TabPanel>
-                                        <Container>
-                                            <Leaderboard leaderboardResult={this.props.quizLeaderboardResult} />
-                                        </Container>
+                                        <Leaderboard leaderboardResult={this.props.quizLeaderboardResult} />
                                     </TabPanel>
                                     <TabPanel>
-                                        <Container>
-                                            <Leaderboard leaderboardResult={this.props.practiceLeaderboardResult} />
-                                        </Container>
+                                        <Leaderboard leaderboardResult={this.props.practiceLeaderboardResult} />
                                     </TabPanel>
                                 </Tabs>
-                                </Container>
                         </div>
                     </div>
                 </Container>
