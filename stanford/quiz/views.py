@@ -606,7 +606,7 @@ def send_weekly_email(subject, message, recipient, bcc_list, tag, last_tag):
         
         if student['email'] in bcc_list:
             html_message = render_to_string('weekly_update.html', info)
-            send_email.delay(subject, message, student['email'])
+            send_email.delay(subject, html_message, student['email'])
 
 # TODO: add better error reporting, statuses
 @user_passes_test(is_admin)
