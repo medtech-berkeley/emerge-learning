@@ -31,6 +31,14 @@ export class MainDashboard extends React.Component {
                     />}
                     <DemographicSurvey submitDemographicSurvey={this.props.submitDemographicSurvey}
                                        demographic_survey_required={this.props.user.consent && !this.props.user.completed_demographic_survey}/>
+
+                        <div class="alert alert-success" role="alert">
+                            <b>Important Announcement:</b> The deadline to complete the weekly quizzes is <b>September 14th</b>. 
+                            On <b>October 14th</b>, you will be able to check back in to complete your <b>post-test</b>. 
+                            The <b>post-test</b> will be available for <b>1 week</b>, until <b>October 21st</b>. At that time, the game will be unavailable. 
+                            Once you complete the post-test and take the brief exit survey, you will receive your <b>certificate</b>. 
+                        </div>
+                        <br></br>
                         <div>
                             <p className="section-text">CHALLENGES</p>
                             <hr />
