@@ -3,20 +3,14 @@ from django.db.models import Count, F, Q, Value, CharField
 import json
 
 def run(*args):
-    if len(args) < 1:
-        print("Usage: num_takers --script-args [quizname]")
+    if len(args) < 2:
+        # Difficulty -> [Basic, Intermediate, Expert]
+        print("Usage: filter_difficulty --script-args [difficulty]")
         return
 
-    name = ' '.join(args)
-    quiz = Quiz.objects.filter(name=name)
+    difficulty = ' '.join(args)
 
-    if not quiz.exists():
-        print("No quiz found with that name")
-        return
-
-    quiz = quiz.first()
-
-    qud_total = QuestionUserData.objects.filter(quiz_userdata__quiz=quiz) \
+    qud_total = QuestionUserData.objects.filter(question__difficulty=difficulty) \
                                           .values(name=F('student__name')) \
                                           .distinct() \
     
@@ -25,7 +19,7 @@ def run(*args):
     count_total = qud_total.count()
     count_correct = qud_correct.count()
 
-    print("FOR QUIZ: " + name)
+    print("FOR DIFFICULTY: " + difficulty)
     print("count_correct: ", count_correct)
     print("count_total: ", count_total)
     print("count_correct / count_total: ", count_correct / count_total)
