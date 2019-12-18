@@ -17,6 +17,12 @@ services:
       - reactserver
     volumes:
       - ./stanford:/stanford
+  rqworker:
+    volumes:
+      - ./stanford:/stanford
+  scheduler:
+    volumes:
+      - ./stanford:/stanford
   database:
     volumes:
       - db_data:/var/lib/postgresql/data

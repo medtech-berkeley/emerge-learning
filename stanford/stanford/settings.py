@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_jenkins',
     'django_extensions',
     'django_rq',
+    'django_tables2',
     'quiz',
     'frontend',
     'accounts'
@@ -87,6 +88,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },

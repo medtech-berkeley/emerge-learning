@@ -15,3 +15,6 @@ oauth2client
 django-user-agents
 django-rq
 rq-scheduler
+django-tables2
+tablib
+six

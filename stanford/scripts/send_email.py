@@ -2,16 +2,31 @@ from quiz.models import QuestionUserData, Student
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 
-def run():
-    mail_subject = input("Enter mail_subject: ") 
+def run(*args):
+    mail_subject = input("Enter mail_subject: ")
     recipient = input("Enter recipient: ")
+    if len(args) < 1:
+        message_file = input("Enter file name for email message: ")
+    else:
+        message_file = args[0]
+
+    if len(args) < 2:
+        email_file = input("Enter file name for email file:")
+    else:
+        email_file = args[1]
 
     # emails = User.objects.values_list('email', flat=True)
 
     # HACK: Testing only
-    emails = ['arjunsv@berkeley.edu', "sean@dooher.net"]
+    with open(email_file) as f:
+        emails = [email.strip() for email in f.readlines() if email.strip()]
 
-    message = read_multiline_input("Enter mail_message: ")
+    emails.append("sean.dooher@berkeley.edu")
+    # emails = ['arjunsv@berkeley.edu', "sean@dooher.net"]
+
+
+    with open(message_file) as f:
+        message = f.read()
 
     send_email(mail_subject, message, recipient, emails)
 

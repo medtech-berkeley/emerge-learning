@@ -6,6 +6,8 @@ from quiz.views import QuestionViewSet, AnswerViewSet, QuizViewSet, QuestionUser
 from quiz.views import submit_consent_form
 from quiz.views import OverallPracticeLeaderboardStatViewSet, OverallQuizLeaderboardStatViewSet, CurrentWeeklyQuizLeaderboardStatViewSet, PreviousWeeklyQuizLeaderboardStatViewSet
 from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, send_email_view, upload_quizzes, submit_feedback, start_quiz
+from quiz.views import EventTableView, StudentTableView, QuestionUserDataTableView, QuizUserDataTableView
+from quiz.views import AnswerTableView, QuestionTableView, QuizTableView, DemographicsTableView
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import signup, logins, activate, resend_verification
@@ -14,24 +16,33 @@ from django.conf import settings
 
 import os
 
-router = routers.SimpleRouter()
-router.register(r'questions', QuestionViewSet, 'Question')
-router.register(r'answers', AnswerViewSet, 'Answer')
-router.register(r'quizzes', QuizViewSet, 'Quiz')
-router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData')
-router.register(r'quizuserdata', QuizUserDataViewSet, 'QuizUserData')
-router.register(r'students', StudentViewSet, 'Student')
-router.register(r'weeklyleaderboard', CurrentWeeklyQuizLeaderboardStatViewSet, 'Student')
-router.register(r'previousleaderboard', PreviousWeeklyQuizLeaderboardStatViewSet, 'Student')
-router.register(r'quizleaderboard', OverallQuizLeaderboardStatViewSet, 'Student')
-router.register(r'practiceleaderboard', OverallPracticeLeaderboardStatViewSet, 'Student')
-router.register(r'studentstats', StudentStatsViewSet, 'StudentStats')
-router.register(r'feedback', QuestionFeedbackViewSet, 'QuestionFeedback')
-router.register(r'events', EventViewSet, 'Events')
+api_router = routers.SimpleRouter()
+api_router.register(r'questions', QuestionViewSet, 'Question')
+api_router.register(r'answers', AnswerViewSet, 'Answer')
+api_router.register(r'quizzes', QuizViewSet, 'Quiz')
+api_router.register(r'questionuserdata', QuestionUserDataViewSet, 'QuestionUserData')
+api_router.register(r'quizuserdata', QuizUserDataViewSet, 'QuizUserData')
+api_router.register(r'students', StudentViewSet, 'Student')
+api_router.register(r'weeklyleaderboard', CurrentWeeklyQuizLeaderboardStatViewSet, 'Student')
+api_router.register(r'previousleaderboard', PreviousWeeklyQuizLeaderboardStatViewSet, 'Student')
+api_router.register(r'quizleaderboard', OverallQuizLeaderboardStatViewSet, 'Student')
+api_router.register(r'practiceleaderboard', OverallPracticeLeaderboardStatViewSet, 'Student')
+api_router.register(r'studentstats', StudentStatsViewSet, 'StudentStats')
+api_router.register(r'feedback', QuestionFeedbackViewSet, 'QuestionFeedback')
+api_router.register(r'events', EventViewSet, 'Events')
 
+tables = [
+    path('events', EventTableView.as_view()),
+    path('students', StudentTableView.as_view()),
+    path('question_userdata', QuestionUserDataTableView.as_view()),
+    path('quiz_userdata', QuizUserDataTableView.as_view()),
+    path('quizzes', QuizTableView.as_view()),
+    path('questions', QuestionTableView.as_view()),
+    path('answers', AnswerTableView.as_view()),
+    path('demographics', DemographicsTableView.as_view()),
+]
 
 urlpatterns = [
-    
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('profile/update', change_user_info),
@@ -42,7 +53,8 @@ urlpatterns = [
     path('quiz/answer', submit_answer),
     path('quiz/results', get_quiz_results),
     path('quiz/start', start_quiz),
-    path('api/', include(router.urls)),
+    path('api/', include(api_router.urls)),
+    # path('tables/', include(tables)),
     path('signup/', signup, name='signup'),
     re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', activate, name='activate'),
     path('login/', logins, name='login_real'),

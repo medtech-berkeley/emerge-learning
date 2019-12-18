@@ -18,6 +18,9 @@ from django.contrib.auth.decorators import user_passes_test
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
 from django_rq import job
+from django_tables2.export.views import ExportMixin
+
+import django_tables2 as tables
 
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.response import Response
@@ -29,6 +32,8 @@ from .utils import get_all_weekly_tags, get_current_week_tag, get_previous_week_
 from .models import Question, QuestionUserData, Quiz, Student, Feedback
 from .models import Event, EventType
 from .models import Student, Quiz, Question, Answer, QuestionUserData, QuizUserData, GVK_EMRI_Demographics
+from .tables import EventTable, StudentTable, QuestionUserDataTable, QuizUserDataTable
+from .tables import QuestionTable, QuizTable, AnswerTable, DemographicsTable
 from .serializers import QuestionSerializer, QuestionUserDataSerializer, QuizSerializer
 from .serializers import AnswerSerializer, LeaderboardStatSerializer, StudentSerializer
 from .serializers import UserSerializer, StudentStatsSerializer, QuizUserDataSerializer, QuestionFeedbackSerializer
@@ -661,3 +666,51 @@ def submit_feedback(request):
         question.save()
         return JsonResponse({'accepted': True})
     return JsonResponse({'accepted': False})
+
+class EventTableView(ExportMixin, tables.SingleTableView):
+    table_class = EventTable
+    model = Event
+    export_name = 'events'
+    template_name = 'django_tables2/bootstrap.html'
+
+class StudentTableView(ExportMixin, tables.SingleTableView):
+    table_class = StudentTable
+    model = Student
+    export_name = 'students'
+    template_name = 'django_tables2/bootstrap.html'
+
+class QuestionUserDataTableView(ExportMixin, tables.SingleTableView):
+    table_class = QuestionUserDataTable
+    model = QuestionUserData
+    export_name = 'question_userdata'
+    template_name = 'django_tables2/bootstrap.html'
+
+class QuizUserDataTableView(ExportMixin, tables.SingleTableView):
+    table_class = QuizUserDataTable
+    model = QuizUserData
+    export_name = 'quiz_userdata'
+    template_name = 'django_tables2/bootstrap.html'
+
+class QuizTableView(ExportMixin, tables.SingleTableView):
+    table_class = QuizTable
+    model = Quiz
+    export_name = 'quizzes'
+    template_name = 'django_tables2/bootstrap.html'
+
+class QuestionTableView(ExportMixin, tables.SingleTableView):
+    table_class = QuestionTable
+    model = Question
+    export_name = 'questions'
+    template_name = 'django_tables2/bootstrap.html'
+
+class AnswerTableView(ExportMixin, tables.SingleTableView):
+    table_class = AnswerTable
+    model = Answer
+    export_name = 'answers'
+    template_name = 'django_tables2/bootstrap.html'
+
+class DemographicsTableView(ExportMixin, tables.SingleTableView):
+    table_class = DemographicsTable
+    model = GVK_EMRI_Demographics
+    export_name = 'demographics'
+    template_name = 'django_tables2/bootstrap.html'

@@ -5,42 +5,54 @@
 #    pip-compile --output-file requirements.txt requirements.in
 #
 apiclient==1.0.4
+asgiref==3.2.3            # via django
 cachetools==3.1.1         # via google-auth
-certifi==2019.6.16        # via apiclient, requests
+certifi==2019.11.28       # via apiclient, requests
 chardet==3.0.4            # via requests
 click==7.0                # via rq
-coverage==4.5.3
+coverage==5.0
 croniter==0.3.30          # via rq-scheduler
-django-cors-middleware==1.4.0
-django-extensions==2.1.9
+defusedxml==0.6.0         # via odfpy
+django-cors-middleware==1.5.0
+django-extensions==2.2.5
 django-jenkins==0.110.0
 django-oauth-toolkit==1.2.0
-django-rq==2.1.0
+django-rq==2.2.0
+django-tables2==2.2.1
 django-user-agents==0.4.0
 django-webpack-loader==0.6.0
-django==2.2.3
-djangorestframework==3.9.4
-google-api-python-client==1.7.9
+django==3.0
+djangorestframework==3.11.0
+et-xmlfile==1.0.1         # via openpyxl
+google-api-python-client==1.7.11
 google-auth-httplib2==0.0.3  # via google-api-python-client
-google-auth==1.6.3        # via google-api-python-client, google-auth-httplib2
-httplib2==0.13.0
+google-auth==1.8.2        # via google-api-python-client, google-auth-httplib2
+httplib2==0.14.0
 idna==2.8                 # via requests
+jdcal==1.4.1              # via openpyxl
+markuppy==1.14            # via tablib
 oauth2client==4.1.3
-oauthlib==3.0.2           # via django-oauth-toolkit
-pillow==6.1.0
-psycopg2-binary==2.8.3
-pyasn1-modules==0.2.5     # via google-auth, oauth2client
-pyasn1==0.4.5             # via oauth2client, pyasn1-modules, rsa
-python-dateutil==2.8.0    # via croniter
-pytz==2019.1              # via django
-redis==3.2.1              # via django-rq, rq
+oauthlib==3.1.0           # via django-oauth-toolkit
+odfpy==1.4.0              # via tablib
+openpyxl==3.0.2           # via tablib
+pillow==6.2.1
+psycopg2-binary==2.8.4
+pyasn1-modules==0.2.7     # via google-auth, oauth2client
+pyasn1==0.4.8             # via oauth2client, pyasn1-modules, rsa
+python-dateutil==2.8.1    # via croniter
+pytz==2019.3              # via django
+pyyaml==5.2               # via tablib
+redis==3.3.11             # via django-rq, rq
 requests==2.22.0          # via django-oauth-toolkit
-rq-scheduler==0.9
-rq==1.0                   # via django-rq, rq-scheduler
+rq-scheduler==0.9.1
+rq==1.1.0                 # via django-rq, rq-scheduler
 rsa==4.0                  # via google-auth, oauth2client
-six==1.12.0               # via django-extensions, google-api-python-client, google-auth, oauth2client, python-dateutil
+six==1.13.0
 sqlparse==0.3.0           # via django
+tablib==0.14.0
 ua-parser==0.8.0          # via user-agents
 uritemplate==3.0.0        # via google-api-python-client
-urllib3==1.25.3           # via apiclient, requests
+urllib3==1.25.7           # via apiclient, requests
 user-agents==2.0          # via django-user-agents
+xlrd==1.2.0               # via tablib
+xlwt==1.3.0               # via tablib
