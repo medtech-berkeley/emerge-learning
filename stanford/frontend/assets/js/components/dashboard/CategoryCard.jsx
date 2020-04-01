@@ -15,7 +15,7 @@ export class CategoryCard extends React.Component {
 	getButtonText() {
 		if (this.props.is_completed && !this.props.can_retake) {
 			return "Review";
-		} else if (this.props.num_required_quizzes > 0 && !this.props.required) {
+		} else if (this.props.num_required_quizzes[this.props.course] > 0 && !this.props.required) {
 			return "Locked"
 		} else if (this.props.is_challenge) {
 			return "Start Challenge";
@@ -25,7 +25,7 @@ export class CategoryCard extends React.Component {
 	}
 
 	getButton() {
-		if (this.props.num_required_quizzes == 0 || this.props.required) {
+		if (this.props.num_required_quizzes[this.props.course] == 0 || this.props.required) {
 			return (
 				<Link 
 	        		to={"/dashboard/quiz/" + this.props.id} 

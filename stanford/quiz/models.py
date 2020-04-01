@@ -30,6 +30,13 @@ class AddTagMixin:
             tag = Tag.objects.create(text=text)
         self.tags.add(tag)
 
+class Course(models.Model):
+    name = models.CharField(max_length=100, default="")
+    is_active = models.BooleanField()
+
+    def __str__(self):
+        return f"{self.name} -- {self.id}"
+
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default="")
@@ -47,20 +54,14 @@ class Student(models.Model):
 
     #TODO: free text option for job, education, and organization fields
 
-    job = models.CharField(max_length=100, default='OTH')
-    education_level = models.CharField(max_length=100, default="LPS")
+    job = models.CharField(max_length=100, choices=JOB_CHOICES, default='OTH')
+    education_level = models.CharField(max_length=100, choices=EDUCATION_CHOICES, default="LPS")
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='AX')
     state = models.CharField(max_length=20, default="Denial")
     years_of_experience = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     organization = models.CharField(max_length=100, default='OTH')
 
     profile_type = models.CharField(max_length=10, choices=PROFILE_CHOICES, default="STUD")
-
-    @property
-    def num_required_quizzes(self):
-        completed_quizzes = set(q.quiz for q in QuizUserData.objects.filter(student=self) if q.is_done())
-        required_quizzes = set(Quiz.objects.filter(required=True)) - completed_quizzes
-        return len(required_quizzes)
 
     def __str__(self):
         return self.user.username
@@ -99,6 +100,7 @@ class Quiz(models.Model, AddTagMixin):
     can_retake = models.BooleanField(default=False)
     num_questions = models.IntegerField(default=-1) # -1 indicates there is no limit
     required = models.BooleanField(default=False)
+    course = models.ForeignKey(Course, related_name="quizzes", on_delete=models.CASCADE)
 
     @property
     def questions(self):
@@ -124,6 +126,7 @@ class Question(models.Model, AddTagMixin):
     created = models.DateTimeField(default=timezone.now)
     media = models.ForeignKey('QuestionMedia', related_name="media", blank=True, null=True, on_delete=models.DO_NOTHING)
     tags = models.ManyToManyField(Tag, blank=True, related_name="questions")
+    courses = models.ManyToManyField(Course, related_name="questions")
 
     BASIC = 'Basic'
     INTERMEDIATE = 'Intermediate'

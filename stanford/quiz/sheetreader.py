@@ -74,7 +74,7 @@ def LoadFromCSV(file):
                 for rep, _ in QuestionMedia.MEDIA_CHOICES:
                     if multimedia_type == rep:
                         clean_multimedia = rep
-                    
+
                 m = q.media
                 if clean_multimedia is not None:
                     if m is not None:
@@ -92,7 +92,7 @@ def LoadFromCSV(file):
 
                 if pretest == 'y':
                     tags.append('pretest')
-                
+
                 practice = True
                 # add all tags to the quest
                 q.tags.clear()
@@ -103,7 +103,7 @@ def LoadFromCSV(file):
                 # if practice:
                 #     q.tags.add(c.practice_tag)
                 q.save()
-                
+
                 answers = [int(x.strip()) for x in question_answer.split(',')]
                 for choice in range(remainder):
                     a = Answer.objects.filter(num=choice, question=q)

@@ -35,8 +35,9 @@ def grant_badges(student):
     if quizzes_done >= 10:
         badges_to_add.append(Badge.objects.get(name = '10Weekly'))
 
-    if student.num_required_quizzes == 0:
-        badges_to_add.append(Badge.objects.get(name = 'Pretest'))
+    # TODO: fix with courses
+    # if student.num_required_quizzes == 0:
+    #     badges_to_add.append(Badge.objects.get(name = 'Pretest'))
 
     for badge in badges_to_add:
         if student not in badge.students.all():

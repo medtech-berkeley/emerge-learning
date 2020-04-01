@@ -7,6 +7,7 @@ from django.utils import timezone
 from .utils import get_stats_student
 from .models import Question, QuestionUserData, Quiz, Event, DeviceData
 from .models import QuizUserData, Answer, Student, QuestionMedia, Feedback, Badge
+from .models import Course
 
 from collections import OrderedDict
 
@@ -54,7 +55,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ('id', 'user', 'name', 'location', 'description', 'image',
-                  'consent_prompt_required', 'consent','completed_demographic_survey','num_required_quizzes', 'profile_type', 'badges')
+                  'consent_prompt_required', 'consent','completed_demographic_survey', 'profile_type', 'badges')
 
 class SmallStudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -84,6 +85,24 @@ class QuizUserDataSerializer(serializers.ModelSerializer):
         model = QuizUserData
         fields = ('quiz', 'student', 'time_started', 'time_completed')
 
+
+class StudentCourseSerializer(serializers.ModelSerializer):
+    num_required_quizzes = serializers.SerializerMethodField()
+    class Meta:
+        model = Course
+        fields = ('id', 'name', 'num_required_quizzes')
+
+    def get_num_required_quizzes(self, instance):
+        student = self.context['request'].user.student
+        completed_quizzes = set(q.quiz for q in QuizUserData.objects.filter(student=student, quiz__course=instance, quiz__required=True) if q.is_done())
+        required_quizzes = set(Quiz.objects.filter(required=True, course=instance)) - completed_quizzes
+        return len(required_quizzes)
+
+
+class InstructorCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('id', 'name')
 
 class AnswerSerializer(serializers.ModelSerializer):
     # TODO: Get rid of is_correct in serializer

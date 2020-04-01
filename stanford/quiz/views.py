@@ -27,12 +27,12 @@ from .utils import get_student_quiz_stats, get_latest_object_or_404
 from .utils import get_stats_student, end_quiz
 from .utils import get_all_weekly_tags, get_current_week_tag, get_previous_week_tag
 from .models import Question, QuestionUserData, Quiz, Student, Feedback
-from .models import Event, EventType
+from .models import Event, EventType, Course
 from .models import Student, Quiz, Question, Answer, QuestionUserData, QuizUserData, GVK_EMRI_Demographics
 from .serializers import QuestionSerializer, QuestionUserDataSerializer, QuizSerializer
 from .serializers import AnswerSerializer, LeaderboardStatSerializer, StudentSerializer
 from .serializers import UserSerializer, StudentStatsSerializer, QuizUserDataSerializer, QuestionFeedbackSerializer
-from .serializers import EventSerializer
+from .serializers import EventSerializer, StudentCourseSerializer, InstructorCourseSerializer
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
 
 
@@ -90,7 +90,7 @@ class QuizViewSet(ModelViewSet):
     serializer_class = QuizSerializer
 
     def get_queryset(self):
-        in_time = Quiz.objects.filter(start__lte=timezone.now(), end__gte=timezone.now())        
+        in_time = Quiz.objects.filter(start__lte=timezone.now(), end__gte=timezone.now())
         quiz_uds = QuizUserData.objects.filter(student=self.request.user.student)
         completed = Quiz.objects.filter(can_retake=False, id__in=quiz_uds.values('quiz_id'))
 
@@ -126,6 +126,19 @@ class QuizUserDataViewSet(ModelViewSet):
         return obj
 
 
+class StudentCourseViewSet(ModelViewSet):
+    serializer_class = StudentCourseSerializer
+
+    def get_queryset(self):
+        return Course.objects.filter(is_active=True)
+
+
+class InstructorCourseViewSet(ModelViewSet):
+    serializer_class = InstructorCourseSerializer
+    permission_classes = [IsInstructor]
+    queryset = Course.objects.all()
+
+
 class QuestionUserDataViewSet(ModelViewSet):
     serializer_class = QuestionUserDataSerializer
 
@@ -138,7 +151,7 @@ class StudentStatsViewSet(ViewSet):
 
     def sorted(self, student_stats):
         return student_stats
-    
+
     def filtered(self, student_stats):
         return student_stats
 
@@ -198,7 +211,7 @@ class LeaderboardStatViewSet(ViewSet):
 
     def get_end_date(self):
         return timezone.now()
-    
+
     def get_student_stats(self):
         qud = QuestionUserData.objects.filter(time_completed__gte=self.get_start_date(),
                                               time_completed__lte=self.get_end_date(),
@@ -207,12 +220,12 @@ class LeaderboardStatViewSet(ViewSet):
         include_tags = self.get_include_tags()
         if len(include_tags) > 0:
             qud = qud.filter(quiz_userdata__quiz__tags__in=include_tags)
-        
+
         exclude_tags = self.get_exclude_tags()
         if len(exclude_tags) > 0:
             qud = qud.exclude(quiz_userdata__quiz__tags__in=exclude_tags)
 
-        return qud.values(name=F('student__name'), 
+        return qud.values(name=F('student__name'),
                           location=F('student__location'),
                           image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
                     .annotate(score=Count('student__name'))\
@@ -289,7 +302,7 @@ def start_quiz(request):
                 quiz = Quiz.objects.get(id=int(request.GET['quiz']))
             except (Quiz.DoesNotExist, KeyError, ValueError):
                 return JsonResponse({'accepted': False, 'reason': 'Missing or invalid quiz in request'}, status=400)
-            
+
             quiz_data = student.quiz_data.filter(quiz=quiz)
             if quiz_data.exists():
                 quiz_data = quiz_data.latest()
@@ -298,7 +311,7 @@ def start_quiz(request):
                     end_quiz(quiz_data)
                 else:
                     return JsonResponse({'accepted': False, 'reason': 'This quiz has already been started'}, status=400)
-            
+
             # check if there are any required quizzes left to do
             if not quiz.required:
                 completed_quizzes = set(q.quiz for q in QuizUserData.objects.filter(student=student) if q.is_done())
@@ -463,7 +476,7 @@ def get_quiz_results(request):
 
         if not quiz_data.is_done():
             return JsonResponse({'accepted': False, 'reason': 'Quiz has not yet been completed'}, status=400)
-        
+
         outoftime = quiz_data.is_out_of_time()
 
         if 'pretest' in [tag.text for tag in quiz.tags.all()]:
@@ -488,7 +501,7 @@ def get_stats(request):
     """
     Returns object of QuestionUserData statistics filtered by student, tags, difficulty
     :param request: POST request with a list of tags (strings) and list of difficulty (strings)
-    :return: JSON response with format as follows 
+    :return: JSON response with format as follows
     '''
 
     '''
@@ -537,7 +550,7 @@ def submit_consent_form(request):
 def submit_demographics_form(request):
     if request.method != 'POST':
         return HttpResponse(status=405)
-    
+
     student = request.user.student
     if student:
         if not student.completed_demographic_survey:
@@ -550,23 +563,23 @@ def submit_demographics_form(request):
                 if field not in request.POST:
                     return HttpResponse(status=400)
                 setattr(student, field, request.POST[field])
-            
+
             student.completed_demographic_survey = True
-            
+
             if student.organization == 'GVK':
                 gvk_fields = {field:request.POST[field] for field in optional_fields}
                 extra_info = GVK_EMRI_Demographics(student=student, **gvk_fields)
                 extra_info.save()
-                
+
             student.save()
-            
+
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
 
 def get_students_scores_and_emails(tag):
     qud = QuestionUserData.objects.filter(answer__is_correct=True, quiz_userdata__quiz__tags=tag)
-    return qud.values(name=F('student__name'), 
+    return qud.values(name=F('student__name'),
                         location=F('student__location'),
                         email=F('student__user__email'),
                         image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
@@ -598,7 +611,7 @@ def send_weekly_email(subject, message, recipient, bcc_list, tag, last_tag):
             'last_accuracy': student['last_score'] * 10,
             'body_text': message,
         }
-        
+
         if student['email'] in bcc_list:
             html_message = render_to_string('weekly_update.html', info)
             send_email.delay(subject, html_message, student['email'])
@@ -644,7 +657,7 @@ def send_email(subject, message, recipient, bcc_list=[]):
     """ Sends email with message to recipient, bcc all emails in bcc (list).
     """
     txt_message = strip_tags(message)
-    
+
     msg = EmailMultiAlternatives(subject, txt_message, to=[recipient], bcc=bcc_list)
     msg.attach_alternative(message, "text/html")
     msg.send()
