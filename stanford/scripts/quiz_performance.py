@@ -3,7 +3,7 @@ from django.db.models import Count, F, Q, Value, CharField
 import json
 
 def run(*args):
-    if len(args) < 2:
+    if len(args) < 1:
         print("Usage: num_takers --script-args [quizname]")
         return
 
