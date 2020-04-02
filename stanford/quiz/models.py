@@ -119,7 +119,7 @@ class Quiz(models.Model, AddTagMixin, AddCourseMixin):
 
     @property
     def questions(self):
-        return Question.objects.filter(tags__in=self.tags.all())
+        return Question.objects.filter(tags__in=self.tags.all(), courses__in=[self.course])
 
     def __str__(self):
         return self.name
