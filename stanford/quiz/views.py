@@ -27,7 +27,7 @@ from .utils import get_student_quiz_stats, get_latest_object_or_404
 from .utils import get_stats_student, end_quiz
 from .utils import get_all_weekly_tags, get_current_week_tag, get_previous_week_tag
 from .models import Question, QuestionUserData, Quiz, Student, Feedback
-from .models import Event, EventType, Course
+from .models import Event, EventType, Course, COVID19_Demographics
 from .models import Student, Quiz, Question, Answer, QuestionUserData, QuizUserData, GVK_EMRI_Demographics
 from .serializers import QuestionSerializer, QuestionUserDataSerializer, QuizSerializer
 from .serializers import AnswerSerializer, LeaderboardStatSerializer, StudentSerializer
@@ -586,6 +586,33 @@ def submit_demographics_form(request):
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
+
+
+@login_required
+def submit_covid19_form(request):
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+
+    student = request.user.student
+    if student:
+        if not student.completed_covid19_survey:
+            fields = ["register_reason", "confident_covid_care", "ppe_access", "game_related_work", "cared_for_covid", "cared_for_covid_possible"]
+            boolean_fields = []
+
+            student.completed_covid19_survey = True
+
+            covid_fields = {field:request.POST[field] for field in fields}
+
+
+            extra_info = COVID19_Demographics(student=student, **covid_fields)
+            extra_info.save()
+
+            student.save()
+
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)
+
 
 def get_students_scores_and_emails(tag):
     qud = QuestionUserData.objects.filter(answer__is_correct=True, quiz_userdata__quiz__tags=tag)

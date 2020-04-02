@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { CourseSection } from '../components/dashboard/CourseSection'
 import { getCategories, selectCategory, getPracticeLeaderboard, getQuizLeaderboard, getCourses} from '../actions/Actions'
-import { getWeeklyLeaderboard, getPreviousLeaderboard, submitConsentForm, submitDemographicSurvey } from "../actions/Actions"
+import { getWeeklyLeaderboard, getPreviousLeaderboard } from "../actions/Actions"
 import { refreshStudent } from '../actions/LoadUserActions'
 
 const mapStateToProps = state => {
@@ -23,8 +23,6 @@ const mapDispatchToProps = dispatch => {
 		getQuizLeaderboard: (course) => dispatch(getQuizLeaderboard(course)),
 		getWeeklyLeaderboard: (course) => dispatch(getWeeklyLeaderboard(course)),
 		getPreviousLeaderboard: (course) => dispatch(getPreviousLeaderboard(course)),
-    	submitConsentForm: (consent) => dispatch(submitConsentForm(consent)),
-        submitDemographicSurvey: (ref) => dispatch(submitDemographicSurvey(ref)),
 		refreshStudent: () => dispatch(refreshStudent()),
     };
 };

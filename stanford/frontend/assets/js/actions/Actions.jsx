@@ -22,6 +22,7 @@ export const SELECT_ANSWER = 'SELECT_ANSWER';
 export const CHANGE_PAGE = 'CHANGE_PAGE';
 export const UPDATE_CONSENT = 'UPDATE_CONSENT';
 export const UPDATE_DEMOSURVEY = 'UPDATE_DEMOSURVEY';
+export const UPDATE_COVIDSURVEY = 'UPDATE_COVIDSURVEY';
 
 export function changePage(page) {
 	return {
@@ -364,5 +365,28 @@ export function updateDemographicForm(demographicResult) {
 	return {
 		type: UPDATE_DEMOSURVEY,
 		demographicResult
+	}
+}
+
+export function submitCovid19Survey(reference) {
+    let headers = Object.assign({}, window.postFormHeader);
+    let data = new FormData(reference);
+	headers.body = data;
+	return dispatch => fetch("/profile/covid19survey", headers)
+		.then(r => {
+			if (r.ok) {
+				console.debug("COVID19 survey submitted")
+				dispatch(updateCovidForm(r));
+				dispatch(refreshStudent());
+			} else {
+				console.debug("Demographic survey submission failed")
+			}
+		});
+}
+
+export function updateCovidForm(covidResult) {
+	return {
+		type: UPDATE_COVIDSURVEY,
+		covidResult
 	}
 }

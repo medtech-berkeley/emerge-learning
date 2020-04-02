@@ -10,7 +10,8 @@ from django.dispatch import receiver
 from os import path
 
 from .model_constants import YEAR_CHOICES, GENDER_CHOICES, JOB_CHOICES, COUNTRY_CHOICES, \
-                             ORG_CHOICES, DEVICE_CHOICES, INTERNET_CHOICES, PROFILE_CHOICES, EDUCATION_CHOICES
+                             ORG_CHOICES, DEVICE_CHOICES, INTERNET_CHOICES, PROFILE_CHOICES, EDUCATION_CHOICES, \
+                             REGISTER_REASON_CHOICES, AGREE_CHOICES
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -42,7 +43,6 @@ class AddCourseMixin:
         else:
             self.course = course
 
-
 class Course(models.Model):
     name = models.CharField(max_length=100, default="")
     is_active = models.BooleanField()
@@ -61,6 +61,7 @@ class Student(models.Model):
     consent_prompt_required = models.BooleanField(default=True)
     consent = models.BooleanField(default=False)
     completed_demographic_survey = models.BooleanField(default=False)
+    completed_covid19_survey = models.BooleanField(default=False)
 
     image = models.ImageField(upload_to='profile_images', default="../static/accounts/profile.png", blank=True)
     birth_year = models.IntegerField(choices=YEAR_CHOICES, default=timezone.now().year)
@@ -290,6 +291,16 @@ class GVK_EMRI_Demographics(models.Model):
     personal_device_hours = models.DecimalField(max_digits=4, decimal_places=2)
 
 
+class COVID19_Demographics(models.Model):
+    student = models.OneToOneField(Student, on_delete=models.CASCADE)
+    game_related_work = models.BooleanField()
+    register_reason = models.CharField(max_length=3, choices=REGISTER_REASON_CHOICES)
+    cared_for_covid = models.BooleanField()
+    cared_for_covid_possible = models.BooleanField()
+    confident_covid_care = models.CharField(max_length=3, choices=AGREE_CHOICES)
+    ppe_access = models.CharField(max_length=3, choices=AGREE_CHOICES)
+
+
 class EventType(Enum):
     QuizStart='QuizStart'
     QuizEnd='QuizEnd'
@@ -323,4 +334,4 @@ class Event(models.Model):
 
     def __str__(self):
         return f"{self.event_type} - {self.student.name} ({self.id})"
-    
+

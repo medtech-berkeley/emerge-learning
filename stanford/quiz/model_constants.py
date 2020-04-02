@@ -305,3 +305,17 @@ COUNTRY_CHOICES = [
     ("ZM", "Zambia"),
     ("ZW", "Zimbabwe"),
 ]
+
+REGISTER_REASON_CHOICES = [
+    ('SBS', 'Suggested by supervisor'),
+    ('DWF', 'Discussion with friends'),
+    ('SMP', 'Social media post')
+]
+
+AGREE_CHOICES = [
+    ('SA', 'Strongly Agree'),
+    ('A', 'Agree'),
+    ('N', 'Neither Agree nor Disagree'),
+    ('D', 'Disagree'),
+    ('SD', 'Strongly Disagree'),
+]

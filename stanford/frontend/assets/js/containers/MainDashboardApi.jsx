@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { MainDashboard } from '../components/dashboard/MainDashboard'
-import { getCourses, submitConsentForm } from '../actions/Actions'
+import { getCourses, submitConsentForm, submitCovid19Survey, submitDemographicSurvey } from '../actions/Actions'
 import { refreshStudent } from '../actions/LoadUserActions'
 
 const mapStateToProps = state => {
@@ -12,7 +12,9 @@ const mapDispatchToProps = dispatch => {
     return {
     	refreshCourses: () => dispatch(getCourses()),
 		refreshStudent: () => dispatch(refreshStudent()),
-		submitConsentForm: (consent) => dispatch(submitConsentForm(consent))
+    	submitConsentForm: (consent) => dispatch(submitConsentForm(consent)),
+        submitDemographicSurvey: (ref) => dispatch(submitDemographicSurvey(ref)),
+        submitCovid19Survey: (ref) => dispatch(submitCovid19Survey(ref)),
     };
 };
 

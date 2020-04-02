@@ -5,7 +5,7 @@ from rest_framework import routers
 from quiz.views import StudentViewSet, StudentStatsViewSet, QuizUserDataViewSet, QuestionFeedbackViewSet
 from quiz.views import QuestionViewSet, AnswerViewSet, QuizViewSet, QuestionUserDataViewSet
 from quiz.views import LeaderboardStatViewSet, EventViewSet, StudentCourseViewSet
-from quiz.views import submit_consent_form
+from quiz.views import submit_consent_form, submit_covid19_form
 from quiz.views import OverallPracticeLeaderboardStatViewSet, OverallQuizLeaderboardStatViewSet, CurrentWeeklyQuizLeaderboardStatViewSet, PreviousWeeklyQuizLeaderboardStatViewSet
 from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, send_email_view, upload_quizzes, submit_feedback, start_quiz
 from django.conf import settings
@@ -39,6 +39,7 @@ urlpatterns = [
     path('profile/update', change_user_info),
     path('profile/consentsurvey', submit_consent_form),
     path('profile/demosurvey', submit_demographics_form),
+    path('profile/covid19survey', submit_covid19_form),
     path('quiz/feedback', submit_feedback),
     path('quiz/question', get_question),
     path('quiz/answer', submit_answer),
