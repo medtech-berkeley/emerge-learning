@@ -90,7 +90,7 @@ class StudentCourseSerializer(serializers.ModelSerializer):
     num_required_quizzes = serializers.SerializerMethodField()
     class Meta:
         model = Course
-        fields = ('id', 'name', 'num_required_quizzes')
+        fields = ('id', 'name', 'num_required_quizzes', 'priority')
 
     def get_num_required_quizzes(self, instance):
         student = self.context['request'].user.student
@@ -102,7 +102,7 @@ class StudentCourseSerializer(serializers.ModelSerializer):
 class InstructorCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'priority')
 
 class AnswerSerializer(serializers.ModelSerializer):
     # TODO: Get rid of is_correct in serializer

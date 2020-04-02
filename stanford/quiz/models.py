@@ -46,6 +46,7 @@ class AddCourseMixin:
 class Course(models.Model):
     name = models.CharField(max_length=100, default="")
     is_active = models.BooleanField()
+    priority = models.IntegerField()
 
     def __str__(self):
         return f"{self.name} -- {self.id}"

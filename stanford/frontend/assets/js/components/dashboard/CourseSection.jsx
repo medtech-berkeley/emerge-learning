@@ -25,6 +25,7 @@ export class CourseSection extends React.Component {
         let course = this.props.course;
 		return (
                 <div>
+                    <br />
                     <p className="section-text">{course.name.toUpperCase()} CHALLENGES</p>
                     <hr />
                     <CategoriesBox
@@ -43,6 +44,7 @@ export class CourseSection extends React.Component {
                     />
                     <br />
                     <p className="section-text">{this.props.course.name.toUpperCase()} LEADERBOARDS</p>
+                    <hr />
                         <Tabs>
                             <TabList>
                                 <Tab>Current Challenge</Tab>

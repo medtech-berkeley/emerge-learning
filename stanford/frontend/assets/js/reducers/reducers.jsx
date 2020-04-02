@@ -111,7 +111,7 @@ export function stanfordApp(state = initialState, action) {
                 newState.api.categories[action.course] = categoriesSorted;
                 break;
         case (UPDATE_COURSES):
-            newState.api.courses = action.courses;
+            newState.api.courses = action.courses.sort((c1, c2) => c1.priority - c2.priority);
             break;
         case (ADD_MESSAGE):
             if (!newState.ui.messages[action.context]) {

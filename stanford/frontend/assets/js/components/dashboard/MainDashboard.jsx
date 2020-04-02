@@ -12,9 +12,33 @@ import CourseSectionApi from "../../containers/CourseSectionApi";
 
 
 export class MainDashboard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.renderCourseTabs = this.renderCourseTabs.bind(this);
+    }
+
     componentDidMount() {
         this.props.refreshCourses();
         this.props.refreshStudent();
+    }
+
+    renderCourseTabs() {
+        if (this.props.courses.length > 0) {
+            return <Tabs>
+                    <TabList>
+                    {this.props.courses.map(course => {
+                        return <Tab>{course.name}</Tab>
+                    })}
+                    </TabList>
+                    {this.props.courses.map(course => {
+                    return (
+                    <TabPanel>
+                        <CourseSectionApi course={course} />
+                    </TabPanel>)
+                    })}
+                </Tabs>;
+        }
+        return null;
     }
 
 	render() {
@@ -32,9 +56,7 @@ export class MainDashboard extends React.Component {
                         <b>UPDATE:</b> Emerge now features new <b>COVID-19</b> related chalenges and practice questions. Please check back in for <b>daily challenges</b>. 
                     </div>
                     <br></br>
-                    {this.props.courses.map(course => {
-                            return <CourseSectionApi course={course} />;
-                    })}
+                    { this.renderCourseTabs() }
                 </div>
             </Container>
 		);
