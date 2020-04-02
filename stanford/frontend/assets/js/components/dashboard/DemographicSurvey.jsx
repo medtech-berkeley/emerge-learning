@@ -24,7 +24,7 @@ export class DemographicSurvey extends React.Component {
 
   handleSubmit(event) {
   	event.preventDefault();
-  	console.log(event.target);
+  	// console.log(event.target);
     this.props.submitDemographicSurvey(event.target);
   }
 
@@ -35,7 +35,7 @@ export class DemographicSurvey extends React.Component {
   }
 
   jobFreeText(event) {
-  	console.log(event.target.value);
+  	// console.log(event.target.value);
   	var job_text = document.getElementById("job_text");
   	job_text.value = document.getElementById("job_select").value;
 

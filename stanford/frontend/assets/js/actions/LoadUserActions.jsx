@@ -12,7 +12,7 @@ export function updateStudent(user) {
 }
 
 export function refreshStudent() {
-	console.log("refresh student action")
+	// console.log("refresh student action")
 	return dispatch => fetch("/api/students/self", window.getHeader)
 		.then(r => r.json().then(user => {
 			dispatch(updateStudent(user))

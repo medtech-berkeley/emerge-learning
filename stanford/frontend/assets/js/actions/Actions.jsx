@@ -4,6 +4,7 @@ import { setLoadingStatus, incLoadingStatus } from './UIActions.jsx';
 
 export const UPDATE_USERS = 'UPDATE_USERS';
 export const UPDATE_CATEGORIES = 'UPDATE_CATEGORIES';
+export const UPDATE_COURSES = 'UPDATE_COURSES';
 export const UPDATE_QUESTION_USER_DATA = 'UPDATE_QUESTION_USER_DATA';
 export const UPDATE_CURRENT_QUESTION = 'UPDATE_CURRENT_QUESTION';
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
@@ -56,18 +57,32 @@ export function updateTimer(time) {
 	}
 }
 
-
-export function getCategories() {
-	return dispatch => fetch("/api/quizzes", window.getHeader)
-		.then(r => r.json().then(categories => {
-			dispatch(updateCategories(categories))
+export function getCourses() {
+	return dispatch => fetch("/api/courses", window.getHeader)
+		.then(r => r.json().then(courses => {
+			dispatch(updateCourses(courses))
 		}));
 }
 
-export function updateCategories(categories) {
+export function updateCourses(courses) {
+	return {
+		type: UPDATE_COURSES,
+		courses
+	}
+}
+
+export function getCategories(course) {
+	return dispatch => fetch("/api/quizzes?course=" + course, window.getHeader)
+		.then(r => r.json().then(categories => {
+			dispatch(updateCategories(categories, course))
+		}));
+}
+
+export function updateCategories(categories, course) {
 	return {
 		type: UPDATE_CATEGORIES,
-		categories
+		categories,
+		course
 	}
 }
 
@@ -212,59 +227,63 @@ export function updateCategoryResults(results) {
 	}
 }
 
-export function updatePracticeLeaderboard(leaderboardResult) {
+export function updatePracticeLeaderboard(leaderboardResult, course) {
 	return {
 		type: UPDATE_PRACTICE_LEADERBOARD,
-		leaderboardResult
+		leaderboardResult,
+		course
 	}
 }
 
-export function updateQuizLeaderboard(leaderboardResult) {
+export function updateQuizLeaderboard(leaderboardResult, course) {
 	return {
 		type: UPDATE_QUIZ_LEADERBOARD,
-		leaderboardResult
+		leaderboardResult,
+		course
 	}
 }
 
-export function updateWeeklyLeaderboard(leaderboardResult) {
+export function updateWeeklyLeaderboard(leaderboardResult, course) {
 	return {
 		type: UPDATE_WEEKLY_LEADERBOARD,
-		leaderboardResult
+		leaderboardResult,
+		course
 	}
 }
 
-export function updatePreviousLeaderboard(leaderboardResult) {
+export function updatePreviousLeaderboard(leaderboardResult, course) {
 	return {
 		type: UPDATE_PREVIOUS_LEADERBOARD,
-		leaderboardResult
+		leaderboardResult,
+		course
 	}
 }
 
-export function getPracticeLeaderboard() {
-	return dispatch => fetch("/api/practiceleaderboard", window.getHeader)
+export function getPracticeLeaderboard(course) {
+	return dispatch => fetch("/api/practiceleaderboard?course=" + course, window.getHeader)
 	.then(r => r.json().then(json => {
-		dispatch(updatePracticeLeaderboard(json))
+		dispatch(updatePracticeLeaderboard(json, course))
 	}));
 }
 
-export function getQuizLeaderboard() {
-	return dispatch => fetch("/api/quizleaderboard", window.getHeader)
+export function getQuizLeaderboard(course) {
+	return dispatch => fetch("/api/quizleaderboard?course=" + course, window.getHeader)
 	.then(r => r.json().then(json => {
-		dispatch(updateQuizLeaderboard(json))
+		dispatch(updateQuizLeaderboard(json, course))
 	}));
 }
 
-export function getWeeklyLeaderboard() {
-	return dispatch => fetch("/api/weeklyleaderboard", window.getHeader)
+export function getWeeklyLeaderboard(course) {
+	return dispatch => fetch("/api/weeklyleaderboard?course=" + course, window.getHeader)
 	.then(r => r.json().then(json => {
-		dispatch(updateWeeklyLeaderboard(json))
+		dispatch(updateWeeklyLeaderboard(json, course))
 	}));
 }
 
-export function getPreviousLeaderboard() {
-	return dispatch => fetch("/api/previousleaderboard", window.getHeader)
+export function getPreviousLeaderboard(course) {
+	return dispatch => fetch("/api/previousleaderboard?course=" + course, window.getHeader)
 	.then(r => r.json().then(json => {
-		dispatch(updatePreviousLeaderboard(json))
+		dispatch(updatePreviousLeaderboard(json, course))
 	}));
 }
 
@@ -307,7 +326,7 @@ export function submitConsentForm(consent) {
 	headers.body = data;
 	return dispatch => fetch("/profile/consentsurvey", headers)
 		.then(r => {
-			console.log(r);
+			// console.log(r);
 			if (r.ok) {
 				console.debug("Consent submitted")
 				dispatch(updateConsentForm(r));

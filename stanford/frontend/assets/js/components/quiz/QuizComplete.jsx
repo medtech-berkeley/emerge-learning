@@ -55,7 +55,7 @@ export class QuizComplete extends React.Component {
 
 	getCompletionText() {
 		let score =  this.props.num_correct / this.props.num_attempted;
-		console.log(score);
+		// console.log(score);
 		var text70to100 = ["Golden touch!",
 							"Marvelous work!",
 							"Fabulous work!",

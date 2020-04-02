@@ -90,9 +90,14 @@ class QuizViewSet(ModelViewSet):
     serializer_class = QuizSerializer
 
     def get_queryset(self):
-        in_time = Quiz.objects.filter(start__lte=timezone.now(), end__gte=timezone.now())
+        course = self.request.query_params.get('course', None)
+        if course is not None:
+            course_quizzes = Quiz.objects.filter(course=course)
+        else:
+            course_quizzes = Quiz.objects.all()
+        in_time = course_quizzes.filter(start__lte=timezone.now(), end__gte=timezone.now())
         quiz_uds = QuizUserData.objects.filter(student=self.request.user.student)
-        completed = Quiz.objects.filter(can_retake=False, id__in=quiz_uds.values('quiz_id'))
+        completed = course_quizzes.filter(can_retake=False, id__in=quiz_uds.values('quiz_id'))
 
         return in_time | completed
 
@@ -212,10 +217,15 @@ class LeaderboardStatViewSet(ViewSet):
     def get_end_date(self):
         return timezone.now()
 
+
     def get_student_stats(self):
         qud = QuestionUserData.objects.filter(time_completed__gte=self.get_start_date(),
                                               time_completed__lte=self.get_end_date(),
                                               answer__is_correct=True)
+
+        course = self.request.query_params.get('course', None)
+        if course is not None:
+            qud = qud.filter(quiz_userdata__quiz__course=course)
 
         include_tags = self.get_include_tags()
         if len(include_tags) > 0:

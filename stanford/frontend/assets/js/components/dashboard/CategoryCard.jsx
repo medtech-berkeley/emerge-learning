@@ -8,14 +8,14 @@ export class CategoryCard extends React.Component {
 		let classes = "category";
 		if(this.props.is_completed && !this.props.can_retake) {
 			classes += " card-complete";
-		} 
+		}
 		return classes;
 	}
 
 	getButtonText() {
 		if (this.props.is_completed && !this.props.can_retake) {
 			return "Review";
-		} else if (this.props.num_required_quizzes[this.props.course] > 0 && !this.props.required) {
+		} else if (this.props.num_required_quizzes > 0 && !this.props.required) {
 			return "Locked"
 		} else if (this.props.is_challenge) {
 			return "Start Challenge";
@@ -25,11 +25,11 @@ export class CategoryCard extends React.Component {
 	}
 
 	getButton() {
-		if (this.props.num_required_quizzes[this.props.course] == 0 || this.props.required) {
+		if (this.props.num_required_quizzes == 0 || this.props.required) {
 			return (
-				<Link 
-	        		to={"/dashboard/quiz/" + this.props.id} 
-	        		className="btn btn-outline-success" 
+				<Link
+	        		to={"/dashboard/quiz/" + this.props.id}
+	        		className="btn btn-outline-success"
 	        		onClick={() => this.props.selectCategory(this.props.id)}>
 					<div>{this.getButtonText()}</div>
 	        	</Link>
@@ -43,6 +43,7 @@ export class CategoryCard extends React.Component {
 		}
 	}
 
+	// TODO: fix imgur link
 	render() {
 		return (
 			<Col sm={4} className={this.getClasses()}>
@@ -55,7 +56,7 @@ export class CategoryCard extends React.Component {
 			                <CardBody>
 			                    <CardTitle>
 			                    	{this.props.name}
-			                    	{this.props.is_challenge && 
+			                    	{this.props.is_challenge &&
 			                    	<img src="https://i.imgur.com/NWR88o8.png" className="icon img-fluid" alt=""/>}
 			                    </CardTitle>
 			                    <CardText className="section-text">{this.props.sponsor}</CardText>

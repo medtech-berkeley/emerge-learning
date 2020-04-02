@@ -35,11 +35,12 @@ def LoadFromCSV(file):
                 question_id = int(row[0])
                 question_text = row[1]
                 question_category = row[2]
-                difficulty = row[3].title()
-                multimedia_type = row[4].upper()
-                multimedia_filename = row[5]
-                pretest = row[6].lower()
-                tags = row[7].split()
+                question_course = row[3]
+                difficulty = row[4].title()
+                multimedia_type = row[5].upper()
+                multimedia_filename = row[6]
+                pretest = row[7].lower()
+                tags = row[8].split()
 
                 question_answer = row[-1]
                 remainder = len(row) - num_fields - 1
@@ -68,6 +69,10 @@ def LoadFromCSV(file):
                     q.category = c
                     q.difficulty = clean_difficulty
                     q.save()
+
+                # add course metadata to question
+                q.courses.clear()
+                q.add_course(question_course)
 
                 #clean multimedia into accepted format (defaulting to none)
                 clean_multimedia = None
@@ -131,14 +136,15 @@ def LoadQuizFromCSV(file):
                 #row structure: |Name|Image|Start|End|is_challenge|retake|required|tags|limit
                 row = [x for x in row]
                 name = row[0]
-                image = row[1]
-                start = pytz.utc.localize(timezone.datetime.strptime(row[2], "%Y/%m/%d"))
-                end = pytz.utc.localize(timezone.datetime.strptime(row[3], "%Y/%m/%d"))
-                is_challenge = row[4].upper() == "TRUE"
-                retake = row[5].upper() == "TRUE"
-                required = row[6].upper() == "TRUE"
-                tags = row[7].split()
-                limit = int(row[8])
+                course = row[1]
+                image = row[2]
+                start = pytz.utc.localize(timezone.datetime.strptime(row[3], "%Y/%m/%d"))
+                end = pytz.utc.localize(timezone.datetime.strptime(row[4], "%Y/%m/%d"))
+                is_challenge = row[5].upper() == "TRUE"
+                retake = row[6].upper() == "TRUE"
+                required = row[7].upper() == "TRUE"
+                tags = row[8].split()
+                limit = int(row[9])
 
                 q = Quiz.objects.filter(name=name)
                 if q.exists():
@@ -160,6 +166,7 @@ def LoadQuizFromCSV(file):
                         num_questions=limit,
                         required=required)
 
+                q.add_course(course)
                 q.tags.clear()
                 for tag_text in tags:
                     q.add_tag(tag_text)

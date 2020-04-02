@@ -30,6 +30,19 @@ class AddTagMixin:
             tag = Tag.objects.create(text=text)
         self.tags.add(tag)
 
+
+class AddCourseMixin:
+    def add_course(self, text):
+        try:
+            course = Course.objects.get(name=text)
+        except Course.DoesNotExist:
+            course = Course.objects.create(name=text, is_active=True)
+        if hasattr(self, "courses"):
+            self.courses.add(course)
+        else:
+            self.course = course
+
+
 class Course(models.Model):
     name = models.CharField(max_length=100, default="")
     is_active = models.BooleanField()
@@ -89,7 +102,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.text
 
-class Quiz(models.Model, AddTagMixin):
+class Quiz(models.Model, AddTagMixin, AddCourseMixin):
     name = models.CharField(max_length=100)
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(default=timezone.datetime(9999, 1, 1, tzinfo=timezone.utc))
@@ -100,7 +113,7 @@ class Quiz(models.Model, AddTagMixin):
     can_retake = models.BooleanField(default=False)
     num_questions = models.IntegerField(default=-1) # -1 indicates there is no limit
     required = models.BooleanField(default=False)
-    course = models.ForeignKey(Course, related_name="quizzes", on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, related_name="quizzes", on_delete=models.CASCADE, default=1)
 
     @property
     def questions(self):
@@ -120,7 +133,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-class Question(models.Model, AddTagMixin):
+class Question(models.Model, AddTagMixin, AddCourseMixin):
     text = models.TextField()
     category = models.ForeignKey(Category, related_name="questions", on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)

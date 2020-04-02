@@ -7,6 +7,18 @@ import {Link} from "react-router-dom";
 // import 'font-awesome/css/font-awesome.css'
 
 export class Leaderboard extends React.Component {
+	constructor(props) {
+		super(props);
+		this.getLeadboardList = this.getLeadboardList.bind(this);
+  }
+
+	getLeadboardList() {
+		if (!Array.isArray(this.props.leaderboardResult)) {
+			return [];
+		}
+		return this.props.leaderboardResult;
+  }
+
   render() {
     return (
       <Table>
@@ -19,8 +31,8 @@ export class Leaderboard extends React.Component {
           </tr>
       </thead>
       <tbody>
-            {console.log(this.props)}
-            {this.props.leaderboardResult.map(
+            {/* {console.log(this.props)} */}
+            {this.getLeadboardList().map(
                function(student, index){
                 return (
                 <tr className={"row-" + index.toString()}>
