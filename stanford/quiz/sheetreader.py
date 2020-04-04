@@ -42,8 +42,9 @@ def LoadFromCSV(file):
                 pretest = row[7].lower()
                 tags = row[8].split()
 
-                question_answer = row[-1]
-                remainder = len(row) - num_fields - 1
+                # 9 + N_ANSWERS(=4) = 12
+                question_answer = row[13]
+                remainder = 4
 
                 c = Category.objects.filter(name=question_category)
                 if not c.exists():
