@@ -41,14 +41,12 @@ export class MainDashboard extends React.Component {
     }
 
     covidRequired() {
-        return this.props.user.consent &&
-               this.props.user.completed_demographic_survey &&
+        return this.props.user.completed_demographic_survey &&
                !this.props.user.completed_covid19_survey;
     }
 
     demographicRequired() {
-        return this.props.user.consent &&
-               !this.props.user.completed_demographic_survey;
+        return !this.props.user.completed_demographic_survey;
     }
 
 	render() {
@@ -56,8 +54,8 @@ export class MainDashboard extends React.Component {
             <Container>
                 {/* {console.log(this.props)} */}
                 <div id="dashboard">
-                    <ConsentForm submitConsentForm={this.props.submitConsentForm}
-                                    consent_prompt_required={this.props.user.consent_prompt_required}/>
+                    {/* <ConsentForm submitConsentForm={this.props.submitConsentForm}
+                                    consent_prompt_required={this.props.user.consent_prompt_required}/> */}
                     <DemographicSurvey submitDemographicSurvey={this.props.submitDemographicSurvey}
                                         demographic_survey_required={this.demographicRequired()}/>
                     <CovidSurvey submitCovidSurvey={this.props.submitCovid19Survey}

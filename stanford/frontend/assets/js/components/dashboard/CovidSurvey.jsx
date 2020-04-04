@@ -21,7 +21,7 @@ export class CovidSurvey extends React.Component {
         <form onSubmit={this.handleSubmit}>
 
           <ModalHeader>
-          	COVID19 Demographic Survey
+          	COVID19 Survey
 
           	<div className="floating"
           		 style=
@@ -37,8 +37,6 @@ export class CovidSurvey extends React.Component {
           <p className="form-text">
             Please fill out this additional information regarding COVID-19.
           </p>
-
-          <br />
 			  <div className="form-group">
 			    <label for="">Is this the first time you are about to play a game related to work?</label>
 				<select className="form-control" name="game_related_work">

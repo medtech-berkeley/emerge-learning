@@ -474,7 +474,7 @@ export class DemographicSurvey extends React.Component {
 				<input className="form-control" type={this.state.org} placeholder="Organization Name" name="organization" id="organization_text"/>
 			  </div>
 
-			  { orgShow
+			  {/* { orgShow
 			  	?
 			  	<div>
 				<div className="form-group">
@@ -569,7 +569,7 @@ export class DemographicSurvey extends React.Component {
 			  </div>
 			  </div>
 			  : null
-			  }
+			  } */}
 
 			  <div className="form-group">
 			    <label for="">What device do you use most often to access the internet?</label>
@@ -597,61 +597,6 @@ export class DemographicSurvey extends React.Component {
 			  <div className="form-group">
 			    <label for="personal_device_hours">How many hours/day do you use your phone or computer for personal purposes?*</label>
 			    <input type="number" step="0.25" min="0" max="24" className="form-control" name="personal_device_hours" id="personal_device_hours" aria-describedby="personal_device_hours" required/>
-			  </div>
-
-			  <div className="form-group">
-			    <label for="">Is this the first time you are about to play a game related to work?</label>
-				<select className="form-control" name="game_related_work">
-				  <option value="Y">Yes</option>
-				  <option value="N">No</option>
-				</select>
-			  </div>
-
-			  <div className="form-group">
-			    <label for="">What made you register today?</label>
-				<select className="form-control" name="register_reason">
-				  <option value="SBS">Suggested by supervisor </option>
-				  <option value="DWF">Discussion with friends</option>
-				  <option value="SMP">Social media post</option>
-				</select>
-			  </div>
-
-			  <div className="form-group">
-			    <label for="">Have you cared for a patient diagnosed by lab testing with COVID-19?</label>
-				<select className="form-control" name="cared_for_covid">
-				  <option value="Y">Yes</option>
-				  <option value="N">No</option>
-				</select>
-			  </div>
-
-			  <div className="form-group">
-			    <label for="">Have you cared for a patient possible COVID-19 symptoms?</label>
-				<select className="form-control" name="cared_for_covid_possible">
-				  <option value="Y">Yes</option>
-				  <option value="N">No</option>
-				</select>
-			  </div>
-
-			  <div className="form-group">
-			    <label for="">Please answer the question: I am confident managing patients with COVID-19?</label>
-				<select className="form-control" name="confident_covid_care">
-				  <option value="SA">Strongly Agree</option>
-				  <option value="A">Agree</option>
-				  <option value="N">Neither Agree nor Disagree</option>
-				  <option value="D">Disagree</option>
-				  <option value="SD">Strongly Disagree</option>
-				</select>
-			  </div>
-
-			  <div className="form-group">
-			    <label for="">Please answer the question: I have access to enough personal protective equipment to care for patients with COVID-19?</label>
-				<select className="form-control" name="ppe_access">
-				  <option value="SA">Strongly Agree</option>
-				  <option value="A">Agree</option>
-				  <option value="N">Neither Agree nor Disagree</option>
-				  <option value="D">Disagree</option>
-				  <option value="SD">Strongly Disagree</option>
-				</select>
 			  </div>
 
           </ModalBody>
