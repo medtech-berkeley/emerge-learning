@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 def LoadFromCSV(file):
     with file.open("rt") as f:
         reader = csv.reader(f)
-        for row in reader:
+        for row in reader[1:]:
             try:
                 row = [x for x in row]
                 #row structure: |ID|Question|Category|Difficulty|Multimedia Type|Media Filename|Pretest/PostTest|Tags|AnswerChoice|AnswerChoice|...|AnswerChoice|CorrectAnswer
@@ -132,7 +132,7 @@ def LoadFromCSV(file):
 def LoadQuizFromCSV(file):
     with file.open("rt") as f:
         reader = csv.reader(f)
-        for row in reader:
+        for row in reader[1:]:
             try:
                 #row structure: |Name|Image|Start|End|is_challenge|retake|required|tags|limit
                 row = [x for x in row]
