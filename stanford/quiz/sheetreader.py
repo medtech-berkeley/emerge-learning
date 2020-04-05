@@ -30,7 +30,7 @@ def LoadFromCSV(file):
             try:
                 row = [x for x in row]
                 #row structure: |ID|Question|Category|Difficulty|Multimedia Type|Media Filename|Pretest/PostTest|Tags|AnswerChoice|AnswerChoice|...|AnswerChoice|CorrectAnswer
-                num_fields = 8
+                num_fields = 9
 
                 question_id = int(row[0])
                 question_text = row[1]
