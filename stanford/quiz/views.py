@@ -499,7 +499,8 @@ def get_quiz_results(request):
                 'text': qud.question.text,
                 'answers': [{"id": answer.id, "text": answer.text} for answer in qud.question.answers.all()],
                 'correct': [answer.id for answer in qud.question.answers.filter(is_correct=True)],
-                'selected': qud.answer.pk if qud.answer else None
+                'selected': qud.answer.pk if qud.answer else None,
+                'explanation': [answer.explanation for answer in qud.question.answers.filter(is_correct=True)][0]
             }
             result.append(question)
         return JsonResponse({'accepted': True, 'results': result, 'outoftime': outoftime})

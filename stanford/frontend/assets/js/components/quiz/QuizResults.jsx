@@ -13,9 +13,9 @@ export class QuizResults extends React.Component {
 
     displayAnswer(result, answer) {
         if(result.correct.includes(answer.id)) {
-            return <p className="correct">{answer.text}</p>
+            return <p className="correct">{answer.text} <b>{"- Correct Answer"}</b></p>
         } else if (result.selected === answer.id) {
-            return <p className="incorrect">{answer.text}</p>
+            return <p className="incorrect">{answer.text} <b>{"- Selected Answer"}</b></p>
         }
         else {
             return <p>{answer.text}</p>
@@ -34,8 +34,16 @@ export class QuizResults extends React.Component {
                             <br />
                             <strong>Question { i + 1 }: </strong> { result.text }
                         </p>
+                        <br />
                         { result.answers.map((answer) => this.displayAnswer(result, answer)) }
+                        <br />
+                        {result.explanation &&
+                        <p>
+                            <strong>Explanation: </strong> { result.explanation }
+                        </p>}
+                        <p>
                         <QuestionFeedback question={result.text} submitFeedback={this.props.submitFeedback}/>
+                        </p>
                         <hr></hr>
                     </div>
                     );
