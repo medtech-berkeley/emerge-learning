@@ -18,6 +18,10 @@ const initialState = {
             "location": "",
             "description": "",
             "image": "",
+            "consent_prompt_required": false,
+            "consent": false,
+            "completed_demographic_survey": true,
+            "completed_covid19_survey": true,
             "profile_type": "STUD"
         },
         students: [],
