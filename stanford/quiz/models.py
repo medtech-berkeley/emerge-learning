@@ -193,6 +193,7 @@ class Answer(models.Model):
     is_correct = models.BooleanField()
     question = models.ForeignKey(Question, related_name="answers", on_delete=models.CASCADE)
     num = models.IntegerField()
+    explanation = models.TextField(null=True)
 
     class Meta:
         unique_together=('num', 'question')

@@ -108,7 +108,7 @@ class AnswerSerializer(serializers.ModelSerializer):
     # TODO: Get rid of is_correct in serializer
     class Meta:
         model = Answer
-        fields = ('id', 'text', 'is_correct')
+        fields = ('id', 'text', 'is_correct', 'explanation')
 
 class SecureAnswerSerializer(serializers.ModelSerializer):
     class Meta:

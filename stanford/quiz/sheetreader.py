@@ -44,6 +44,8 @@ def LoadFromCSV(file):
 
                 # 9 + N_ANSWERS(=4) = 12
                 question_answer = row[13]
+                answer_explanation = row[14]
+                reference = row[15]
                 remainder = 4
 
                 c = Category.objects.filter(name=question_category)
@@ -117,12 +119,14 @@ def LoadFromCSV(file):
                         a = a.first()
                         a.text = row[num_fields + choice]
                         a.is_correct = (choice + 1 in answers)
+                        a.explanation = answer_explanation
                         a.save()
                     else:
                         a = Answer.objects.create(num=choice,
                                                   text=row[num_fields + choice],
                                                   is_correct= (choice + 1) in answers,
-                                                  question=q)
+                                                  question=q,
+                                                  explanation = answer_explanation)
 
                 for answer in Answer.objects.filter(num__gte=remainder, question=q):
                     answer.delete()
