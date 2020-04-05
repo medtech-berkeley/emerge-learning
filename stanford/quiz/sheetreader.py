@@ -45,7 +45,7 @@ def LoadFromCSV(file):
                 # 9 + N_ANSWERS(=4) = 12
                 question_answer = row[13]
                 answer_explanation = row[14]
-                reference = row[15]
+                question_reference = row[15]
                 remainder = 4
 
                 c = Category.objects.filter(name=question_category)
@@ -65,12 +65,14 @@ def LoadFromCSV(file):
                     q = Question.objects.create(id=question_id,
                                                 text=question_text,
                                                 category=c,
-                                                difficulty=clean_difficulty)
+                                                difficulty=clean_difficulty,
+                                                reference=question_reference)
                 else:
                     q = q.first()
                     q.text = question_text
                     q.category = c
                     q.difficulty = clean_difficulty
+                    q.reference = question_reference
                     q.save()
 
                 # add course metadata to question

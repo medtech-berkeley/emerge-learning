@@ -140,7 +140,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'text', 'answers', 'created', 'media', 'tags')
+        fields = ('id', 'text', 'answers', 'created', 'media', 'tags', 'reference')
 
 class DeviceDataSerializer(serializers.ModelSerializer):
     class Meta:

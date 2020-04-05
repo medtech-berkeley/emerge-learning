@@ -36,10 +36,16 @@ export class QuizResults extends React.Component {
                         </p>
                         <br />
                         { result.answers.map((answer) => this.displayAnswer(result, answer)) }
+                        {(result.explanation || result.reference) && 
                         <br />
+                        }
                         {result.explanation &&
                         <p>
                             <strong>Explanation: </strong> { result.explanation }
+                        </p>}
+                        {result.reference &&
+                        <p>
+                            <strong>Reference: </strong> { result.reference }
                         </p>}
                         <p>
                         <QuestionFeedback question={result.text} submitFeedback={this.props.submitFeedback}/>
