@@ -147,7 +147,8 @@ class Question(models.Model, AddTagMixin, AddCourseMixin):
     media = models.ForeignKey('QuestionMedia', related_name="media", blank=True, null=True, on_delete=models.DO_NOTHING)
     tags = models.ManyToManyField(Tag, blank=True, related_name="questions")
     courses = models.ManyToManyField(Course, related_name="questions")
-    reference = models.TextField(null=True)
+    reference_name = models.TextField(null=True)
+    reference_link = models.URLField(null=True)
 
     BASIC = 'Basic'
     INTERMEDIATE = 'Intermediate'

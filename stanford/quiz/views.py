@@ -499,7 +499,8 @@ def get_quiz_results(request):
                 'correct': [answer.id for answer in qud.question.answers.filter(is_correct=True)],
                 'selected': qud.answer.pk if qud.answer else None,
                 'explanation': [answer.explanation for answer in qud.question.answers.filter(is_correct=True)][0],
-                'reference': qud.question.reference
+                'reference_name': qud.question.reference_name,
+                'reference_link': qud.question.reference_link
             }
             result.append(question)
         return JsonResponse({'accepted': True, 'results': result, 'outoftime': outoftime})

@@ -42,10 +42,11 @@ def LoadFromCSV(file):
                 pretest = row[7].lower()
                 tags = row[8].split()
 
-                # 9 + N_ANSWERS(=4) = 12
+                # 9 + N_ANSWERS(4) = 12
                 question_answer = row[13]
                 answer_explanation = row[14]
-                question_reference = row[15]
+                question_reference_name = row[15]
+                question_reference_link = row[16]
                 remainder = 4
 
                 c = Category.objects.filter(name=question_category)
@@ -66,13 +67,15 @@ def LoadFromCSV(file):
                                                 text=question_text,
                                                 category=c,
                                                 difficulty=clean_difficulty,
-                                                reference=question_reference)
+                                                reference_name=question_reference_name,
+                                                reference_link=question_reference_link)
                 else:
                     q = q.first()
                     q.text = question_text
                     q.category = c
                     q.difficulty = clean_difficulty
-                    q.reference = question_reference
+                    q.reference_name = question_reference_name
+                    q.reference_link = question_reference_link
                     q.save()
 
                 # add course metadata to question
