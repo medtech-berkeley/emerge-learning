@@ -7,7 +7,7 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 from django.utils import timezone
-from .models import Quiz, Question, Answer, Tag, QuestionMedia, Category
+from .models import Quiz, Question, Answer, Tag, QuestionMedia, Category, Course
 from django.core.files import File
 import csv
 import datetime
@@ -153,6 +153,11 @@ def LoadQuizFromCSV(file):
                 tags = row[8].split()
                 limit = int(row[9])
 
+                try:
+                    course = Course.objects.get(name=course)
+                except Course.DoesNotExist:
+                    course = Course.objects.create(name=course, is_active=True)
+
                 q = Quiz.objects.filter(name=name)
                 if q.exists():
                     q = q.first()
@@ -171,9 +176,9 @@ def LoadQuizFromCSV(file):
                         image=image,
                         can_retake=retake,
                         num_questions=limit,
+                        course=course,
                         required=required)
 
-                q.add_course(course)
                 q.tags.clear()
                 for tag_text in tags:
                     q.add_tag(tag_text)

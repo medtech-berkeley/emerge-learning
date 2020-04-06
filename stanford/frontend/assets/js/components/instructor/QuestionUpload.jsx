@@ -15,7 +15,7 @@ export class QuestionUpload extends React.Component {
     render() {
         return (
             <center className=".d-inline-block">
-                <h1> Upload Quizzes </h1> 
+                <h1>Upload Data</h1> 
                 <br/>
                     <p>Upload Questions</p>
                     <Row style={{"display": "inline-block"}}>
@@ -30,7 +30,7 @@ export class QuestionUpload extends React.Component {
                     <br/>
                     <br/>
                     <br/>
-                    <p>Upload Categories</p>
+                    <p>Upload Quizzes</p>
                     <Row style={{"display": "inline-block"}}>
                     <Container color="success" size="sm" >
                         <form method="POST" action="/instructor/uploadquizzes/" encType="multipart/form-data" >
