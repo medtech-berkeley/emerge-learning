@@ -18,7 +18,7 @@ export class CourseSection extends React.Component {
         this.props.getPracticeLeaderboard(course.id);
         this.props.getQuizLeaderboard(course.id);
         this.props.getWeeklyLeaderboard(course.id);
-        this.props.getPreviousLeaderboard(course.id);
+        // this.props.getPreviousLeaderboard(course.id);
     }
 
 	render() {
@@ -48,16 +48,16 @@ export class CourseSection extends React.Component {
                         <Tabs>
                             <TabList>
                                 <Tab>Current Challenge</Tab>
-                                <Tab>Previous Challenge</Tab>
+                                {/* <Tab>Previous Challenge</Tab> */}
                                 <Tab>All Quizzes</Tab>
                                 <Tab>All Practice</Tab>
                             </TabList>
                             <TabPanel>
                                 <Leaderboard leaderboardResult={this.props.weeklyLeaderboardResult[course.id]} />
                             </TabPanel>
-                            <TabPanel>
+                            {/* <TabPanel>
                                 <Leaderboard leaderboardResult={this.props.previousLeaderboardResult[course.id]} />
-                            </TabPanel>
+                            </TabPanel> */}
                             <TabPanel>
                                 <Leaderboard leaderboardResult={this.props.quizLeaderboardResult[course.id]} />
                             </TabPanel>

@@ -217,16 +217,7 @@ class LeaderboardStatViewSet(ViewSet):
     def get_end_date(self):
         return timezone.now()
 
-
-    def get_student_stats(self):
-        qud = QuestionUserData.objects.filter(time_completed__gte=self.get_start_date(),
-                                              time_completed__lte=self.get_end_date(),
-                                              answer__is_correct=True)
-
-        course = self.request.query_params.get('course', None)
-        if course is not None:
-            qud = qud.filter(quiz_userdata__quiz__course=course)
-
+    def tag_filter(self, qud, course=None):
         include_tags = self.get_include_tags()
         if len(include_tags) > 0:
             qud = qud.filter(quiz_userdata__quiz__tags__in=include_tags)
@@ -235,6 +226,24 @@ class LeaderboardStatViewSet(ViewSet):
         if len(exclude_tags) > 0:
             qud = qud.exclude(quiz_userdata__quiz__tags__in=exclude_tags)
 
+        return qud
+
+    def filter_qud(self, qud, course=None):
+        return self.tag_filter(qud, course)
+
+    def get_qud(self):
+        qud = QuestionUserData.objects.filter(time_completed__gte=self.get_start_date(),
+                                              time_completed__lte=self.get_end_date(),
+                                              answer__is_correct=True)
+
+        course = self.request.query_params.get('course', None)
+        if course is not None:
+            qud = qud.filter(quiz_userdata__quiz__course=course)
+
+        return self.filter_qud(qud, course=course)
+
+    def get_student_stats(self):
+        qud = self.get_qud()
         return qud.values(name=F('student__name'),
                           location=F('student__location'),
                           image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
@@ -259,16 +268,22 @@ class LeaderboardStatViewSet(ViewSet):
         return Response(serializer.data)
 
 class OverallPracticeLeaderboardStatViewSet(LeaderboardStatViewSet):
-    def get_exclude_tags(self):
-        return get_all_weekly_tags()
+    def filter_qud(self, qud, course=None):
+        return qud.filter(quiz_userdata__quiz__is_challenge=False)
 
 class OverallQuizLeaderboardStatViewSet(LeaderboardStatViewSet):
-    def get_include_tags(self):
-        return get_all_weekly_tags()
+    def filter_qud(self, qud, course=None):
+        return qud.filter(quiz_userdata__quiz__is_challenge=True)
 
 class CurrentWeeklyQuizLeaderboardStatViewSet(LeaderboardStatViewSet):
-    def get_include_tags(self):
-        return [get_current_week_tag()]
+    def filter_qud(self, qud, course=None):
+        challenges = Quiz.objects.filter(is_challenge=True, start__lte=timezone.now())
+
+        if course != None:
+            challenges = challenges.filter(course=course)
+
+        current = challenges.order_by('-start').first()
+        return qud.filter(quiz_userdata__quiz=current)
 
 class PreviousWeeklyQuizLeaderboardStatViewSet(LeaderboardStatViewSet):
     def get_include_tags(self):
