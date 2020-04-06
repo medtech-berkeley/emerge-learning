@@ -45,7 +45,7 @@ export class QuizResults extends React.Component {
                         </p>}
                         {result.reference &&
                         <p>
-                            <strong>Reference: </strong> { result.reference }
+                            <strong>Reference: </strong> <a href={ result.reference }>{ result.reference }</a>
                         </p>}
                         <p>
                         <QuestionFeedback question={result.text} submitFeedback={this.props.submitFeedback}/>

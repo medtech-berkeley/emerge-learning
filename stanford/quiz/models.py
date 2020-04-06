@@ -48,6 +48,11 @@ class Course(models.Model):
     is_active = models.BooleanField()
     priority = models.IntegerField(default=100)
 
+    def num_required_left(self, student):
+        completed_quizzes = set(q.quiz for q in QuizUserData.objects.filter(student=student, quiz__course=self, quiz__required=True) if q.is_done())
+        required_quizzes = set(Quiz.objects.filter(required=True, course=self)) - completed_quizzes
+        return len(required_quizzes)
+
     def __str__(self):
         return f"{self.name} -- {self.id}"
 

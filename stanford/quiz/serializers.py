@@ -94,9 +94,7 @@ class StudentCourseSerializer(serializers.ModelSerializer):
 
     def get_num_required_quizzes(self, instance):
         student = self.context['request'].user.student
-        completed_quizzes = set(q.quiz for q in QuizUserData.objects.filter(student=student, quiz__course=instance, quiz__required=True) if q.is_done())
-        required_quizzes = set(Quiz.objects.filter(required=True, course=instance)) - completed_quizzes
-        return len(required_quizzes)
+        return instance.num_required_left(student)
 
 
 class InstructorCourseSerializer(serializers.ModelSerializer):

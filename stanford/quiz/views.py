@@ -324,9 +324,7 @@ def start_quiz(request):
 
             # check if there are any required quizzes left to do
             if not quiz.required:
-                completed_quizzes = set(q.quiz for q in QuizUserData.objects.filter(student=student) if q.is_done())
-                required_quizzes = set(Quiz.objects.filter(required=True)) - completed_quizzes
-                if len(required_quizzes) > 0:
+                if  quiz.course.num_required_left(student) > 0:
                     return JsonResponse({'accepted': False, 'reason': 'Missing one or more required tests.'}, status=400)
 
             qud = QuizUserData.objects.create(student=student, quiz=quiz)
@@ -489,8 +487,8 @@ def get_quiz_results(request):
 
         outoftime = quiz_data.is_out_of_time()
 
-        if 'pretest' in [tag.text for tag in quiz.tags.all()]:
-            return JsonResponse({'accepted': True, 'results': [], 'outoftime': outoftime})
+        # if 'pretest' in [tag.text for tag in quiz.tags.all()]:
+        #     return JsonResponse({'accepted': True, 'results': [], 'outoftime': outoftime})
 
         result = []
         user_data = QuestionUserData.objects.filter(quiz_userdata=quiz_data, student=student)
