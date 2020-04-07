@@ -30,7 +30,7 @@ const initialState = {
         weeklyLeaderboardResult: {},
         previousLeaderboardResult: {},
         questionUserData: [],
-        data: [],
+        data: {},
         question: {
             answers: ['Help her', 'Run away', 'Apply aloe-vera to her gunshot wound', 'Check her vitals'],
             text: 'You find a woman with blue lips after a loud noise was heard. What do you do?',

@@ -1,8 +1,11 @@
 from .models import Student, Question, Quiz, Answer, QuestionUserData, QuizUserData, Tag, Event, EventType
 
 from django.utils import timezone
+from django.utils.timezone import datetime
 from django.http import Http404
 from django.shortcuts import _get_queryset
+from dateutil.relativedelta import relativedelta
+from calendar import monthrange
 import logging
 
 logger = logging.getLogger(__name__)
@@ -45,7 +48,8 @@ def get_earliest_object_or_404(klass, *args, **kwargs):
 def get_stats_student(student, date=None, query_set=QuestionUserData.objects.all()):
     stats = {}
     stats['name'] = student.name
-    stats['subjects'] = get_subject_stats(student, date, query_set=query_set)
+    stats['practice_subjects'] = get_subject_stats(student, date, query_set=query_set.filter(quiz_userdata__quiz__is_challenge=False))
+    stats['quiz_subjects'] = get_subject_stats(student, date, query_set=query_set.filter(quiz_userdata__quiz__is_challenge=True))
 
     if date is None:
         date = timezone.now()
@@ -54,34 +58,55 @@ def get_stats_student(student, date=None, query_set=QuestionUserData.objects.all
     stats['num_correct'] = qud.filter(answer__is_correct=True).count()
     stats['num_incorrect'] = stats['questions_answered'] - stats['num_correct']
     stats['performance'] = get_performance_stats(student, date)
+    stats['performance_breakdown'] = get_performance_breakdown(student, date)
     stats['score'] = stats['num_correct']
     studentQuiz = [quiz.is_done() for quiz in QuizUserData.objects.filter(student = student).all()]
     stats['num_completed'] = sum(studentQuiz)
 
     return stats
 
+def get_performance_stat_for_date(student, date_range):
+    start, stop = date_range
+    qud = QuestionUserData.objects.filter(student=student, time_completed__gt=start, time_completed__lte=stop)
+    return {'num_attempted' : qud.count(),
+            'num_correct' : qud.filter(answer__is_correct=True).count()}
+
 def get_performance_stats(student, date=None):
     if date is None:
         date = timezone.now()
         #"2018-11-01T20:29:13.109657Z"
+    clean_date = date.replace(hour=0, minute=0, second=0)
 
-    performance_stats = {}
+    def get_month(month):
+        _, last_day = monthrange(date.year, month)
+        return clean_date.replace(day=1), clean_date.replace(month=month, day=last_day)
 
-    for i in range(7):
-        new_date = date - timezone.timedelta(days=i)
-        qud = QuestionUserData.objects.filter(student=student, time_completed__date=new_date)
+    performance_config = {
+        "this_month": get_month(date.month),
+        "last_month": get_month(datetime.now().month - 1 or 12),
+        "week": (clean_date - timezone.timedelta(days=date.weekday()), date),
+        "day": (clean_date, date),
+        "all_time": (clean_date.replace(year=2000), date)
+    }
 
-        day_label = "day" + str(i)
+    return {key: get_performance_stat_for_date(student, date_range) for key, date_range in performance_config.items()}
 
-        performance_stats[day_label] = {'date' : new_date.date(),
-                                        'num_attempted' : qud.count(),
-                                        'num_correct' : qud.filter(answer__is_correct=True).count()}
+def get_performance_breakdown(student, date=None, num_days=7):
+    if date is None:
+        date = timezone.now()
+    date = date.replace(hour=23, minute=59, second=59)
 
-    return performance_stats
+    start = date.replace(year=2000)
 
+    breakdown = []
+    for i in range(num_days):
+        stop = date - timezone.timedelta(days=i)
+        day_perf = get_performance_stat_for_date(student, (start, stop))
+        breakdown.append({"day": datetime.strftime(stop, "%m/%d"), "points": day_perf['num_correct']})
+    return reversed(breakdown)
 
 def get_subject_stats(student, date=None, query_set=QuestionUserData.objects.all()):
-    subject_stats = {}
+    subject_stats = []
     if date is None:
         date = timezone.now()
 
@@ -90,14 +115,12 @@ def get_subject_stats(student, date=None, query_set=QuestionUserData.objects.all
         qud = query_set.filter(student=student, time_completed__lte=date, quiz_userdata__quiz__tags=tag.text)
         total = qud.count()
         if total > 0:
-            subjects.append((tag.text, int(get_subject_stat(student, tag.text, query_set, date)['percent_correct'])))
+            name = tag.text.replace("practice", "").replace("-", " ").title()
+            subjects.append({"name": name,
+                             "Accuracy": get_subject_stat(student, tag.text, query_set, date)['percent_correct']
+                            })
 
-    subjects = sorted(subjects, key=lambda x: -x[1])
-
-    for subject, accuracy in subjects:
-        subject_stats[subject] = accuracy
-
-    return subject_stats
+    return sorted(subjects, key=lambda subject: -subject["Accuracy"])
 
 def get_subject_stat(student, subject, query_set=QuestionUserData.objects.all(), date=None):
     if date is None:
@@ -105,15 +128,12 @@ def get_subject_stat(student, subject, query_set=QuestionUserData.objects.all(),
 
     qud = query_set.filter(student=student, time_completed__lte=date, quiz_userdata__quiz__tags=subject)
 
-    # logger.info(qud)
-    # logger.info(qud.count())
-
     stat = {}
     total = qud.count()
     if total == 0:
-        stat['percent_correct'] = '0'
+        stat['percent_correct'] = 0.0
     else:
-        stat['percent_correct'] = str(int(qud.filter(answer__is_correct=True).count() * 100 / total))
+        stat['percent_correct'] = qud.filter(answer__is_correct=True).count() / total
 
     return stat
 
@@ -213,7 +233,7 @@ def end_quiz(quiz_userdata: QuizUserData):
     if quiz_userdata.time_completed is None:
         quiz_userdata.time_completed = timezone.now()
         quiz_userdata.save()
-    
+
     Event.objects.create(event_type=EventType.QuizEnd.value, student=student, quiz_ud=quiz_userdata)
     grant_badges(student)
 

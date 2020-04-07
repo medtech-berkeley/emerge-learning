@@ -161,8 +161,10 @@ class StudentStatsSerializer(serializers.Serializer):
     questions_answered = serializers.IntegerField(read_only=True)
     num_correct = serializers.IntegerField(read_only=True)
     num_incorrect = serializers.IntegerField(read_only=True)
-    subjects = serializers.DictField()
+    quiz_subjects = serializers.ListField()
+    practice_subjects = serializers.ListField()
     performance = serializers.DictField()
+    performance_breakdown = serializers.ListField()
     num_completed = serializers.IntegerField(read_only=True)
 
     @staticmethod
