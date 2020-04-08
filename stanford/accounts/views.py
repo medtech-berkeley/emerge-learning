@@ -16,6 +16,8 @@ import logging
 from django.conf import settings
 from django.http import HttpResponse
 
+import traceback
+
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -80,6 +82,7 @@ def signup(request):
                     return render(request, 'accounts/login.html', {'error':'An account verification email has been sent!', 'username': user.username})
                 except Exception as e:
                     print(str(type(e)) + ":", e)
+                    print(traceback.format_exc())
                     return redirect(reverse('dashboard') + '?error=Unknown error has occurred...')
         else:
             return redirect(reverse('dashboard') + "?error='Passwords didn't match")
