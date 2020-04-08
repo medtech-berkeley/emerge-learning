@@ -44,7 +44,7 @@ def signup(request):
         if request.POST['password'] == request.POST['password_confirm']:
             try:
                 User.objects.get(username=request.POST['username'])
-                return redirect(reverse('dashboard') + '?error=Username has already been taken.')
+                return redirect(reverse('index') + '?error=Username has already been taken.')
             except User.DoesNotExist:
                 try:
                     user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
@@ -83,11 +83,11 @@ def signup(request):
                 except Exception as e:
                     print(str(type(e)) + ":", e)
                     print(traceback.format_exc())
-                    return redirect(reverse('dashboard') + '?error=Unknown error has occurred...')
+                    return redirect(reverse('index') + '?error=Unknown error has occurred...')
         else:
-            return redirect(reverse('dashboard') + "?error='Passwords didn't match")
+            return redirect(reverse('index') + "?error='Passwords didn't match")
     else:
-        return redirect('dashboard')
+        return redirect('index')
 
 
 def logins(request):
