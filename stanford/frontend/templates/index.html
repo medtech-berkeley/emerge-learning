@@ -31,8 +31,11 @@
 
 
         <div class="landing-content">
-          <div class="alert alert-primary text-center" role="alert">
-            Feel free to contact emergelearninghelp@gmail.com if you are experiencing issues signing up, logging in, or for any other feedback.
+          <div class="alert alert-primary text-center alert-dismissible" role="alert">
+            Contact emergelearninghelp@gmail.com if you are experiencing any issues.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>          
           </div>
             <h1 class="landing-header">Emerge Learning</h1>
             <form class="signup" method="POST" action="{% url 'signup' %}">
