@@ -42,48 +42,46 @@ def send_login_event(student, request):
 def signup(request):
     if request.method == 'POST':
         if request.POST['password'] == request.POST['password_confirm']:
-            try:
-                User.objects.get(username=request.POST['username'])
+            if User.objects.filter(username=request.POST['username']).exists():
                 return redirect(reverse('index') + '?error=Username has already been taken.')
-            except User.DoesNotExist:
-                try:
-                    user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
-                    user.is_active = False
+            if User.objects.filter(email=request.POST['email']).exists():
+                return redirect(reverse('index') + '?error=An account with this email already exists')
+            try:
+                user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
+                user.is_active = False
+                user.save()
+
+                student = Student.objects.get(user=user)
+                student.name = request.POST['username']
+                if 'image' in request.FILES:
+                    student.image = request.FILES['image']
+                student.save()
+
+                # Send Email
+                if not settings.DEBUG:
+                    current_site = get_current_site(request)
+                    mail_subject = 'Please activate your Emerge Learning account'
+                    message = render_to_string('acc_active_email.html', {
+                        'user': user,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'token': account_activation_token.make_token(user),
+                    })
+                    to_email = request.POST['email']
+                    email = EmailMessage(
+                                mail_subject, message, to=[to_email]
+                    )
+                    email.send()
+                else:
+                    user.is_active = True
                     user.save()
+                    send_login_event(user.student, request)
+                    login(request, user)
+                    return redirect('dashboard')
 
-                    student = Student.objects.get(user=user)
-                    student.name = request.POST['username']
-                    if 'image' in request.FILES:
-                        student.image = request.FILES['image']
-                    student.save()
-
-                    # Send Email
-                    if not settings.DEBUG:
-                        current_site = get_current_site(request)
-                        mail_subject = 'Please activate your Emerge Learning account'
-                        message = render_to_string('acc_active_email.html', {
-                            'user': user,
-                            'domain': current_site.domain,
-                            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                            'token': account_activation_token.make_token(user),
-                        })
-                        to_email = request.POST['email']
-                        email = EmailMessage(
-                                    mail_subject, message, to=[to_email]
-                        )
-                        email.send()
-                    else:
-                        user.is_active = True
-                        user.save()
-                        send_login_event(user.student, request)
-                        login(request, user)
-                        return redirect('dashboard')
-
-                    return render(request, 'accounts/login.html', {'error':'An account verification email has been sent!', 'username': user.username})
-                except Exception as e:
-                    print(str(type(e)) + ":", e)
-                    print(traceback.format_exc())
-                    return redirect(reverse('index') + '?error=Unknown error has occurred...')
+                return render(request, 'accounts/login.html', {'error':'An account verification email has been sent!', 'username': user.username})
+            except Exception as e:
+                return redirect(reverse('index') + '?error=Unknown error has occurred...')
         else:
             return redirect(reverse('index') + "?error='Passwords didn't match")
     else:
