@@ -24,7 +24,7 @@ pipeline {
     stage('Collect and Publish Reports') {
       steps {
         junit 'reports/junit.xml'
-        junit 'reports/js-xunit.xml'
+        // junit 'reports/js-xunit.xml'
         cobertura(autoUpdateHealth: true, failNoReports: true, failUnstable: true, coberturaReportFile: 'reports/coverage.xml')
       }
     }
