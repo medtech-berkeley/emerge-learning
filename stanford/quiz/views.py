@@ -247,7 +247,7 @@ class LeaderboardStatViewSet(ViewSet):
         return qud.values(name=F('student__name'),
                           location=F('student__location'),
                           image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
-                    .annotate(score=Count('student__name'))\
+                    .annotate(score=Count('student__id'))\
                     .order_by('-score')[:10]
 
     def list(self, request):
