@@ -242,13 +242,13 @@ class LeaderboardStatViewSet(ViewSet):
 
         return self.filter_qud(qud, course=course)
 
-    def get_student_stats(self):
-        qud = self.get_qud()
-        return qud.values(name=F('student__name'),
-                          location=F('student__location'),
-                          image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
-                    .annotate(score=Count('student__id'))\
-                    .order_by('-score')[:10]
+def get_student_stats(self):
+    qud = self.get_qud()
+    return qud.values(name=F('student__name'), \
+                        location=F('student__location'), \
+                        sid=F('student__id'),
+                        image=Concat(Value(settings.MEDIA_URL), F('student__image'))).annotate(score=Count('sid')) \
+                .order_by('-score')[:10]
 
     def list(self, request):
         student_stats = self.get_student_stats()
