@@ -691,7 +691,7 @@ def send_email_view(request):
     message = request.POST['message']
 
     if recipient.strip() == 'test@emergelearning.org'.strip():
-        emails = ['sean@dooher.net', 'arjunsv@berkeley.edu']
+        emails = ['sean@dooher.net', 'arjunsv@berkeley.edu', 'blindquist2@gmail.com']
     else:
         emails = User.objects.values_list('email', flat=True)
 
