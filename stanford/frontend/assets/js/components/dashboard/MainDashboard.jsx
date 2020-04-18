@@ -5,6 +5,7 @@ import {Container} from "reactstrap";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import CourseSectionApi from "../../containers/CourseSectionApi";
 import {CovidSurvey} from "./CovidSurvey";
+import {ContestRules} from "./ContestRules"
 
 
 
@@ -14,6 +15,11 @@ export class MainDashboard extends React.Component {
         this.renderCourseTabs = this.renderCourseTabs.bind(this);
         this.covidRequired = this.covidRequired.bind(this);
         this.demographicRequired = this.demographicRequired.bind(this);
+        this.toggleContestRules = this.toggleContestRules.bind(this);
+
+        this.state = {
+            contestRulesOpen : false,
+        };
     }
 
     componentDidMount() {
@@ -49,6 +55,14 @@ export class MainDashboard extends React.Component {
         return !this.props.user.completed_demographic_survey;
     }
 
+    toggleContestRules(event) {
+        event.preventDefault();
+        this.setState(prevState => ({
+            contestRulesOpen: !prevState.contestRulesOpen
+        }));
+        console.log(this.state)
+    }
+
 	render() {
 		return (
             <Container>
@@ -60,9 +74,14 @@ export class MainDashboard extends React.Component {
                                         demographic_survey_required={this.demographicRequired()}/>
                     <CovidSurvey submitCovidSurvey={this.props.submitCovid19Survey}
                                         covid_survey_required={this.covidRequired()}/>
+                    <ContestRules isOpen={this.state.contestRulesOpen} toggleContestRules={this.toggleContestRules}/>
+
 
                     <div className="alert alert-primary" role="alert">
                         <b>UPDATE:</b> Emerge now features new <b>COVID-19</b> related chalenges and practice questions. Please check back in for <b>daily challenges</b>. 
+                    </div>
+                    <div className="alert alert-success" role="alert">
+                        <b>NEW:</b> Complete <b>all challenges</b> to receive a <b>certificate</b> and be eligible to win a <b>brand new tablet. </b><a href="#" onClick={this.toggleContestRules}>Terms and Conditions</a>
                     </div>
                     <br></br>
                     { this.renderCourseTabs() }
