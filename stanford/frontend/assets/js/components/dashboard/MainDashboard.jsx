@@ -81,7 +81,7 @@ export class MainDashboard extends React.Component {
                         <b>UPDATE:</b> Emerge now features new <b>COVID-19</b> related chalenges and practice questions. Please check back in for <b>daily challenges</b>. 
                     </div>
                     <div className="alert alert-success" role="alert">
-                        <b>NEW:</b> Complete <b>all challenges</b> to receive a <b>certificate</b> and be eligible to win a <b>brand new tablet. </b><a href="#" onClick={this.toggleContestRules}>Terms and Conditions</a>
+                        <b>NEW:</b> Complete <b>all daily challenges</b> and the <b>final challenge</b> on <b>May 5th, 2020</b> to receive a <b>certificate</b> and be eligible to win a <b>brand new tablet. </b><a href="#" onClick={this.toggleContestRules}>Terms and Conditions</a>
                     </div>
                     <br></br>
                     { this.renderCourseTabs() }

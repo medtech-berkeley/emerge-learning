@@ -29,15 +29,19 @@ export class ContestRules extends React.Component {
 
                 <p>
                     <b>Contest Rules: </b> 
-                    We reserve the right to withhold prizes at the discretion of emerge learning.
+                    We reserve the right to withhold prizes at the discretion of Emerge Learning. The eligible overall top challenge scorer at the end of the COVID-19 course (final challenge on May 5, 2020), will receive a prize (ties broken by completion time). Additionally, the eligible top participant based on total questions completed in challenge and practice combined will also receive a prize.
                 </p>
+                <p>
+                    <b>Eligibility and Limitations: </b>
+                    The prizes are only open to those who sign up for the game on emergelearning.org and are a prehospital or frontline provider (e.g. EMT, paramedic, community health worker, etc). Limit of one entry per person. Only one (1) prize per household for the contest. Limit of 1 entrant per email sent/received. There is no limitation on age.    
+                </p> 
                 <p>
                     <b>Prize(s): </b>
                     Winners will receive a tablet worth approximately $200 USD. The prize(s) that may be awarded to the eligible winner(s) are not transferable, redeemable for cash or exchangeable for any other prize. Participants must provide valid and accurate contact information. If a winner cannot be contacted or is disqualified for any reason, Emerge Learning reserves the right to determine an alternate winner or not to award that winner’s prize, in its sole discretion. 
                 </p>
                 <p>
                     <b>Entries: </b>
-                    Only entries submitted at the website designated by Emerge Learning with forms provided by Emerge Learning may be used to enter the contest. Winner will be selected at random from all eligible entries received. All blanks must be filled in accurately or entry may be considered ineligible.
+                    Only entries submitted at the website designated by Emerge Learning with forms provided by Emerge Learning may be used to enter the contest. Winner will be selected at random from all eligible entries received. All blanks must be filled in accurately or entry may be considered ineligible. 
                 </p>
                 <p>
                     <b>Tax: </b>
