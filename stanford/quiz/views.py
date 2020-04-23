@@ -1,6 +1,7 @@
 import pytz
 import random
 import datetime
+import logging
 
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -35,6 +36,9 @@ from .serializers import UserSerializer, StudentStatsSerializer, QuizUserDataSer
 from .serializers import EventSerializer, StudentCourseSerializer, InstructorCourseSerializer
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
 
+
+logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def is_instructor(user):
     return user.is_authenticated and (user.student.profile_type in ['ADMN', 'INST'] or user.is_superuser)
@@ -702,7 +706,8 @@ def send_email_view(request):
         last_tag = f"week-{week - 1}"
         send_weekly_email.delay(mail_subject, message, recipient, set(emails), tag, last_tag)
     else:
-        send_email.delay(mail_subject, message, recipient, emails)
+        message_with_footer = render_to_string('email_template.html', {'message': message})
+        send_email.delay(mail_subject, message_with_footer, recipient, emails)
 
     return redirect('dashboard')
 
