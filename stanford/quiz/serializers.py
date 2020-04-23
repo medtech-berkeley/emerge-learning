@@ -54,7 +54,7 @@ class StudentSerializer(serializers.ModelSerializer):
     badges = BadgeSerializer(many=True)
     class Meta:
         model = Student
-        fields = ('id', 'user', 'name', 'location', 'description', 'image',
+        fields = ('id', 'user', 'name', 'location', 'description', 'image', 'subscribed_to_emails',
                   'consent_prompt_required', 'consent','completed_demographic_survey', 'completed_covid19_survey', 'profile_type', 'badges')
 
 class SmallStudentSerializer(serializers.ModelSerializer):

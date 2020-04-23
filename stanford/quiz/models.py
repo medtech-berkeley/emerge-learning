@@ -80,8 +80,8 @@ class Student(models.Model):
     state = models.CharField(max_length=20, default="Denial")
     years_of_experience = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     organization = models.CharField(max_length=100, default='OTH')
-
     profile_type = models.CharField(max_length=10, choices=PROFILE_CHOICES, default="STUD")
+    subscribed_to_emails = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.username

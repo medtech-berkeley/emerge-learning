@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { Settings } from '../components/profile/Settings'
 
 const mapStateToProps = state => {
-    return {};
+    return {student: state.api.user};
 };
 
 const mapDispatchToProps = dispatch => {

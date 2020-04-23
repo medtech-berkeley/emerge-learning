@@ -247,6 +247,7 @@ class LeaderboardStatViewSet(ViewSet):
         return qud.values(name=F('student__name'), \
                             location=F('student__location'), \
                             sid=F('student__id'),
+                            time=F('student__id'),
                             image=Concat(Value(settings.MEDIA_URL), F('student__image'))).annotate(score=Count('sid')) \
                     .order_by('-score')[:10]
 
@@ -693,7 +694,7 @@ def send_email_view(request):
     if recipient.strip() == 'test@emergelearning.org'.strip():
         emails = ['sean@dooher.net', 'arjunsv@berkeley.edu', 'blindquist2@gmail.com']
     else:
-        emails = User.objects.values_list('email', flat=True)
+        emails = User.objects.filter(student__subscribed_to_emails=True).values_list('email', flat=True)
 
     if request.POST.get('weekly', None):
         week = int(request.POST['week'])

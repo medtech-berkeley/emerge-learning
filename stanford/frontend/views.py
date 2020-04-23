@@ -14,7 +14,7 @@ def index(request):
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('index')
-    
+
     info = {'coming_soon': os.getenv('COMING_SOON', 'false')}
     return render(request, 'dashboard.html', info)
 
@@ -31,6 +31,7 @@ def change_user_info(request):
             student.description = request.POST['description']
         if 'image' in request.FILES:
             student.image = request.FILES['image']
+        student.subscribed_to_emails = 'subscribed_to_emails' in request.POST
         student.save()
         return redirect('dashboard')
     else:
