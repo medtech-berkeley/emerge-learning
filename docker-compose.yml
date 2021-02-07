@@ -41,4 +41,6 @@ services:
     image: redis:3.0-alpine
   database:
     image: postgres:9.5
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
 
