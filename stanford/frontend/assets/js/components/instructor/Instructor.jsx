@@ -6,6 +6,7 @@ import { QuestionUpload } from "./QuestionUpload";
 import { Container } from "reactstrap";
 import UserManagementAPI from '../../containers/instructor/UserManagementAPI';
 import { EmailSender } from './EmailSender';
+import { WhatsappSender } from './WhatsappSender';
 
 export class Instructor extends React.Component {
 
@@ -18,6 +19,7 @@ export class Instructor extends React.Component {
                         <Tab>View Feedback</Tab>
                         <Tab>User Management</Tab>
                         <Tab>Send Email</Tab>
+                        <Tab>Send Whatsapp</Tab>
                     </TabList>
                     <TabPanel>
                         <Container>
@@ -37,6 +39,11 @@ export class Instructor extends React.Component {
                     <TabPanel>
                         <Container>
                             <EmailSender />
+                        </Container>
+                    </TabPanel>
+                    <TabPanel>
+                        <Container>
+                            <WhatsappSender />
                         </Container>
                     </TabPanel>
                 </Tabs>

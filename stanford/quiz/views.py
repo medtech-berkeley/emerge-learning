@@ -36,6 +36,8 @@ from .serializers import UserSerializer, StudentStatsSerializer, QuizUserDataSer
 from .serializers import EventSerializer, StudentCourseSerializer, InstructorCourseSerializer
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
 
+from twilio.rest import Client
+
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -720,6 +722,23 @@ def send_email(subject, message, recipient, bcc_list=[]):
     msg = EmailMultiAlternatives(subject, txt_message, to=[recipient], bcc=bcc_list)
     msg.attach_alternative(message, "text/html")
     msg.send()
+
+def send_whatsapp_view(request):
+    """ Sends whatsapp with message to recipient"""
+    body = request.POST['message']
+    to = request.POST['number']
+
+    account_sid = 'AC55c5340cd976e45ed8374320ce025d83'
+    auth_token = '3d9e1f6dbb2aebd3cf89d8702be59e31'
+    client = Client(account_sid, auth_token)
+
+    client.messages.create(
+        from_ = 'whatsapp:+14155238886',
+        body = body,
+        to = f"whatsapp:+1{to}"
+    )
+
+    return redirect('dashboard')
 
 @login_required
 def submit_feedback(request):

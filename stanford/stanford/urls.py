@@ -7,7 +7,7 @@ from quiz.views import QuestionViewSet, AnswerViewSet, QuizViewSet, QuestionUser
 from quiz.views import LeaderboardStatViewSet, EventViewSet, StudentCourseViewSet
 from quiz.views import submit_consent_form, submit_covid19_form
 from quiz.views import OverallPracticeLeaderboardStatViewSet, OverallQuizLeaderboardStatViewSet, CurrentWeeklyQuizLeaderboardStatViewSet, PreviousWeeklyQuizLeaderboardStatViewSet
-from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, send_email_view, upload_quizzes, submit_feedback, start_quiz
+from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, send_email_view, send_whatsapp_view, upload_quizzes, submit_feedback, start_quiz
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import signup, logins, activate, resend_verification
@@ -54,6 +54,7 @@ urlpatterns = [
     path('stats/', get_stats, name='stats'),
     path('instructor/uploadquestions/', upload_questions),
     path('instructor/send_email/', send_email_view),
+    path('instructor/send_whatsapp/', send_whatsapp_view),
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='password_reset_form.html'), name='password_reset_real'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'), name='password_reset_confirm'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'), name='password_reset_done'),
