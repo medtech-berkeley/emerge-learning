@@ -60,6 +60,7 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default="")
     phone = models.CharField(max_length=20, default="")
+    whatsapp_notifs = models.BooleanField(default=False)
     location = models.CharField(max_length=100, default="")
     description = models.CharField(max_length=500, default="")
     last_activity = models.DateTimeField(auto_now_add=True)
