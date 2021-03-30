@@ -47,7 +47,22 @@ def signup(request):
             if User.objects.filter(email=request.POST['email']).exists():
                 return redirect(reverse('index') + '?error=An account with this email already exists')
             try:
-                user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
+                country_code = request.POST['country_code']
+                phone_no = request.POST['phone_no'].strip()
+                whatsapp_notifs = 'whatsapp_notifs' in request.POST
+                if whatsapp_notifs and not phone_no:
+                    return redirect(reverse('index') + '?error=Phone number required for Whatsapp Notifications')
+                elif (phone_no) and (country_code == 'Country'):
+                    return redirect(reverse('index') + '?error=Please specify country code')
+                elif (not phone_no.isnumeric()) or len(phone_no) != 10:
+                    return redirect(reverse('index') + '?error=Please assure phone number is 10 digit, all numbers')
+                merged_phone_no = country_code[:-6] + phone_no
+
+                user = User.objects.create_user(
+                    request.POST['username'], 
+                    request.POST['email'], 
+                    request.POST['password']
+                    )
                 user.is_active = False
                 user.save()
 
@@ -55,6 +70,8 @@ def signup(request):
                 student.name = request.POST['username']
                 if 'image' in request.FILES:
                     student.image = request.FILES['image']
+                student.phone = merged_phone_no
+                student.whatsapp_notifs = whatsapp_notifs
                 student.save()
 
                 # Send Email
@@ -77,7 +94,7 @@ def signup(request):
                     user.save()
                     send_login_event(user.student, request)
                     login(request, user)
-                    return redirect('dashboard')
+                    return redirect(reverse('dashboard') + '?whatsapp_alert')
 
                 return render(request, 'accounts/login.html', {'error':'An account verification email has been sent!', 'username': user.username})
             except Exception as e:

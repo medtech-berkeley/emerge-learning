@@ -49,16 +49,35 @@
               {% endif %}
               {% csrf_token %}
               <div class="form-group">
-                <input type="email" class="form-control" name="email" placeholder="Email">
+                <input type="email" class="form-control" name="email" placeholder="Email" required>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" name="username" placeholder="Username">
+                <input type="text" class="form-control" name="username" placeholder="Username" required>
               </div>
               <div class="form-group">
-                <input type="password" class="form-control" name="password" placeholder="Password">
+                <input type="password" class="form-control" name="password" placeholder="Password" required>
               </div>
               <div class="form-group">
-                <input type="password" class="form-control" name="password_confirm" placeholder="Confirm Password">
+                <input type="password" class="form-control" name="password_confirm" placeholder="Confirm Password" required>
+              </div>
+              <div class="form-row">
+
+              </div>
+              <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <select class="form-control" name="country_code" placeholder="Code">
+                      <option selected>Country</option>
+                      <option>+1 (USA)</option>
+                      <option>+91 (IND)</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-7">
+                    <input type="tel" class="form-control" name="phone_no" placeholder="Whatsapp Phone No.">
+                  </div>
+              </div>
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="whatsapp_notifs" checked>
+                <label class="form-check-label landing-body" for="exampleCheck1">Opt-in to Whatsapp Notifactions</label>
               </div>
               <button type="submit" class="btn btn-success btn-block">Sign Up!</button>
             </form>
