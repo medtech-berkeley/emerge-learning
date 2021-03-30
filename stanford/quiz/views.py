@@ -728,7 +728,7 @@ def send_email(subject, message, recipient, bcc_list=[]):
 def send_whatsapp_view(request):
     """ Sends whatsapp with message to recipient"""
     body = request.POST['message']
-    to = f"whatsapp:+1{request.POST['number']}"
+    print(Student.objects.filter(whatsapp_notifs=True))
 
 
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
@@ -737,11 +737,11 @@ def send_whatsapp_view(request):
 
     print(client)
 
-    message = client.messages.create( 
-        from_='whatsapp:+14155238886',  
-        body=body,      
-        to=to
-    ) 
+    # message = client.messages.create( 
+    #     from_='whatsapp:+14155238886',  
+    #     body=body,      
+    #     to=to
+    # ) 
 
     return redirect('dashboard')
 
