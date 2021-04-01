@@ -55,6 +55,10 @@ export class MainDashboard extends React.Component {
         return !this.props.user.completed_demographic_survey;
     }
 
+    showWhatsappAlert() {
+        return this.props.location.search.includes("whatsapp_alert");
+    }
+
     toggleContestRules(event) {
         event.preventDefault();
         this.setState(prevState => ({
@@ -75,8 +79,9 @@ export class MainDashboard extends React.Component {
                     <CovidSurvey submitCovidSurvey={this.props.submitCovid19Survey}
                                         covid_survey_required={this.covidRequired()}/>
                     <ContestRules isOpen={this.state.contestRulesOpen} toggleContestRules={this.toggleContestRules}/>
-
-
+                    <div className="alert alert-warning" role="alert" hidden={!this.showWhatsappAlert()} >
+                        <b>ACTION REQUIRED:</b> Text  <b>join active-tune</b> to  <b>+1 415 523 8886</b> on Whatsapp to receive notifications. 
+                    </div>
                     <div className="alert alert-primary" role="alert">
                         <b>UPDATE:</b> Emerge now features new <b>COVID-19</b> related chalenges and practice questions. Please check back in for <b>daily challenges</b>. 
                     </div>
