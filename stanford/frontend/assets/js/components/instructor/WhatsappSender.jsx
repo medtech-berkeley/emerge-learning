@@ -16,9 +16,6 @@ export class WhatsappSender extends React.Component {
                 <Container>
                     <form method="POST" action="/instructor/send_whatsapp/">
                     <CSRFToken />
-                        Phone Number: 
-                        <input type="tel" name="number"/>
-                        <br/>
                         Message:
                         <br/>
                         <textarea type="text" name="message" rows="4" cols="50"/>
