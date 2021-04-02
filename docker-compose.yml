@@ -2,19 +2,24 @@ version: '3.4'
 services:
   interfaceserver:
     build: .
-    image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
+    image: public.ecr.aws/t6n9y7s9/docker-repo/emerge-learning:latest
     command: sh /entry/entrypoint-interface.sh
     user: stanford
     working_dir: /stanford
     expose:
       - "8000"
+    ports:
+      - "8000:8000"
     env_file:
       - docker/docker.env
     depends_on:
       - database
       - redis
+      - reactserver
+    volumes:
+      - ./stanford:/stanford
   rqworker:
-    image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
+    image: public.ecr.aws/t6n9y7s9/docker-repo/emerge-learning:latest
     command: /entry/entrypoint-rqworker.sh
     user: stanford
     working_dir: /stanford
@@ -26,7 +31,7 @@ services:
       - database
       - redis
   scheduler:
-    image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
+    image: public.ecr.aws/t6n9y7s9/docker-repo/emerge-learning:latest
     command: /entry/entrypoint-rqscheduler.sh
     user: stanford
     working_dir: /stanford
@@ -43,4 +48,18 @@ services:
     image: postgres:9.5
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
-
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  #added
+  reactserver:
+    build:
+      context: .
+      target: react-pkg
+    ports:
+      - "3000:3000"
+    working_dir: /stanford
+    command: sh -c "npm install package.json; node react_server.js"
+    volumes:
+      - ./stanford/:/stanford/
+volumes:
+  db_data:
