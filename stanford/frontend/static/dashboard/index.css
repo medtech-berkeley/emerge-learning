@@ -69,7 +69,7 @@ body.modal-open {margin-right: 0px}
     background-image: url("https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/on-the-top-of-the-world-2d-landscape-sarah-bank.jpg");
     background-size: 100% 100%;
     width: 100%;
-    height: 32rem;
+    height: 44rem;
 }
 
 .landing-header {
@@ -79,6 +79,12 @@ body.modal-open {margin-right: 0px}
     padding-bottom: 22px;
     text-align: center;
     text-shadow: 1px 1px rgba(42,64,82,0.21);
+}
+
+.landing-body {
+    color: white;
+    font-size: 1rem;
+    padding-bottom: 18px;
 }
 
 form.signup {

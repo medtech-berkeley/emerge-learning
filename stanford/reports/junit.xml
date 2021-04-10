@@ -1,0 +1,105 @@
+<testsuite errors="23" failures="3" name="Django Project Tests" skips="0" tests="93" time="72.337"><testcase classname="quiz.tests.AnswerTest" name="test_answer_many" time="1.716546" /><testcase classname="quiz.tests.AnswerTest" name="test_answer_many_list" time="0.991419" /><testcase classname="quiz.tests.AnswerTest" name="test_answer_null" time="0.311238" /><testcase classname="quiz.tests.AnswerTest" name="test_answer_permissions" time="0.962071" /><testcase classname="quiz.tests.AnswerTest" name="test_answer_permissions_list" time="0.960517" /><testcase classname="quiz.tests.AnswerTest" name="test_answer_single" time="0.335369" /><testcase classname="quiz.tests.AnswerTest" name="test_answer_single_list" time="0.349147" /><testcase classname="quiz.tests.BadgeTests" name="test_pretest_badge" time="0.720615"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1412, in test_pretest_badge
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.CUDTest" name="test_cud_many_many_user" time="1.202012" /><testcase classname="quiz.tests.CUDTest" name="test_cud_many_many_user_list" time="1.208024" /><testcase classname="quiz.tests.CUDTest" name="test_cud_many_single_user" time="0.645376" /><testcase classname="quiz.tests.CUDTest" name="test_cud_many_single_user_list" time="0.660506" /><testcase classname="quiz.tests.CUDTest" name="test_cud_null" time="0.326027" /><testcase classname="quiz.tests.CUDTest" name="test_cud_permissions" time="0.781953" /><testcase classname="quiz.tests.CUDTest" name="test_cud_permissions_list" time="0.621298" /><testcase classname="quiz.tests.CUDTest" name="test_cud_single" time="0.355469" /><testcase classname="quiz.tests.CUDTest" name="test_cud_single_list" time="0.338628" /><testcase classname="quiz.tests.EventTests" name="test_start_quiz_after_required_completion" time="0.710614"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1432, in test_start_quiz_after_required_completion
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.LeaderboardStatsTest" name="test_leaderboard_list_smoke" time="0.535223" /><testcase classname="quiz.tests.LeaderboardStatsTest" name="test_leaderboard_permissions" time="0.594034" /><testcase classname="quiz.tests.LeaderboardStatsTest" name="test_leaderboard_permissions_list" time="0.536255" /><testcase classname="quiz.tests.LeaderboardStatsTest" name="test_leaderboard_self" time="0.355654" /><testcase classname="quiz.tests.QUDTest" name="test_qud_many_many_user" time="1.575927" /><testcase classname="quiz.tests.QUDTest" name="test_qud_many_many_user_list" time="1.934904" /><testcase classname="quiz.tests.QUDTest" name="test_qud_many_single_user" time="0.986125" /><testcase classname="quiz.tests.QUDTest" name="test_qud_many_single_user_list" time="1.349489" /><testcase classname="quiz.tests.QUDTest" name="test_qud_many_user_permissions" time="1.570000" /><testcase classname="quiz.tests.QUDTest" name="test_qud_null" time="0.305852" /><testcase classname="quiz.tests.QUDTest" name="test_qud_permissions" time="0.937675" /><testcase classname="quiz.tests.QUDTest" name="test_qud_permissions_list" time="0.985440" /><testcase classname="quiz.tests.QUDTest" name="test_qud_single" time="0.337407" /><testcase classname="quiz.tests.QUDTest" name="test_qud_single_list" time="0.335799" /><testcase classname="quiz.tests.QuestionTest" name="test_question_many" time="0.934541" /><testcase classname="quiz.tests.QuestionTest" name="test_question_many_list" time="1.292875" /><testcase classname="quiz.tests.QuestionTest" name="test_question_null" time="0.304451" /><testcase classname="quiz.tests.QuestionTest" name="test_question_permissions" time="0.927741" /><testcase classname="quiz.tests.QuestionTest" name="test_question_permissions_list" time="1.098701" /><testcase classname="quiz.tests.QuestionTest" name="test_question_single" time="0.330013" /><testcase classname="quiz.tests.QuestionTest" name="test_question_single_list" time="0.333719" /><testcase classname="quiz.tests.QuizTest" name="test_quiz_many" time="0.571295" /><testcase classname="quiz.tests.QuizTest" name="test_quiz_many_list" time="0.948638" /><testcase classname="quiz.tests.QuizTest" name="test_quiz_null" time="0.303408" /><testcase classname="quiz.tests.QuizTest" name="test_quiz_permissions" time="0.569127" /><testcase classname="quiz.tests.QuizTest" name="test_quiz_permissions_list" time="0.756083" /><testcase classname="quiz.tests.QuizTest" name="test_quiz_single" time="0.329936" /><testcase classname="quiz.tests.QuizTest" name="test_quiz_single_list" time="0.321441" /><testcase classname="quiz.tests.QuizTestCase" name="test_answer_basic" time="0.717543"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 972, in test_answer_basic
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_answer_forgotten" time="0.780060"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1105, in test_answer_forgotten
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_answer_late" time="0.717984"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1087, in test_answer_late
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_answer_multiple_attempts" time="0.717638"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 985, in test_answer_multiple_attempts
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_answer_multiple_categories" time="0.691566"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1038, in test_answer_multiple_categories
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_answer_sequential_questions" time="0.701765"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1003, in test_answer_sequential_questions
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_cannot_retake_quiz" time="0.682914" /><testcase classname="quiz.tests.QuizTestCase" name="test_get_completed_answers" time="0.619477" /><testcase classname="quiz.tests.QuizTestCase" name="test_get_completed_answers_fail" time="0.709887"><failure message="True is not false : Should not be able to get answers for a quiz that is not completed" type="builtins.AssertionError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1341, in test_get_completed_answers_fail
+    self.assertFalse(200 &lt;= response.status_code &lt; 300, msg="Should not be able to get answers for a quiz "
+AssertionError: True is not false : Should not be able to get answers for a quiz that is not completed
+</failure></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_get_question_all_complete" time="0.700752"><error message="'tags'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 955, in test_get_question_all_complete
+    self.assertIn(self.quizzes[0].tags.first().text, question['tags'])
+KeyError: 'tags'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_get_question_basic" time="0.692146"><error message="'tags'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 922, in test_get_question_basic
+    self.assertIn(self.quizzes[0].tags.first().text, question['tags'])
+KeyError: 'tags'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_get_question_multiple_categories" time="0.706846"><error message="'tags'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 930, in test_get_question_multiple_categories
+    self.assertIn(self.quizzes[0].tags.first().text, question['tags'])
+KeyError: 'tags'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_get_stats_student" time="0.693437"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1347, in test_get_stats_student
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_get_stats_student_nullcase" time="0.578693" /><testcase classname="quiz.tests.QuizTestCase" name="test_question_all_tags" time="0.610548" /><testcase classname="quiz.tests.QuizTestCase" name="test_quiz_question_limit" time="0.691561"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 883, in test_quiz_question_limit
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_retake_quiz" time="0.743876" /><testcase classname="quiz.tests.QuizTestCase" name="test_retake_quiz_complete" time="0.708875"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 902, in test_retake_quiz_complete
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_start_quiz" time="0.585110" /><testcase classname="quiz.tests.QuizTestCase" name="test_start_quiz_after_required_completion" time="0.750077"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 870, in test_start_quiz_after_required_completion
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_start_quiz_other_required" time="0.649460" /><testcase classname="quiz.tests.QuizTestCase" name="test_start_quiz_required" time="0.635472" /><testcase classname="quiz.tests.QuizTestCase" name="test_stats_location_quiz" time="0.611474" /><testcase classname="quiz.tests.QuizTestCase" name="test_stats_location_total" time="0.632122" /><testcase classname="quiz.tests.QuizTestCase" name="test_stats_question_total_multi_user" time="3.533840"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1179, in test_stats_question_total_multi_user
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_stats_question_total_multi_user_some_wrong" time="1.969917"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1206, in test_stats_question_total_multi_user_some_wrong
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_stats_question_total_null" time="0.731084"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1225, in test_stats_question_total_null
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_stats_question_total_single_user" time="0.704915"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1157, in test_stats_question_total_single_user
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_stats_quiz_multi_user" time="1.903701"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1271, in test_stats_quiz_multi_user
+    question = Question.objects.get(id=response.json()['id'])
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_stats_quiz_null" time="0.712000"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1295, in test_stats_quiz_null
+    question = Question.objects.get(id=response.json()['id'])
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_stats_quiz_single_user" time="0.699526"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1236, in test_stats_quiz_single_user
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.QuizTestCase" name="test_stats_student" time="0.840020"><error message="'id'" type="builtins.KeyError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 1118, in test_stats_student
+    question_id = response.json()['id']
+KeyError: 'id'
+</error></testcase><testcase classname="quiz.tests.StudentFormTests" name="test_consent_form" time="0.307467" /><testcase classname="quiz.tests.StudentFormTests" name="test_demographic_form" time="0.309931" /><testcase classname="quiz.tests.StudentStatsTest" name="test_studentstat_list_smoke" time="3.265191" /><testcase classname="quiz.tests.StudentStatsTest" name="test_studentstat_permissions" time="0.889811" /><testcase classname="quiz.tests.StudentStatsTest" name="test_studentstat_permissions_list" time="0.814559" /><testcase classname="quiz.tests.StudentStatsTest" name="test_studentstat_self" time="0.373647" /><testcase classname="quiz.tests.StudentTest" name="test_student_many" time="0.604295" /><testcase classname="quiz.tests.StudentTest" name="test_student_many_list" time="0.851227" /><testcase classname="quiz.tests.StudentTest" name="test_student_permissions" time="0.549052" /><testcase classname="quiz.tests.StudentTest" name="test_student_permissions_list" time="0.574423" /><testcase classname="quiz.tests.StudentTest" name="test_student_self" time="0.332962" /><testcase classname="quiz.tests.StudentTest" name="test_student_single" time="0.321676" /><testcase classname="quiz.tests.StudentTest" name="test_student_single_list" time="0.329562" /><testcase classname="quiz.tests.TestSheetReading" name="test_load_questions" time="0.020206"><failure message="0 != 3" type="builtins.AssertionError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 178, in test_load_questions
+    self.assertEqual(Question.objects.count(), 3)
+AssertionError: 0 != 3
+</failure></testcase><testcase classname="quiz.tests.TestSheetReading" name="test_load_quizzes" time="0.012583"><failure message="0 != 2" type="builtins.AssertionError">Traceback (most recent call last):
+  File "/stanford/quiz/tests.py", line 159, in test_load_quizzes
+    self.assertEqual(len(Quiz.objects.all()), 2)
+AssertionError: 0 != 2
+</failure></testcase></testsuite>

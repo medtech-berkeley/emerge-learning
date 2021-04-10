@@ -2,6 +2,7 @@ import pytz
 import random
 import datetime
 import logging
+import os
 
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -35,6 +36,8 @@ from .serializers import AnswerSerializer, LeaderboardStatSerializer, StudentSer
 from .serializers import UserSerializer, StudentStatsSerializer, QuizUserDataSerializer, QuestionFeedbackSerializer
 from .serializers import EventSerializer, StudentCourseSerializer, InstructorCourseSerializer
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
+
+from twilio.rest import Client
 
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
@@ -720,6 +723,25 @@ def send_email(subject, message, recipient, bcc_list=[]):
     msg = EmailMultiAlternatives(subject, txt_message, to=[recipient], bcc=bcc_list)
     msg.attach_alternative(message, "text/html")
     msg.send()
+
+@user_passes_test(is_admin)
+def send_whatsapp_view(request):
+    """ Sends whatsapp with message to recipient"""
+    body = request.POST['message']
+
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']  
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    client = Client(account_sid, auth_token)
+
+    subscribed_users = Student.objects.filter(whatsapp_notifs=True)
+    for user in subscribed_users:
+        client.messages.create( 
+            from_='whatsapp:+14155238886',  
+            body=body,      
+            to=f"whatsapp:{user.phone}"
+        )
+
+    return redirect('dashboard')
 
 @login_required
 def submit_feedback(request):
