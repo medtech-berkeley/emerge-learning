@@ -32,6 +32,8 @@ def change_user_info(request):
         if 'image' in request.FILES:
             student.image = request.FILES['image']
         student.subscribed_to_emails = 'subscribed_to_emails' in request.POST
+        student.whatsapp_notifs = 'whatsapp_notifs' in request.POST
+        
         student.save()
         return redirect('dashboard')
     else:

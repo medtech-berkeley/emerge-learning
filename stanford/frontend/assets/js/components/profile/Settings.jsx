@@ -57,6 +57,10 @@ export class Settings extends React.Component {
                   <input type="checkbox" name="subscribed_to_emails" className="form-check-input" defaultChecked={this.props.student.subscribed_to_emails}/>
                   <label className="form-check-label">Receive Emails from Emerge Learning</label>
                 </div>
+                <div className="form-check">
+                  <input type="checkbox" name="whatsapp_notifs" className="form-check-input" defaultChecked={this.props.student.whatsapp_notifs}/>
+                  <label className="form-check-label">Receive WhatsApp Notifications from Emerge Learning</label>
+                </div>
                 <br />
                 <button type="submit" className="btn btn-success">Update</button>
             </form>
