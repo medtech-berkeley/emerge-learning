@@ -98,7 +98,7 @@ def signup(request):
                     user.save()
                     send_login_event(user.student, request)
                     login(request, user)
-                    return redirect(reverse('dashboard') + '?whatsapp_alert')
+                    return redirect(reverse('dashboard'))
 
                 return render(request, 'accounts/login.html', {'error':'An account verification email has been sent!', 'username': user.username})
             except Exception as e:
