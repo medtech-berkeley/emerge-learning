@@ -58,6 +58,10 @@ def signup(request):
                     return redirect(reverse('index') + '?error=Please assure phone number is 10 digit, all numbers')
                 merged_phone_no = country_code[:-6] + phone_no
 
+                if (Student.objects.filter(phone=merged_phone_no).exists()):
+                    return redirect(reverse('index') + '?error=This phone number is already in use. Please enter a different number')
+
+
                 user = User.objects.create_user(
                     request.POST['username'], 
                     request.POST['email'], 
