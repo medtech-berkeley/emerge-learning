@@ -65,8 +65,8 @@ class Student(models.Model):
     description = models.CharField(max_length=500, default="")
     last_activity = models.DateTimeField(auto_now_add=True)
 
-    courses = models.ManyToManyField(Course)
-    instructor_of = models.ManyToManyField(Course)
+    courses = models.ManyToManyField(Course, related_name="students")
+    instructor_of = models.ManyToManyField(Course, related_name="instructors")
 
     consent_prompt_required = models.BooleanField(default=True)
     consent = models.BooleanField(default=False)
