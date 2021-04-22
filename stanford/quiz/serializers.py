@@ -90,7 +90,7 @@ class StudentCourseSerializer(serializers.ModelSerializer):
     num_required_quizzes = serializers.SerializerMethodField()
     class Meta:
         model = Course
-        fields = ('id', 'name', 'num_required_quizzes', 'priority')
+        fields = ('id', 'name', 'num_required_quizzes', 'priority', 'students', 'instructors')
 
     def get_num_required_quizzes(self, instance):
         student = self.context['request'].user.student
