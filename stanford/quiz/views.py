@@ -142,7 +142,7 @@ class StudentCourseViewSet(ModelViewSet):
     serializer_class = StudentCourseSerializer
 
     def get_queryset(self):
-        return Course.objects.filter(is_active=True)
+        return Course.objects.filter(is_active=True, students__in=[self.request.user.student])
 
 
 class InstructorCourseViewSet(ModelViewSet):

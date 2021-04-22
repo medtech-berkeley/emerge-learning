@@ -42,8 +42,10 @@ export class MainDashboard extends React.Component {
                     </TabPanel>)
                     })}
                 </Tabs>;
-        }
-        return null;
+        } else {
+            // TODO: Replace the # below with an internal link to the course selection page
+            return <h6>You aren't currently enrolled in a course. Sign up for one <a href="#">here</a>!</h6>
+        };
     }
 
     covidRequired() {
