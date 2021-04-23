@@ -5,6 +5,7 @@ import { setLoadingStatus, incLoadingStatus } from './UIActions.jsx';
 export const UPDATE_USERS = 'UPDATE_USERS';
 export const UPDATE_CATEGORIES = 'UPDATE_CATEGORIES';
 export const UPDATE_COURSES = 'UPDATE_COURSES';
+export const UPDATE_INSTRUCTOR_COURSES = 'UPDATE_INSTRUCTOR_COURSES'
 export const UPDATE_QUESTION_USER_DATA = 'UPDATE_QUESTION_USER_DATA';
 export const UPDATE_CURRENT_QUESTION = 'UPDATE_CURRENT_QUESTION';
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
@@ -69,6 +70,21 @@ export function updateCourses(courses) {
 	return {
 		type: UPDATE_COURSES,
 		courses
+	}
+}
+
+export function getInstructorCourses() {
+	console.log('get instructor courses');
+	return dispatch => fetch("/api/instructorcourses", window.getHeader)
+		.then(r => r.json().then(courses => {
+			dispatch(updateInstructorCourses(courses))
+		}));
+}
+
+export function updateInstructorCourses(instructor_courses) {
+	return {
+		type: UPDATE_INSTRUCTOR_COURSES,
+		instructor_courses
 	}
 }
 

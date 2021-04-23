@@ -148,7 +148,9 @@ class StudentCourseViewSet(ModelViewSet):
 class InstructorCourseViewSet(ModelViewSet):
     serializer_class = InstructorCourseSerializer
     permission_classes = [IsInstructor]
-    queryset = Course.objects.all()
+    def get_queryset(self):
+        print('Instructor view set')
+        return Course.objects.filter(is_active=True, instructors__in=[self.request.user.student])
 
 
 class QuestionUserDataViewSet(ModelViewSet):

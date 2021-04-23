@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from frontend.views import index, change_user_info, dashboard
 from rest_framework import routers
-from quiz.views import StudentViewSet, StudentStatsViewSet, QuizUserDataViewSet, QuestionFeedbackViewSet
+from quiz.views import StudentViewSet, StudentStatsViewSet, QuizUserDataViewSet, QuestionFeedbackViewSet, InstructorCourseViewSet
 from quiz.views import QuestionViewSet, AnswerViewSet, QuizViewSet, QuestionUserDataViewSet
 from quiz.views import LeaderboardStatViewSet, EventViewSet, StudentCourseViewSet
 from quiz.views import submit_consent_form, submit_covid19_form
@@ -31,6 +31,7 @@ router.register(r'studentstats', StudentStatsViewSet, 'StudentStats')
 router.register(r'feedback', QuestionFeedbackViewSet, 'QuestionFeedback')
 router.register(r'events', EventViewSet, 'Events')
 router.register(r'courses', StudentCourseViewSet, 'Courses')
+router.register(r'instructorcourses', InstructorCourseViewSet, 'InstructorCourses')
 
 
 urlpatterns = [
