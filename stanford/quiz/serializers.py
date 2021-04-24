@@ -54,7 +54,7 @@ class StudentSerializer(serializers.ModelSerializer):
     badges = BadgeSerializer(many=True)
     class Meta:
         model = Student
-        fields = ('id', 'user', 'name', 'location', 'description', 'image', 'subscribed_to_emails', 'whatsapp_notifs',
+        fields = ('id', 'user', 'name', 'location', 'description', 'image', 'subscribed_to_emails', 'whatsapp_notifs', 'courses', 'instructor_of',
                   'consent_prompt_required', 'consent','completed_demographic_survey', 'completed_covid19_survey', 'profile_type', 'badges')
 
 class SmallStudentSerializer(serializers.ModelSerializer):
@@ -90,7 +90,7 @@ class StudentCourseSerializer(serializers.ModelSerializer):
     num_required_quizzes = serializers.SerializerMethodField()
     class Meta:
         model = Course
-        fields = ('id', 'name', 'num_required_quizzes', 'priority')
+        fields = ('id', 'name', 'num_required_quizzes', 'priority', 'students', 'instructors')
 
     def get_num_required_quizzes(self, instance):
         student = self.context['request'].user.student
