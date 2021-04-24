@@ -38,6 +38,7 @@ from .serializers import EventSerializer, StudentCourseSerializer, InstructorCou
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
 
 from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
 
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
@@ -730,18 +731,23 @@ def send_email(subject, message, recipient, bcc_list=[]):
 def send_whatsapp_view(request):
     """ Sends whatsapp with message to recipient"""
     body = request.POST['message']
+    course_ids = request.POST.getlist('courses')
 
     account_sid = os.environ['TWILIO_ACCOUNT_SID']  
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
 
-    subscribed_users = Student.objects.filter(whatsapp_notifs=True)
+    subscribed_users = Student.objects.filter(whatsapp_notifs=True, courses__in=course_ids)
+    print(subscribed_users)
     for user in subscribed_users:
-        client.messages.create( 
-            from_='whatsapp:+14155238886',  
-            body=body,      
-            to=f"whatsapp:{user.phone}"
-        )
+        try:
+            client.messages.create( 
+                from_='whatsapp:+14155238886',  
+                body=body,      
+                to=f"whatsapp:{user.phone}"
+            )
+        except TwilioRestException as err: 
+            print(err)
 
     return redirect('dashboard')
 

@@ -24,7 +24,7 @@ export class WhatsappSender extends React.Component {
                         <CSRFToken />
                         <FormGroup>
                             <Label for="exampleSelect">Courses</Label>
-                            <Input type="select" name="select" id="exampleSelect" multiple>
+                            <Input type="select" name="courses" multiple required>
                                 {
                                 this.props.instructor_courses.map((course) =>
                                     <option value={course.id}>{course.name}</option>
@@ -34,7 +34,7 @@ export class WhatsappSender extends React.Component {
                         </FormGroup>
                         <FormGroup>
                             <Label for="exampleSelect">Message</Label>
-                            <Input type="textarea" name="message" />
+                            <Input type="textarea" name="message" required/>
                         </FormGroup>
                         <Button color="success">Submit</Button>
                     </Form>
