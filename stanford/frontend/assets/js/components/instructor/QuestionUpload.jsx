@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Button, Container, Row, Input, FormGroup, Label, Form, Carousel, Jumbotron, FormText} from 'reactstrap';
+import { Button, Container, Row, Input, FormGroup, Label, Form, Carousel, Jumbotron, FormText, Fade} from 'reactstrap';
 import { FeedbackSummary } from "./FeedbackSummary";
 import Cookies from "js-cookie";
 
@@ -18,7 +18,7 @@ function Step1(props) {
         <Form method="POST" action="/instructor/uploadquizzes/" encType="multipart/form-data">
             <CSRFToken />
             <FormGroup>
-                <h4>Upload Quizzes</h4>
+                <h4>Quiz Upload</h4>
                 <p >Download quiz template <a href="https://drive.google.com/uc?export=download&id=1sSsjKh6f48aeE8oA0ZJVc-8W1ASFIUae">here</a></p>
                 <Input type="file" name="file" accept=".csv" />
                 <Button color='success'>Submit</Button>
@@ -35,8 +35,8 @@ function Step2(props) {
         <Form method="POST" action="/instructor/uploadquestions/" encType="multipart/form-data">
             <CSRFToken />
             <FormGroup>
-                <h4>Upload Questions</h4>
-                <p >Download question template <a href="https://drive.google.com/uc?export=download&id=1CIc7EOKPXKY1U3XqNTP4sEh3WVPoH8no">here</a></p>
+                <h4>Question Upload</h4>
+                <p>Download question template <a href="https://drive.google.com/uc?export=download&id=1CIc7EOKPXKY1U3XqNTP4sEh3WVPoH8no">here</a></p>
                 <Input type="file" name="file" accept=".csv"/>
                 <Button color='success'>Submit</Button>
             </FormGroup>
@@ -94,16 +94,23 @@ export class QuestionUpload extends React.Component {
     render() {
         return (
             <center className=".d-inline-block">
-                <h1>Upload Data</h1>
+                <h2>Upload Quizzes &amp; Questions</h2>
                 <p className="lead">Upload quizzes first, then click <strong>next</strong> to upload questions!</p>
                 <hr className="my-2" />
-                <Row style={{"display": "inline-block"}}>
-                    <Step1 currentStep={this.state.currentStep}/>
-                    <Step2 currentStep={this.state.currentStep}/>
-                    <br />
-                    {this.previousButton()}
-                    {this.nextButton()}
-                </Row>
+                <Jumbotron>
+                        <Row style={{"display": "inline-block"}}>
+                            <Fade in={this.state.currentStep === 1}>
+                                <Step1 currentStep={this.state.currentStep}/>
+                            </Fade>
+                            <Fade in={this.state.currentStep === 2}>
+                                <Step2 currentStep={this.state.currentStep}/>
+                            </Fade>
+                            <br />
+                            {this.previousButton()}
+                            {this.nextButton()}
+                        </Row>
+                </Jumbotron>
+                
             </center>
         )
     }
