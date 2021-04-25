@@ -15,7 +15,7 @@ export class Instructor extends React.Component {
             <Container>
                 <Tabs>
                     <TabList>
-                        <Tab>Upload Questions</Tab>
+                        <Tab>Upload Quizzes &amp; Questions</Tab>
                         <Tab>View Feedback</Tab>
                         <Tab>User Management</Tab>
                         <Tab>Send Email</Tab>
