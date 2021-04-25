@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Button, Container, Row, Input, FormGroup, Label, Form, Carousel, Jumbotron, FormText, Fade} from 'reactstrap';
+import { Button, Row, Input, FormGroup, Form, Jumbotron, Fade} from 'reactstrap';
 import { FeedbackSummary } from "./FeedbackSummary";
 import Cookies from "js-cookie";
 
@@ -20,7 +20,7 @@ function Step1(props) {
             <FormGroup>
                 <h4>Quiz Upload</h4>
                 <p >Download quiz template <a href="https://drive.google.com/uc?export=download&id=1sSsjKh6f48aeE8oA0ZJVc-8W1ASFIUae">here</a></p>
-                <Input type="file" name="file" accept=".csv" />
+                <Input type="file" name="file" accept=".csv"/>
                 <Button color='success'>Submit</Button>
             </FormGroup>
         </Form>
@@ -48,7 +48,7 @@ export class QuestionUpload extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentStep: 1,
+            currentStep: 1
         }
     }
 
@@ -98,7 +98,7 @@ export class QuestionUpload extends React.Component {
                 <p className="lead">Upload quizzes first, then click <strong>next</strong> to upload questions!</p>
                 <hr className="my-2" />
                 <Jumbotron>
-                        <Row style={{"display": "inline-block"}}>
+\                        <Row style={{"display": "inline-block"}}>
                             <Fade in={this.state.currentStep === 1}>
                                 <Step1 currentStep={this.state.currentStep}/>
                             </Fade>
