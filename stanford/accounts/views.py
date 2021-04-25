@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from quiz.models import Student, Event, EventType, DeviceData
+from quiz.models import Student, Event, EventType, DeviceData, Course
 import requests
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
@@ -61,6 +61,9 @@ def signup(request):
                 if (Student.objects.filter(phone=merged_phone_no).exists()):
                     return redirect(reverse('index') + '?error=This phone number is already in use. Please enter a different number')
 
+                if 'access_code' in request.POST and not Course.objects.filter(code=request.POST['access_code'].strip()):
+                    return redirect(reverse('index') + '?error=This access code is invalid. Please enter a different code')
+
 
                 user = User.objects.create_user(
                     request.POST['username'], 
@@ -76,6 +79,8 @@ def signup(request):
                     student.image = request.FILES['image']
                 student.phone = merged_phone_no
                 student.whatsapp_notifs = whatsapp_notifs
+                if 'access_code' in request.POST:
+                    student.courses.add(Course.objects.get(code=request.POST['access_code'].strip()))
                 student.save()
 
                 # Send Email
