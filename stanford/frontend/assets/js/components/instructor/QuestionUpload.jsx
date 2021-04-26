@@ -98,7 +98,7 @@ export class QuestionUpload extends React.Component {
                 <p className="lead">Upload quizzes first, then click <strong>next</strong> to upload questions!</p>
                 <hr className="my-2" />
                 <Jumbotron>
-\                        <Row style={{"display": "inline-block"}}>
+                        <Row style={{"display": "inline-block"}}>
                             <Fade in={this.state.currentStep === 1}>
                                 <Step1 currentStep={this.state.currentStep}/>
                             </Fade>
