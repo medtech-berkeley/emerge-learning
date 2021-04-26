@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container, Row } from 'reactstrap';
+import PropTypes from "prop-types";
+import { Container, Form, Row, Input, Label, FormGroup, Button} from 'reactstrap';
 import Cookies from "js-cookie";
 import {RichEditor} from './RichTextEditor';
 
@@ -10,23 +11,40 @@ const CSRFToken = () => {
 };
 
 export class WhatsappSender extends React.Component {
+    componentWillMount() {
+        console.log('Mounting');
+        this.props.refreshInstructorCourses();
+    }    
+
     render() {
         return (
             <center className=".d-inline-block">
                 <Container>
-                    <form method="POST" action="/instructor/send_whatsapp/">
-                    <CSRFToken />
-                        Message:
-                        <br/>
-                        <textarea type="text" name="message" rows="4" cols="50"/>
-                        {/* <div style={{'width': '800px'}}>
-                            <RichEditor inputName="message" />
-                        </div> */}
-                        <br/>
-                        <input className="btn btn-success"  type="submit" />
-                    </form>
+                    <Form method="POST" action="/instructor/send_whatsapp/">
+                        <CSRFToken />
+                        <FormGroup>
+                            <Label for="exampleSelect">Courses</Label>
+                            <Input type="select" name="courses" multiple required>
+                                {
+                                this.props.instructor_courses.map((course) =>
+                                    <option value={course.id}>{course.name}</option>
+                                )
+                                }
+                            </Input>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="exampleSelect">Message</Label>
+                            <Input type="textarea" name="message" required/>
+                        </FormGroup>
+                        <Button color="success">Submit</Button>
+                    </Form>
                 </Container>
             </center>
         );
     }
 }
+
+WhatsappSender.propTypes = {
+    refreshInstructorCourses: PropTypes.func,
+    instructor_courses: PropTypes.array
+};

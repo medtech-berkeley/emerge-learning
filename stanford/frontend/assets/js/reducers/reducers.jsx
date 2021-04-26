@@ -1,4 +1,4 @@
-import { UPDATE_CATEGORY_DATA, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_RESULTS, UPDATE_FEEDBACK_SUMMARY, SELECT_ANSWER, CHANGE_PAGE, UPDATE_COURSES } from "../actions/Actions"
+import { UPDATE_CATEGORY_DATA, UPDATE_CATEGORIES, UPDATE_QUESTION_USER_DATA, SELECT_CATEGORY, UPDATE_CURRENT_QUESTION, UPDATE_SUBMIT_ERROR, UPDATE_CATEGORY_COMPLETED, UPDATE_CATEGORY_RESULTS, UPDATE_FEEDBACK_SUMMARY, SELECT_ANSWER, CHANGE_PAGE, UPDATE_COURSES, UPDATE_INSTRUCTOR_COURSES} from "../actions/Actions"
 import { UPDATE_TIMER, UPDATE_CONSENT, UPDATE_DEMOSURVEY} from "../actions/Actions"
 import { UPDATE_PRACTICE_LEADERBOARD, UPDATE_QUIZ_LEADERBOARD, UPDATE_WEEKLY_LEADERBOARD, UPDATE_PREVIOUS_LEADERBOARD } from "../actions/Actions"
 import { UPDATE_STUDENT, UPDATE_STUDENTS } from "../actions/LoadUserActions"
@@ -116,6 +116,11 @@ export function stanfordApp(state = initialState, action) {
                 break;
         case (UPDATE_COURSES):
             newState.api.courses = action.courses.sort((c1, c2) => c1.priority - c2.priority);
+            break;
+        case (UPDATE_INSTRUCTOR_COURSES):
+            console.log('updating state')
+            console.log(action.instructor_courses)
+            newState.api.instructor_courses = action.instructor_courses.sort((c1, c2) => c1.priority - c2.priority);
             break;
         case (ADD_MESSAGE):
             if (!newState.ui.messages[action.context]) {

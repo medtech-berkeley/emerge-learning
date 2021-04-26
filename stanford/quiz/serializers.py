@@ -100,7 +100,7 @@ class StudentCourseSerializer(serializers.ModelSerializer):
 class InstructorCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ('id', 'name', 'priority')
+        fields = ('id', 'name', 'priority', 'students', 'instructors', 'is_active', 'private', 'code')
 
 class AnswerSerializer(serializers.ModelSerializer):
     # TODO: Get rid of is_correct in serializer

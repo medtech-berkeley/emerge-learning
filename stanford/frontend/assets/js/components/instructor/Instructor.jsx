@@ -6,7 +6,7 @@ import { QuestionUpload } from "./QuestionUpload";
 import { Container } from "reactstrap";
 import UserManagementAPI from '../../containers/instructor/UserManagementAPI';
 import { EmailSender } from './EmailSender';
-import { WhatsappSender } from './WhatsappSender';
+import WhatsappSenderAPI from '../../containers/instructor/WhatsappSenderAPI';
 
 export class Instructor extends React.Component {
 
@@ -43,7 +43,7 @@ export class Instructor extends React.Component {
                     </TabPanel>
                     <TabPanel>
                         <Container>
-                            <WhatsappSender />
+                            <WhatsappSenderAPI />
                         </Container>
                     </TabPanel>
                 </Tabs>
