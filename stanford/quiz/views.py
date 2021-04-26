@@ -38,6 +38,7 @@ from .serializers import EventSerializer, StudentCourseSerializer, InstructorCou
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
 
 from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
 
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
@@ -142,13 +143,15 @@ class StudentCourseViewSet(ModelViewSet):
     serializer_class = StudentCourseSerializer
 
     def get_queryset(self):
-        return Course.objects.filter(is_active=True)
+        return Course.objects.filter(is_active=True, students__in=[self.request.user.student])
 
 
 class InstructorCourseViewSet(ModelViewSet):
     serializer_class = InstructorCourseSerializer
     permission_classes = [IsInstructor]
-    queryset = Course.objects.all()
+    def get_queryset(self):
+        print('Instructor view set')
+        return Course.objects.filter(is_active=True, instructors__in=[self.request.user.student])
 
 
 class QuestionUserDataViewSet(ModelViewSet):
@@ -728,18 +731,23 @@ def send_email(subject, message, recipient, bcc_list=[]):
 def send_whatsapp_view(request):
     """ Sends whatsapp with message to recipient"""
     body = request.POST['message']
+    course_ids = request.POST.getlist('courses')
 
     account_sid = os.environ['TWILIO_ACCOUNT_SID']  
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
 
-    subscribed_users = Student.objects.filter(whatsapp_notifs=True)
+    subscribed_users = Student.objects.filter(whatsapp_notifs=True, courses__in=course_ids)
+    print(subscribed_users)
     for user in subscribed_users:
-        client.messages.create( 
-            from_='whatsapp:+14155238886',  
-            body=body,      
-            to=f"whatsapp:{user.phone}"
-        )
+        try:
+            client.messages.create( 
+                from_='whatsapp:+14155238886',  
+                body=body,      
+                to=f"whatsapp:{user.phone}"
+            )
+        except TwilioRestException as err: 
+            print(err)
 
     return redirect('dashboard')
 
