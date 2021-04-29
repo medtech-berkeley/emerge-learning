@@ -70,20 +70,21 @@ export class UpdateCourses extends React.Component {
         }
         return (
             <center className=".d-inline-block">
+                <h1>Update Courses</h1>
                 <Container>
                     <form method="POST" action='/settings/addcourse/'>
                         <CSRFToken />
-                        Add Course Access Code:
+                        <b>Add Course From Access Code:</b>
                         <br />
                         <input name="access_code" type="text" />
                         <button type="submit">Submit</button>
                     </form>
                 </Container>
-                <br/>
+                <br />
                 <Container>
                     <form method="POST" action='/settings/removecourse/'>
                         <CSRFToken />
-                        Remove Course:
+                        <b>Remove Course:</b>
                         <br />
                         <select name="access_code" type="text">
                             {this.state.courses.map((e, key) => {
@@ -93,8 +94,12 @@ export class UpdateCourses extends React.Component {
                         <button type="submit">Submit</button>
                     </form>
                 </Container>
-                <br/>
-                <br/>
+                <br />
+                <br />
+                <b>List of public courses, feel free to add these courses and try them out!</b>
+                <br />
+                <br />
+
                 <Container>
                     <ListGroup>
                         <ListGroupItem header="Header 1" variant="primary">
