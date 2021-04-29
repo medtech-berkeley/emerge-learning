@@ -150,7 +150,7 @@ class PublicCourseViewSet(ModelViewSet):
     serializer_class = StudentCourseSerializer
 
     def get_queryset(self):
-        return Course.objects.filter(private = False)
+        return Course.objects.filter(private = False).filter(is_active = True)
 
 
 class InstructorCourseViewSet(ModelViewSet):
