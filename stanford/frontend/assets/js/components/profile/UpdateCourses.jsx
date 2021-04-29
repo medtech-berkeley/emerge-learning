@@ -38,46 +38,30 @@ export class UpdateCourses extends React.Component {
         }
         this.getCourses = this.getCourses.bind(this)
         this.getPublicCourses = this.getPublicCourses.bind(this)
-        // this.dropDown = this.dropDown.bind(this)
     };
 
     handleClick(item) {
-        // console.log(item.question__id);
         this.setState({ selected: item })
 
     };
 
     async getCourses() {
-        // var allCourses = await fetch('settings/listcourses/', {
-        //     method: "POST", 
-        //     mode: 'same-origin',
-        //     headers: {
-        //         'X-CSRFToken': csrftoken
-        //     }
-        // }).then(response => response.json());
-
-        // var allCourses = await fetch("/api/students", window.getHeader)
         var lsCourses = await fetch("/api/courses", window.getHeader)
-        // var jsonCourses = await allCourses.json();
         var jsonls = await lsCourses.json()
         this.setState({ courses: jsonls })
-        // console.log(jsonls[0])
     }
 
     async getPublicCourses() {
         var publicCourses = await fetch('/api/publiccourses', window.getHeader)
         var publicjson = await publicCourses.json()
         this.setState({ public: publicjson })
-        console.log(publicjson)
     }
-    // dropDown(){
-    //     var options = [];
-    //     for(var i = 0; i <= this.state.courses.length; i++){
-    //         options.push(<option value = {this.state.courses[i].code}> {this.state.courses[i].name} </option>)
-    //     }
-    //     return options;
-    // }
 
+    // async send(e, form){
+    //     var response = await fetch(form.action, {method: "POST", body: new FormData(form)});
+    //     var rjson = await response.json()
+    //     console.log(rjson);
+    // }
     render() {
         if (!this.state.fetched) {
             (async () => { this.getCourses(); })();
@@ -143,9 +127,6 @@ export class UpdateCourses extends React.Component {
                         })}
                     </ListGroup>
                 </Container>
-                {/* <Container>
-                    {allCourses}
-                </Container>  */}
 
             </center>
         );
