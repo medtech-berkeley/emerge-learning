@@ -32,8 +32,6 @@ const CSRFToken = () => {
 
 export class UpdateProfile extends React.Component {
 	render() {
-    console.log(this.props);
-    console.log('hello')
     return (
       <center className=".d-inline-block">
           <Container>

@@ -2,38 +2,31 @@ import React from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import "react-tabs/style/react-tabs.css";
 import { Container } from "reactstrap";
-import { UpdateProfileContainer } from '../../containers/UpdateProfileContainer'
-import { EmailSender } from '../instructor/EmailSender'
+import UpdateProfileContainer from '../../containers/UpdateProfileContainer'
 import { UpdateCourses } from './UpdateCourses'
 
 export class Settings extends React.Component {
 
-    render() {
-        return ( 
+  render() {
+    return (
+      <Container>
+        <Tabs>
+          <TabList>
+            <Tab>Course Settings</Tab>
+            <Tab>Profile Settings</Tab>
+          </TabList>
+          <TabPanel>
             <Container>
-                <Tabs>
-                    <TabList>
-                        <Tab>Send Email</Tab>
-                        <Tab>Profile Settings</Tab>
-                        <Tab>Course Settings</Tab>
-                    </TabList>
-                    <TabPanel>
-                        <Container>
-                            <EmailSender />
-                        </Container>
-                    </TabPanel>
-                    <TabPanel>
-                        <Container>
-                            <UpdateProfileContainer />
-                        </Container>
-                    </TabPanel>
-                    <TabPanel>
-                        <Container>
-                            <UpdateCourses />
-                        </Container>
-                    </TabPanel>
-                </Tabs>
+              <UpdateCourses />
             </Container>
-        );
-    }
+          </TabPanel>
+          <TabPanel>
+            <Container>
+              <UpdateProfileContainer />
+            </Container>
+          </TabPanel>
+        </Tabs>
+      </Container>
+    );
+  }
 }

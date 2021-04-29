@@ -146,6 +146,12 @@ class StudentCourseViewSet(ModelViewSet):
     def get_queryset(self):
         return Course.objects.filter(is_active=True, students__in=[self.request.user.student])
 
+class PublicCourseViewSet(ModelViewSet):
+    serializer_class = StudentCourseSerializer
+
+    def get_queryset(self):
+        return Course.objects.filter(private = False)
+
 
 class InstructorCourseViewSet(ModelViewSet):
     serializer_class = InstructorCourseSerializer
@@ -783,12 +789,16 @@ def remove_course(request):
     return redirect('dashboard') #TODO how to display success message?
 
 
-def list_courses(request):
+def list_public_courses(request):
     if request.method == 'POST':
-        student = request.user.student
-        if student:
-            return Course.objects.filter(students=student).values('code')
-    return {}
+        # print("reached")
+        # student = request.user.student
+        # if student:
+        #     print("reached")
+        #     return jsonify({'greeting': 'hi'})
+        return Courses.objects.filter(private = False)
+            # return Course.objects.filter(students=student).values('code')
+    return 'hi'
 
 @login_required
 def submit_feedback(request):
