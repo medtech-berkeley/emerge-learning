@@ -7,7 +7,7 @@ from quiz.views import QuestionViewSet, AnswerViewSet, QuizViewSet, QuestionUser
 from quiz.views import LeaderboardStatViewSet, EventViewSet, StudentCourseViewSet
 from quiz.views import submit_consent_form, submit_covid19_form
 from quiz.views import OverallPracticeLeaderboardStatViewSet, OverallQuizLeaderboardStatViewSet, CurrentWeeklyQuizLeaderboardStatViewSet, PreviousWeeklyQuizLeaderboardStatViewSet
-from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, send_email_view, send_whatsapp_view, upload_quizzes, submit_feedback, start_quiz, sign_up_course, remove_course, list_public_courses
+from quiz.views import get_question, submit_answer, get_quiz_results, get_stats, submit_demographics_form, upload_questions, send_email_view, send_whatsapp_view, upload_quizzes, submit_feedback, start_quiz, sign_up_course, remove_course
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import signup, logins, activate, resend_verification
@@ -41,7 +41,6 @@ urlpatterns = [
     path('profile/update', change_user_info),
     path('settings/addcourse/', sign_up_course),
     path('settings/removecourse/', remove_course),
-    path('settings/listcourses/', list_public_courses),
     path('profile/consentsurvey', submit_consent_form),
     path('profile/demosurvey', submit_demographics_form),
     path('profile/covid19survey', submit_covid19_form),

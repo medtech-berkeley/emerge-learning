@@ -7,7 +7,7 @@ import os
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.shortcuts import get_object_or_404, reverse
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -766,8 +766,6 @@ def sign_up_course(request):
         student = request.user.student
         if student and access_code != "":
             if not Course.objects.filter(code=access_code):
-                # return redirect(reverse('dashboard') + '?error=This access code is invalid. Please enter a different code')
-                # return render(request, 'dashboard')
                 return redirect('dashboard') # TODO how to display error easily?
             student.courses.add(Course.objects.get(code=access_code))
 
@@ -788,17 +786,6 @@ def remove_course(request):
     
     return redirect('dashboard') #TODO how to display success message?
 
-
-def list_public_courses(request):
-    if request.method == 'POST':
-        # print("reached")
-        # student = request.user.student
-        # if student:
-        #     print("reached")
-        #     return jsonify({'greeting': 'hi'})
-        return Courses.objects.filter(private = False)
-            # return Course.objects.filter(students=student).values('code')
-    return 'hi'
 
 @login_required
 def submit_feedback(request):
