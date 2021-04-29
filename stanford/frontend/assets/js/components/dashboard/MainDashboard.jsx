@@ -44,7 +44,7 @@ export class MainDashboard extends React.Component {
                 </Tabs>;
         } else {
             // TODO: Replace the # below with an internal link to the course selection page
-            return <h6>You aren't currently enrolled in a course. Sign up for one <a href="#">here</a>!</h6>
+            return <h6>You aren't currently enrolled in a course. Sign up for one <a href="/dashboard/settings">here</a>!</h6>
         };
     }
 

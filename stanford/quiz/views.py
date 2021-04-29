@@ -40,6 +40,7 @@ from .sheetreader import LoadFromCSV, LoadQuizFromCSV
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
 
+from quiz.models import Student, Event, EventType, DeviceData, Course
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -144,6 +145,12 @@ class StudentCourseViewSet(ModelViewSet):
 
     def get_queryset(self):
         return Course.objects.filter(is_active=True, students__in=[self.request.user.student])
+
+class PublicCourseViewSet(ModelViewSet):
+    serializer_class = StudentCourseSerializer
+
+    def get_queryset(self):
+        return Course.objects.filter(private = False).filter(is_active = True)
 
 
 class InstructorCourseViewSet(ModelViewSet):
@@ -750,6 +757,35 @@ def send_whatsapp_view(request):
             print(err)
 
     return redirect('dashboard')
+
+@login_required
+def sign_up_course(request):
+    """ Signs up a user for a course """
+    if request.method == 'POST':
+        access_code = request.POST.get('access_code').strip()
+        student = request.user.student
+        if student and access_code != "":
+            if not Course.objects.filter(code=access_code):
+                return redirect('dashboard') # TODO how to display error easily?
+            student.courses.add(Course.objects.get(code=access_code))
+
+    return redirect('dashboard') # TODO how to display success message?
+
+
+@login_required
+def remove_course(request):
+    """ Removes user from a course"""
+    if request.method == 'POST':
+        access_code = request.POST.get('access_code').strip()
+        student = request.user.student
+        if student and access_code != "":
+            if not Course.objects.filter(code=access_code).filter(students=student):
+                return redirect('dashboard') # TODO how to display error easily?
+                # Error: Not enrolled in that course
+            student.courses.remove(Course.objects.get(code=access_code))
+    
+    return redirect('dashboard') #TODO how to display success message?
+
 
 @login_required
 def submit_feedback(request):
