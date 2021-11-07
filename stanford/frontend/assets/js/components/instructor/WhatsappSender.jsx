@@ -14,6 +14,7 @@ export class WhatsappSender extends React.Component {
     componentWillMount() {
         console.log('Mounting');
         this.props.refreshInstructorCourses();
+        console.log(this.props);
     }    
 
     render() {
@@ -26,6 +27,7 @@ export class WhatsappSender extends React.Component {
                             <Label for="exampleSelect">Courses</Label>
                             <Input type="select" name="courses" multiple required>
                                 {
+                                   
                                 this.props.instructor_courses.map((course) =>
                                     <option value={course.id}>{course.name}</option>
                                 )

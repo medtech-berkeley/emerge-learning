@@ -158,7 +158,11 @@ class InstructorCourseViewSet(ModelViewSet):
     permission_classes = [IsInstructor]
     def get_queryset(self):
         print('Instructor view set')
-        return Course.objects.filter(is_active=True, instructors__in=[self.request.user.student])
+        # x = Course.objects.values_list()
+        # for p in x:
+        #     print(p)
+        return Course.objects.filter(is_active=True) # for now return all active courses; there is no 'in' field in the databases; the call returns an empty querry otherwise
+        # return Course.objects.filter(is_active=True, instructors__in=[self.request.user.student])
 
 
 class QuestionUserDataViewSet(ModelViewSet):
@@ -743,7 +747,8 @@ def send_whatsapp_view(request):
     account_sid = os.environ['TWILIO_ACCOUNT_SID']  
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
-
+    print("printing course ids")
+    print(course_ids)
     subscribed_users = Student.objects.filter(whatsapp_notifs=True, courses__in=course_ids)
     print(subscribed_users)
     for user in subscribed_users:

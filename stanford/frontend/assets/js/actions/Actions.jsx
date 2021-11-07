@@ -74,7 +74,6 @@ export function updateCourses(courses) {
 }
 
 export function getInstructorCourses() {
-	console.log('get instructor courses');
 	return dispatch => fetch("/api/instructorcourses", window.getHeader)
 		.then(r => r.json().then(courses => {
 			dispatch(updateInstructorCourses(courses))
