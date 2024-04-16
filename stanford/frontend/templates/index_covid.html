@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Emerge Learning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  {% load static %}
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="{% static 'dashboard/index.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    {% if not logged_in %}
+    <form action="/login" class="login-button">
+      <button type="submit" class="btn btn-outline-primary">Log In</button>
+    </form>
+    {% else %}
+    <form action="/logout/" method="POST" class="login-button">
+      <button type="submit" class="btn btn-outline-danger">Log Out</button>
+      <a href="/dashboard" class="btn btn-outline-primary">Go to Dashboard</a>
+      {% csrf_token %}
+    </form>
+    {% endif %}
+
+  </nav>
+
+
+  <div class="landing-content">
+    <div class="alert alert-primary text-center alert-dismissible" role="alert">
+      Contact emergelearninghelp@gmail.com if you are experiencing any issues.
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <h1 class="landing-header">Emerge Learning</h1>
+    <form class="signup" method="POST" action="{% url 'signup' %}">
+      {% if error %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <strong> {{error}} </strong>
+      </div>
+      {% endif %}
+      {% csrf_token %}
+      <div class="form-group">
+        <input type="email" class="form-control" name="email" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="username" placeholder="Username" required>
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" name="password" placeholder="Password" required>
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" name="password_confirm" placeholder="Confirm Password" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <select class="form-control" name="country_code" placeholder="Code">
+            <option selected>Country</option>
+            <option>+1 (USA)</option>
+            <option>+91 (IND)</option>
+          </select>
+        </div>
+        <div class="form-group col-md-7">
+          <input type="tel" class="form-control" name="phone_no" placeholder="Whatsapp Phone No.">
+        </div>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="whatsapp_notifs" checked>
+        <label class="form-check-label landing-body" for="exampleCheck1">Opt-in to Whatsapp Notifactions</label>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="access_code" placeholder="Course Access Code (optional)">
+      </div>
+      <button type="submit" class="btn btn-success btn-block">Sign Up!</button>
+    </form>
+  </div>
+  <!-- Icons Grid -->
+  <section id="icons-grid" class="features-icons bg-light text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg">
+          <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <!-- 	                <i class="icon-screen-desktop m-auto text-primary"></i>
+ --> <img id="first-img" src="{% static 'landingpage/img/ambulance.png' %}" alt="ambulance">
+            </div>
+            <h3>Learn From Experts</h3>
+            <p class="lead mb-0">Learn from a curriculum developed by leading Emergency Medicine Doctors at Stanford
+              University.</p>
+          </div>
+        </div>
+        <div class="col-lg">
+          <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <!-- 	                <i src= class="icon-layers m-auto text-primary"></i>
+ --> <img id="second-img" src="{% static 'landingpage/img/linechart.png' %}" alt="linechart">
+            </div>
+            <h3>Track Progress</h3>
+            <p class="lead mb-0">Monitor and track your performance and learning with advanced statistics and data
+              visualizations.</p>
+          </div>
+        </div>
+        <div class="col-lg">
+          <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <img id="fourth-img" src="{% static 'landingpage/img/trophy.png' %}" alt="coins">
+              <!-- 	                <i class="icon-check m-auto text-primary"></i>
+ -->
+            </div>
+            <h3>Win Prizes</h3>
+            <p class="lead mb-0">Top performers may be eligible to win exciting prizes. Login for more information!</p>
+          </div>
+        </div>
+        <div class="col-lg">
+          <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <img id="third-img" src="{% static 'landingpage/img/medicine.png' %}" alt="coins">
+              <!-- 	                <i class="icon-check m-auto text-primary"></i>
+ -->
+            </div>
+            <h3>Save Lives</h3>
+            <p class="lead mb-0">Apply your new knowledge and skills to help those in need.</p>
+          </div>
+        </div>
+
+
+      </div>
+      <!-- video section -->
+    </div>
+  </section>
+
+  <section class="text-center">
+    <br>
+    <br>
+    <h3>Video Tutorial</h3>
+    <br>
+    <br>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/542B0SV74OM" width="200"
+              height="200" allowfullscreen=""></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section id="icons-grid" class="features-icons text-center">
+    <h3>Screenshots</h3>
+    <br>
+    <br>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <img class="mb-2 screenshots" src="{% static 'landingpage/img/screenshot-1.png' %}" alt="">
+          <p style="margin-top: 20px" class="lead mb-0">Test your knowledge across 16 subjects!</p>
+          <br />
+        </div>
+        <div class="col">
+          <img class="mb-2 screenshots" src="{% static 'landingpage/img/screenshot-2.png' %}" alt="">
+          <p style="margin-top: 20px" class="lead mb-0">Take interactive quizzes to earn rewards!</p>
+          <br />
+        </div>
+        <div class="col">
+          <img class="mb-2 screenshots" src="{% static 'landingpage/img/screenshot-3.png' %}" alt="">
+          <p style="margin-top: 20px" class="lead mb-0">Receive feedback on your performance!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="icons-grid" class="features-icons bg-light text-center">
+    <div class="container">
+      <div class="row" style="text-align:center">
+        <div class="col" style="display: inline-block">
+          <h4 style="margin-bottom: 28px">Our Supporters</h4>
+          <ul class="list-unstyled text-small">
+            <li><a style="font-size: 18px" href="https://med.stanford.edu/care.html">Stanford Center for Asian Health
+                Research and Education</a></li>
+            <br>
+            <li><a style="font-size: 18px" href="https://mtab.berkeley.edu">Medical Technology at Berkeley</a></li>
+            <br>
+            <li><a style="font-size: 18px" href="https://www.flaticon.com/">Icons from flaticon.com</a></li>
+
+          </ul>
+        </div>
+      </div>
+  </section>
+
+  <!-- footer -->
+  <div class="container">
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+      <div class="row">
+        <div class="col-12 col-md">
+          <a href="https://mtab.berkeley.edu">
+            <img class="mb-2" src="{% static 'landingpage/img/mtablogo.png' %}" alt="" width="62" height="54">
+          </a>
+          <!--             <small class="d-block mb-3 text-muted" style="margin-left: 2rem;">© 2017-2018</small>
+ -->
+        </div>
+        <div class="col-6 col-md">
+          <h5>Contact</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#"></a></li>
+            <li><a class="text-muted" href="#">General Inquiries</a></li>
+            <li><a class="text-muted" href="#">Feedback</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Resources</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Educational Resources</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>About</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="https://mtab.berkeley.edu">Medical Technology at Berkeley</a></li>
+            <li><a class="text-muted" href="https://emed.stanford.edu/">Stanford Emergency Medicine</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+
+</html>
