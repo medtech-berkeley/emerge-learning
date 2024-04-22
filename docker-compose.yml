@@ -2,7 +2,8 @@ version: '3.4'
 services:
   interfaceserver:
     build: .
-    image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
+    # image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
+    image: public.ecr.aws/t6n9y7s9/docker-repo/emerge-learning:${ID:-latest}
     command: sh /entry/entrypoint-interface.sh
     user: stanford
     working_dir: /stanford
@@ -14,7 +15,8 @@ services:
       - database
       - redis
   rqworker:
-    image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
+    # image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
+    image: public.ecr.aws/t6n9y7s9/docker-repo/emerge-learning:${ID:-latest}
     command: /entry/entrypoint-rqworker.sh
     user: stanford
     working_dir: /stanford
@@ -26,7 +28,8 @@ services:
       - database
       - redis
   scheduler:
-    image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
+    # image: builder.mtab.ml:5000/stanford-quiz:${ID:-latest}
+    image: public.ecr.aws/t6n9y7s9/docker-repo/emerge-learning:${ID:-latest}
     command: /entry/entrypoint-rqscheduler.sh
     user: stanford
     working_dir: /stanford
@@ -41,4 +44,6 @@ services:
     image: redis:3.0-alpine
   database:
     image: postgres:9.5
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
 

@@ -47,6 +47,8 @@ class Course(models.Model):
     name = models.CharField(max_length=100, default="")
     is_active = models.BooleanField()
     priority = models.IntegerField(default=100)
+    private = models.BooleanField(default=False)
+    code = models.CharField(max_length=10, default="")
 
     def num_required_left(self, student):
         completed_quizzes = set(q.quiz for q in QuizUserData.objects.filter(student=student, quiz__course=self, quiz__required=True) if q.is_done())
@@ -59,9 +61,14 @@ class Course(models.Model):
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default="")
-    location = models.CharField(max_length=100, default="")
-    description = models.CharField(max_length=500, default="")
+    phone = models.CharField(max_length=20, default="", blank=True)
+    whatsapp_notifs = models.BooleanField(default=False)
+    location = models.CharField(max_length=100, default="", blank=True)
+    description = models.CharField(max_length=500, default="", blank=True)
     last_activity = models.DateTimeField(auto_now_add=True)
+
+    courses = models.ManyToManyField(Course, related_name="students", blank=True)
+    instructor_of = models.ManyToManyField(Course, related_name="instructors", blank=True)
 
     consent_prompt_required = models.BooleanField(default=True)
     consent = models.BooleanField(default=False)
@@ -79,9 +86,9 @@ class Student(models.Model):
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='AX')
     state = models.CharField(max_length=20, default="Denial")
     years_of_experience = models.DecimalField(max_digits=4, decimal_places=2, default=0)
-    organization = models.CharField(max_length=100, default='OTH')
-
+    organization = models.CharField(max_length=100, default='OTH', blank=True)
     profile_type = models.CharField(max_length=10, choices=PROFILE_CHOICES, default="STUD")
+    subscribed_to_emails = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.username

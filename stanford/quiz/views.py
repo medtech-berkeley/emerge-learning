@@ -1,6 +1,8 @@
 import pytz
 import random
 import datetime
+import logging
+import os
 
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -35,6 +37,13 @@ from .serializers import UserSerializer, StudentStatsSerializer, QuizUserDataSer
 from .serializers import EventSerializer, StudentCourseSerializer, InstructorCourseSerializer
 from .sheetreader import LoadFromCSV, LoadQuizFromCSV
 
+from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
+
+from quiz.models import Student, Event, EventType, DeviceData, Course
+
+logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def is_instructor(user):
     return user.is_authenticated and (user.student.profile_type in ['ADMN', 'INST'] or user.is_superuser)
@@ -135,13 +144,21 @@ class StudentCourseViewSet(ModelViewSet):
     serializer_class = StudentCourseSerializer
 
     def get_queryset(self):
-        return Course.objects.filter(is_active=True)
+        return Course.objects.filter(is_active=True, students__in=[self.request.user.student])
+
+class PublicCourseViewSet(ModelViewSet):
+    serializer_class = StudentCourseSerializer
+
+    def get_queryset(self):
+        return Course.objects.filter(private = False).filter(is_active = True)
 
 
 class InstructorCourseViewSet(ModelViewSet):
     serializer_class = InstructorCourseSerializer
     permission_classes = [IsInstructor]
-    queryset = Course.objects.all()
+    def get_queryset(self):
+        print('Instructor view set')
+        return Course.objects.filter(is_active=True, instructors__in=[self.request.user.student])
 
 
 class QuestionUserDataViewSet(ModelViewSet):
@@ -244,10 +261,11 @@ class LeaderboardStatViewSet(ViewSet):
 
     def get_student_stats(self):
         qud = self.get_qud()
-        return qud.values(name=F('student__name'),
-                          location=F('student__location'),
-                          image=Concat(Value(settings.MEDIA_URL), F('student__image'))) \
-                    .annotate(score=Count('student__name'))\
+        return qud.values(name=F('student__name'), \
+                            location=F('student__location'), \
+                            sid=F('student__id'),
+                            time=F('student__id'),
+                            image=Concat(Value(settings.MEDIA_URL), F('student__image'))).annotate(score=Count('sid')) \
                     .order_by('-score')[:10]
 
     def list(self, request):
@@ -592,10 +610,10 @@ def submit_demographics_form(request):
 
             student.completed_demographic_survey = True
 
-            if student.organization == 'GVK':
-                gvk_fields = {field:request.POST[field] for field in optional_fields}
-                extra_info = GVK_EMRI_Demographics(student=student, **gvk_fields)
-                extra_info.save()
+            # if student.organization == 'GVK':
+            #     gvk_fields = {field:request.POST[field] for field in optional_fields}
+            #     extra_info = GVK_EMRI_Demographics(student=student, **gvk_fields)
+            #     extra_info.save()
 
             student.save()
 
@@ -691,9 +709,9 @@ def send_email_view(request):
     message = request.POST['message']
 
     if recipient.strip() == 'test@emergelearning.org'.strip():
-        emails = ['sean@dooher.net', 'arjunsv@berkeley.edu']
+        emails = ['sean@dooher.net', 'arjunsv@berkeley.edu', 'blindquist2@gmail.com']
     else:
-        emails = User.objects.values_list('email', flat=True)
+        emails = User.objects.filter(student__subscribed_to_emails=True).values_list('email', flat=True)
 
     if request.POST.get('weekly', None):
         week = int(request.POST['week'])
@@ -701,7 +719,8 @@ def send_email_view(request):
         last_tag = f"week-{week - 1}"
         send_weekly_email.delay(mail_subject, message, recipient, set(emails), tag, last_tag)
     else:
-        send_email.delay(mail_subject, message, recipient, emails)
+        message_with_footer = render_to_string('email_template.html', {'message': message})
+        send_email.delay(mail_subject, message_with_footer, recipient, emails)
 
     return redirect('dashboard')
 
@@ -714,6 +733,59 @@ def send_email(subject, message, recipient, bcc_list=[]):
     msg = EmailMultiAlternatives(subject, txt_message, to=[recipient], bcc=bcc_list)
     msg.attach_alternative(message, "text/html")
     msg.send()
+
+@user_passes_test(is_admin)
+def send_whatsapp_view(request):
+    """ Sends whatsapp with message to recipient"""
+    body = request.POST['message']
+    course_ids = request.POST.getlist('courses')
+
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']  
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    client = Client(account_sid, auth_token)
+
+    subscribed_users = Student.objects.filter(whatsapp_notifs=True, courses__in=course_ids)
+    print(subscribed_users)
+    for user in subscribed_users:
+        try:
+            client.messages.create( 
+                from_='whatsapp:+14155238886',  
+                body=body,      
+                to=f"whatsapp:{user.phone}"
+            )
+        except TwilioRestException as err: 
+            print(err)
+
+    return redirect('dashboard')
+
+@login_required
+def sign_up_course(request):
+    """ Signs up a user for a course """
+    if request.method == 'POST':
+        access_code = request.POST.get('access_code').strip()
+        student = request.user.student
+        if student and access_code != "":
+            if not Course.objects.filter(code=access_code):
+                return redirect('dashboard') # TODO how to display error easily?
+            student.courses.add(Course.objects.get(code=access_code))
+
+    return redirect('dashboard') # TODO how to display success message?
+
+
+@login_required
+def remove_course(request):
+    """ Removes user from a course"""
+    if request.method == 'POST':
+        access_code = request.POST.get('access_code').strip()
+        student = request.user.student
+        if student and access_code != "":
+            if not Course.objects.filter(code=access_code).filter(students=student):
+                return redirect('dashboard') # TODO how to display error easily?
+                # Error: Not enrolled in that course
+            student.courses.remove(Course.objects.get(code=access_code))
+    
+    return redirect('dashboard') #TODO how to display success message?
+
 
 @login_required
 def submit_feedback(request):
