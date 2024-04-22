@@ -6,7 +6,7 @@
 #
 apiclient==1.0.4
     # via -r requirements.in
-asgiref==3.2.7
+asgiref==3.8.1
     # via django
 cachetools==4.0.0
     # via google-auth
@@ -22,7 +22,7 @@ coverage==5.0.4
     # via -r requirements.in
 croniter==0.3.31
     # via rq-scheduler
-django==3.0.5
+django==3.2.25
     # via
     #   -r requirements.in
     #   django-jenkins
