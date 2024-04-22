@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row } from 'reactstrap';
 import Cookies from "js-cookie";
+import {RichEditor} from './RichTextEditor';
 
 const CSRFToken = () => {
     return (
@@ -9,7 +10,6 @@ const CSRFToken = () => {
 };
 
 export class EmailSender extends React.Component {
-
     render() {
         return (
             <center className=".d-inline-block">
@@ -27,10 +27,11 @@ export class EmailSender extends React.Component {
                             <option value="test@emergelearning.org">test@emergelearning.org</option>
                         </select>
                         <br/>
-                        Message: 
+                        Message:
                         <br/>
-                        <textarea name="message" rows="15" columns="150">
-                        </textarea>
+                        <div style={{'width': '800px'}}>
+                            <RichEditor inputName="message" />
+                        </div>
                         <br/>
                         Weekly Email: 
                         <input type="checkbox" name="weekly" value="true" />

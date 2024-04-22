@@ -6,6 +6,8 @@ import {Provider} from 'react-redux';
 import {stanfordApp} from "./reducers/reducers";
 import {createStore, applyMiddleware} from 'redux';
 import Cookies from "js-cookie";
+import 'babel-polyfill';
+import 'draft-js/dist/Draft.css';
 
 if (module.hot) {
     module.hot.accept();
