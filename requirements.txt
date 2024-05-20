@@ -14,7 +14,7 @@ certifi==2020.4.5.1
     # via
     #   apiclient
     #   requests
-chardet==3.0.4
+charset-normalizer==3.3.2
     # via requests
 click==7.1.1
     # via rq
@@ -102,7 +102,7 @@ redis==3.4.1
     # via
     #   django-rq
     #   rq
-requests==2.23.0
+requests==2.32.0
     # via
     #   django-oauth-toolkit
     #   google-api-core
