@@ -8,8 +8,10 @@ import UserDashboardApi from "./containers/UserDashboardApi";
 import Quiz from "./containers/quiz/Quiz";
 import Settings from "./containers/SettingsContainer";
 import {startTime, changePage} from "./actions/Actions";
-import Instructor from "./containers/InstructorContainer"
-import {ComingSoon} from "./components/dashboard/ComingSoon.jsx"
+import Instructor from "./containers/InstructorContainer";
+import {ComingSoon} from "./components/dashboard/ComingSoon.jsx";
+import {QuestionCreator} from "./components/dashboard/QuestionCreator.jsx";
+
 // import {DemoPage} from "./components/dashboard/DemoPage.jsx"
 
  history.listen(
@@ -36,6 +38,7 @@ export class App extends React.Component {
                                 <Route path="/dashboard/settings" component={Settings}/>
                                 <Route path="/dashboard/instructor" component={Instructor}/>
                                 <Route path="/dashboard/quiz/:quizId" component={Quiz}/>
+                                <Route path="/dashboard/QuestionCreator" component={QuestionCreator} />
 {/*                                <Route path="/dashboard/demo" component={DemoPage}/>
 */}                            </div>
                         </div>

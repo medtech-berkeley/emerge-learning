@@ -1,0 +1,83 @@
+/* Styles for Question Creator */
+
+/* Header */
+.header {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Form container */
+  .form-container {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 800px;
+  }
+  
+  /* Form label */
+  .form-label {
+    font-weight: bold;
+  }
+  
+  /* Form input */
+  .form-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+  }
+  
+  .form-input:focus {
+    border-color: #003366; /* Dark blue color when focused */
+  }
+  
+  /* Form select */
+  .form-select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+    appearance: none;
+  }
+  
+  .form-select:focus {
+    border-color: #003366; /* Dark blue color when focused */
+  }
+  
+  /* Answer option */
+  .answer-option {
+    margin-right: 10px;
+  }
+  
+  /* Submit button */
+  .submit-button {
+    background-color: #003366; /* Dark blue color */
+    color: #fff; /* Text color */
+    padding: 10px 20px; /* Adjust padding as needed */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .submit-button:hover {
+    background-color: #001a33; /* Darker blue color on hover */
+  }
+  
+  /* Dark blue submit button */
+  .submit-button-dark {
+    background-color: #003366; /* Dark blue color */
+    color: #fff; /* Text color */
+    padding: 10px 20px; /* Adjust padding as needed */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .submit-button-dark:hover {
+    background-color: #001a33; /* Darker blue color on hover */
+  }
