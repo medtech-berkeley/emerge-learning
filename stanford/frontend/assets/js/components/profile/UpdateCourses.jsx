@@ -70,7 +70,7 @@ export class UpdateCourses extends React.Component {
         }
         return (
             <center className=".d-inline-block">
-                <h1>Update Courses</h1>
+                <h1>Sign Up for Courses</h1>
                 <Container>
                     <form method="POST" action='/settings/addcourse/'>
                         <CSRFToken />
@@ -96,10 +96,45 @@ export class UpdateCourses extends React.Component {
                 </Container>
                 <br />
                 <br />
+                <b>List of Enrolled Courses</b>
+                <br />
+                <br />
+                <Container>
+                    <ListGroup>
+                        <ListGroupItem header="Header 1" variant="primary">
+                            <Row>
+                                <Col>
+                                    <b>Course Name</b>
+                                </Col>
+                                <Col>
+                                    <Button onClick={() => { window.location.href = `/course/${course.id}` }}>Go to Course</Button>
+                                </Col>
+                            </Row>
+                        </ListGroupItem>
+                        <br />
+                        <br />
+                        {this.state.courses.map((course, key) => (
+                            <ListGroupItem key={key}>
+                                <Row>
+                                    <Col>
+                                        {course.name}
+                                    </Col>
+                                    <Col>
+                                        <a href={`/course/${course.id}`}>
+                                            <button type="button">Link to Course</button>
+                                        </a>
+                                    </Col>
+                                </Row>
+                            </ListGroupItem>
+                        ))}
+                    </ListGroup>
+                </Container>
+                <br />
+                <br />
                 <b>List of public courses, feel free to add these courses and try them out!</b>
                 <br />
                 <br />
-
+    
                 <Container>
                     <ListGroup>
                         <ListGroupItem header="Header 1" variant="primary">
@@ -118,7 +153,7 @@ export class UpdateCourses extends React.Component {
                         </ListGroupItem>
                         {this.state.public.map((e, key) => {
                             return (
-                                <ListGroupItem>
+                                <ListGroupItem key={key}>
                                     <Row>
                                         <Col>
                                             {e.name}
@@ -132,7 +167,6 @@ export class UpdateCourses extends React.Component {
                         })}
                     </ListGroup>
                 </Container>
-
             </center>
         );
     }

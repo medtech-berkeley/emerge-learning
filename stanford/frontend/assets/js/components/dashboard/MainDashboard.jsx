@@ -28,24 +28,44 @@ export class MainDashboard extends React.Component {
     }
 
     renderCourseTabs() {
-        if (this.props.courses.length > 0) {
-            return <Tabs>
-                    <TabList>
-                    {this.props.courses.map(course => {
-                        return <Tab>{course.name}</Tab>
-                    })}
-                    </TabList>
-                    {this.props.courses.map(course => {
-                    return (
-                    <TabPanel>
-                        <CourseSectionApi course={course} />
-                    </TabPanel>)
-                    })}
-                </Tabs>;
-        } else {
-            // TODO: Replace the # below with an internal link to the course selection page
-            return <h6>You aren't currently enrolled in a course. Sign up for one <a href="/dashboard/questioncreator">here</a>!</h6>
+        const textStyle = {
+            fontSize: '18px', // You can adjust the size as needed
         };
+    
+        if (this.props.courses.length > 0) {
+            return (
+                <div>
+                    <Tabs>
+                        <TabList>
+                            {this.props.courses.map(course => {
+                                return <Tab key={course.id}>{course.name}</Tab>
+                            })}
+                        </TabList>
+                        {this.props.courses.map(course => {
+                            return (
+                                <TabPanel key={course.id}>
+                                    <CourseSectionApi course={course} />
+                                </TabPanel>
+                            )
+                        })}
+                    </Tabs>
+                    <div>
+                        <p style={textStyle}>
+                            Looking to create a quiz? Click <a href="/dashboard/QuestionCreator">here</a> to get started!
+                        </p>
+                    </div>
+                </div>
+            );
+        } else {
+            return (
+                <h6 style={textStyle}>
+                    You aren't currently enrolled in a course. Sign up for one <a href="/dashboard/settings">here</a>!
+                    <br />
+                    <br />
+                    Looking to create a quiz? Click <a href="/dashboard/QuestionCreator">here</a> to get started!
+                </h6>
+            );
+        }
     }
 
     covidRequired() {
@@ -81,11 +101,8 @@ export class MainDashboard extends React.Component {
                     <CovidSurvey submitCovidSurvey={this.props.submitCovid19Survey}
                                         covid_survey_required={this.covidRequired()}/>
                     <ContestRules isOpen={this.state.contestRulesOpen} toggleContestRules={this.toggleContestRules}/>
-                    <div className="alert alert-primary" role="alert">
-                        <b>UPDATE:</b> Emerge now features new <b>COVID-19</b> related chalenges and practice questions. Please check back in for <b>daily challenges</b>. 
-                    </div>
                     <div className="alert alert-success" role="alert">
-                        <b>NEW:</b> Complete <b>all daily challenges</b> and the <b>final challenge</b> on <b>May 5th, 2020</b> to receive a <b>certificate</b> and be eligible to win a <b>brand new tablet. </b><a href="#" onClick={this.toggleContestRules}>Terms and Conditions</a>
+                        Complete <b>all daily challenges</b> and the <b>final challenge</b> on <b>September 5th, 2024</b> to receive a <b>certificate</b> and be eligible to win a <b>brand new tablet. </b><a href="#" onClick={this.toggleContestRules}>Terms and Conditions</a>
                     </div>
                     <br></br>
                     { this.renderCourseTabs() }
