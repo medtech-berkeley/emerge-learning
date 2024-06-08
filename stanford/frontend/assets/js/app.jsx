@@ -10,7 +10,8 @@ import Settings from "./containers/SettingsContainer";
 import {startTime, changePage} from "./actions/Actions";
 import Instructor from "./containers/InstructorContainer";
 import {ComingSoon} from "./components/dashboard/ComingSoon.jsx";
-import {QuestionCreator} from "./components/dashboard/QuestionCreator.jsx";
+import QuestionCreator from "./components/dashboard/QuestionCreator.jsx";
+import QuestionDisplay from "./components/dashboard/QuestionDisplay.jsx";
 
 // import {DemoPage} from "./components/dashboard/DemoPage.jsx"
 
@@ -38,7 +39,8 @@ export class App extends React.Component {
                                 <Route path="/dashboard/settings" component={Settings}/>
                                 <Route path="/dashboard/instructor" component={Instructor}/>
                                 <Route path="/dashboard/quiz/:quizId" component={Quiz}/>
-                                <Route path="/dashboard/QuestionCreator" component={QuestionCreator} />
+                                <Route path="/dashboard/questioncreator" component={QuestionCreator} />
+                                <Route path="/dashboard/questiondisplay" component={QuestionDisplay} />
 {/*                                <Route path="/dashboard/demo" component={DemoPage}/>
 */}                            </div>
                         </div>
